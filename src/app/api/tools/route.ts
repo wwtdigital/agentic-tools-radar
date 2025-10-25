@@ -46,47 +46,55 @@ export async function GET() {
     return NextResponse.json(demo);
   }
 
-  const pages = await notion.databases.query({ database_id: DB_ID, page_size: 100 });
-  const items = await Promise.all(pages.results.map(async (p: any) => {
-    const props = p.properties;
-    const readSelect = (name: string) => props[name]?.select?.name ?? props[name]?.multi_select?.[0]?.name;
-    const readURL = (name: string) => props[name]?.url ?? "";
-    const readTitle = (name: string) => props[name]?.title?.[0]?.plain_text ?? "";
-    const readText = (name: string) => props[name]?.rich_text?.[0]?.plain_text ?? "";
-    const readNumberLike = (name: string) => {
-      const prop = props[name];
-      if (!prop) return 0;
-      if (prop[prop.type] && typeof prop[prop.type].number === "number") return prop[prop.type].number;
-      // Handle select 1–5 stored as names
-      if (prop.select?.name) return Number(prop.select.name) || 0;
-      return 0;
-    };
-    const ratingFormula = props["Rating"]?.formula?.number ?? null;
+  try {
+    const pages = await notion.databases.query({ database_id: DB_ID, page_size: 100 });
+    const items = await Promise.all(pages.results.map(async (p: any) => {
+      const props = p.properties;
+      const readSelect = (name: string) => props[name]?.select?.name ?? props[name]?.multi_select?.[0]?.name;
+      const readURL = (name: string) => props[name]?.url ?? "";
+      const readTitle = (name: string) => props[name]?.title?.[0]?.plain_text ?? "";
+      const readText = (name: string) => props[name]?.rich_text?.[0]?.plain_text ?? "";
+      const readNumberLike = (name: string) => {
+        const prop = props[name];
+        if (!prop) return 0;
+        if (prop[prop.type] && typeof prop[prop.type].number === "number") return prop[prop.type].number;
+        // Handle select 1–5 stored as names
+        if (prop.select?.name) return Number(prop.select.name) || 0;
+        return 0;
+      };
+      const ratingFormula = props["Rating"]?.formula?.number ?? null;
 
-    const tool = {
-      id: p.id,
-      tool: readTitle("Tool") || readTitle("Name") || "Unknown",
-      company: readText("Company"),
-      category: readSelect("Category") || "",
-      status: readSelect("Evaluation Status") || "",
-      urls: {
-        product: readURL("Product URL"),
-        docs: readURL("Documentation Link"),
-        company: readURL("Company URL")
-      },
-      quickTake: readText("Quick Take"),
-      dims: {
-        autonomy: readNumberLike("Autonomy"),
-        collaboration: readNumberLike("Collaboration"),
-        context: readNumberLike("Context"),
-        governance: readNumberLike("Governance"),
-        interface: readNumberLike("Interface")
-      },
-      rating: ratingFormula,
-      lastEdited: p.last_edited_time
-    };
-    return ToolSchema.parse(tool);
-  }));
+      const tool = {
+        id: p.id,
+        tool: readTitle("Tool") || readTitle("Name") || "Unknown",
+        company: readText("Company"),
+        category: readSelect("Category") || "",
+        status: readSelect("Evaluation Status") || "",
+        urls: {
+          product: readURL("Product URL"),
+          docs: readURL("Documentation Link"),
+          company: readURL("Company URL")
+        },
+        quickTake: readText("Quick Take"),
+        dims: {
+          autonomy: readNumberLike("Autonomy"),
+          collaboration: readNumberLike("Collaboration"),
+          context: readNumberLike("Context"),
+          governance: readNumberLike("Governance"),
+          interface: readNumberLike("Interface")
+        },
+        rating: ratingFormula,
+        lastEdited: p.last_edited_time
+      };
+      return ToolSchema.parse(tool);
+    }));
 
-  return NextResponse.json(items);
+    return NextResponse.json(items);
+  } catch (error) {
+    console.error("Error fetching from Notion:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch tools data" },
+      { status: 500 }
+    );
+  }
 }
