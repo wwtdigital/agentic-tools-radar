@@ -41,9 +41,14 @@ export default function RadarPage() {
   const compareIds = selected.length ? selected : defaultIds;
 
   return (
-    <main className="mx-auto max-w-[1100px] p-6">
-      <h1 className="text-3xl font-bold mb-6">Agentic Developer Tools Radar</h1>
-      <div className="grid grid-cols-12 gap-6">
+    <>
+      <nav className="w-full bg-black text-white">
+        <div className="mx-auto max-w-[1100px] px-6 py-4">
+          <h1 className="text-2xl font-bold">Agentic Developer Tools Radar</h1>
+        </div>
+      </nav>
+      <main className="mx-auto max-w-[1100px] p-6">
+        <div className="grid grid-cols-12 gap-6">
       <aside className="col-span-3 space-y-6">
         <Filters all={data} onChange={(f) => setFilters(prev => ({ ...prev, ...f }))} />
         <CompareSelect all={filtered} selected={compareIds} onChange={setSelected} />
@@ -77,6 +82,7 @@ export default function RadarPage() {
         </figure>
       </section>
       </div>
-    </main>
+      </main>
+    </>
   );
 }

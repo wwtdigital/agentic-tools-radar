@@ -1,6 +1,16 @@
 "use client";
 type Tool = { category: string; status?: string; lastEdited: string };
 
+const CATEGORY_TIPS: Record<string, string> = {
+  "IDE Assistants": "AI coding assistants integrated into development environments",
+  "Agentic Frameworks": "Frameworks for building autonomous AI agents",
+  "Code Completion": "Tools that autocomplete code as you type",
+  "Terminal Agents": "AI assistants for command-line interfaces",
+  "Web Agents": "AI agents that interact with web browsers and applications",
+  "Testing Tools": "AI-powered testing and quality assurance tools",
+  "Documentation": "AI tools for generating and maintaining documentation"
+};
+
 export function Filters({
   all,
   onChange
@@ -13,20 +23,32 @@ export function Filters({
 
   return (
     <div className="space-y-3">
-      <select className="w-full border rounded p-1" onChange={(e) => onChange({ category: e.target.value || undefined })}>
-        <option value="">All categories</option>
-        {cats.map(c => <option key={c} value={c}>{c}</option>)}
-      </select>
-      <select className="w-full border rounded p-1" onChange={(e) => onChange({ status: e.target.value || undefined })}>
-        <option value="">All statuses</option>
-        {statuses.map(s => <option key={s} value={s}>{s}</option>)}
-      </select>
-      <select className="w-full border rounded p-1" onChange={(e) => onChange({ months: Number(e.target.value) || undefined })}>
-        <option value="">Any freshness</option>
-        <option value="3">Last 3 months</option>
-        <option value="6">Last 6 months</option>
-        <option value="12">Last 12 months</option>
-      </select>
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
+        <select className="w-full border rounded p-1" onChange={(e) => onChange({ category: e.target.value || undefined })}>
+          <option value="">All categories</option>
+          {cats.map(c => <option key={c} value={c} title={CATEGORY_TIPS[c] || c}>{c}</option>)}
+        </select>
+        <p className="mt-1 text-xs text-slate-500">Filter tools by their primary use case</p>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
+        <select className="w-full border rounded p-1" onChange={(e) => onChange({ status: e.target.value || undefined })}>
+          <option value="">All statuses</option>
+          {statuses.map(s => <option key={s} value={s}>{s}</option>)}
+        </select>
+        <p className="mt-1 text-xs text-slate-500">Filter by evaluation or adoption status</p>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">Freshness</label>
+        <select className="w-full border rounded p-1" onChange={(e) => onChange({ months: Number(e.target.value) || undefined })}>
+          <option value="">Any freshness</option>
+          <option value="3">Last 3 months</option>
+          <option value="6">Last 6 months</option>
+          <option value="12">Last 12 months</option>
+        </select>
+        <p className="mt-1 text-xs text-slate-500">Filter by last update date</p>
+      </div>
     </div>
   );
 }
