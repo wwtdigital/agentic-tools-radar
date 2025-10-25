@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+
 type Tool = { category: string; status?: string; lastEdited: string };
 
 const CATEGORY_TIPS: Record<string, string> = {
@@ -20,16 +22,27 @@ export function Filters({
 }) {
   const cats = Array.from(new Set(all.map(t => t.category))).sort();
   const statuses = Array.from(new Set(all.map(t => t.status).filter(Boolean))) as string[];
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   return (
     <div className="space-y-3">
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
-        <select className="w-full border rounded p-1" onChange={(e) => onChange({ category: e.target.value || undefined })}>
+        <select
+          className="w-full border rounded p-1"
+          onChange={(e) => {
+            setSelectedCategory(e.target.value);
+            onChange({ category: e.target.value || undefined });
+          }}
+        >
           <option value="">All categories</option>
-          {cats.map(c => <option key={c} value={c} title={CATEGORY_TIPS[c] || c}>{c}</option>)}
+          {cats.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
-        <p className="mt-1 text-xs text-slate-500">Filter tools by their primary use case</p>
+        {selectedCategory && CATEGORY_TIPS[selectedCategory] ? (
+          <p className="mt-1 text-xs text-blue-600 italic">{CATEGORY_TIPS[selectedCategory]}</p>
+        ) : (
+          <p className="mt-1 text-xs text-slate-500">Filter tools by their primary use case</p>
+        )}
       </div>
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
