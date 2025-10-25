@@ -54,7 +54,6 @@ export function RadarView({
       borderWidth={2}
       dotSize={0}
       fillOpacity={0.12}
-      borderOpacity={0.9}
       isInteractive
     />
   );
