@@ -64,14 +64,14 @@ export function CompareSelect({
                 {allSelected ? "Deselect all" : someSelected ? "Select all" : "Select all"}
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-1.5">
+            <div className="grid grid-cols-4 gap-2">
               {tools.map(t => {
                 const on = selected.includes(t.id);
                 return (
                   <button
                     key={t.id}
                     onClick={() => onChange(on ? selected.filter(id => id !== t.id) : [...selected, t.id])}
-                    className={`text-left text-xs border px-2 py-1.5 rounded flex items-center gap-2 transition-colors ${
+                    className={`text-left text-xs border px-2 py-2 rounded flex items-center gap-2 transition-colors ${
                       on ? "bg-slate-100 border-slate-400 shadow-sm" : "bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300"
                     }`}
                     title={t.quickTake}
