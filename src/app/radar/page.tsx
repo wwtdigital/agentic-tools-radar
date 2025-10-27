@@ -5,6 +5,7 @@ import { RadarView } from "@/components/RadarView";
 import { Filters } from "@/components/Filters";
 import { CompareSelect } from "@/components/CompareSelect";
 import { ToolDetails } from "@/components/ToolDetails";
+import { DimensionTooltip } from "@/components/DimensionTooltip";
 
 type Tool = {
   id: string;
@@ -90,7 +91,10 @@ export default function RadarPage() {
                   setHiddenDims(next);
                 }}
               />
-              {dim}
+              <span className="flex items-center">
+                {dim}
+                <DimensionTooltip dimension={dim} />
+              </span>
             </label>
           ))}
         </div>
