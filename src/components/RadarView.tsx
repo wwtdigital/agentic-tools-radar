@@ -7,7 +7,7 @@ type Tool = {
   company?: string;
   dims: { autonomy: number; collaboration: number; context: number; governance: number; interface: number };
   rating?: number | null;
-  urls?: { logo?: string };
+  urls?: { product?: string };
 };
 
 const DIM_LABELS = ["Autonomy","Collaboration","Context","Governance","Interface"] as const;
@@ -68,7 +68,7 @@ export function RadarView({
     };
 
     const initials = getInitials(tool.tool);
-    const logoUrl = tool.urls?.logo || getFaviconUrl(tool.urls?.product);
+    const logoUrl = getFaviconUrl(tool.urls?.product);
 
     return (
       <g transform={`translate(${x},${y})`}>

@@ -2,7 +2,6 @@
 import { useState } from "react";
 
 type ToolLogoProps = {
-  logoUrl?: string;
   toolName: string;
   companyName?: string;
   productUrl?: string;
@@ -78,21 +77,19 @@ function getInitials(toolName?: string): string {
 }
 
 export function ToolLogo({
-  logoUrl,
   toolName,
   companyName,
   productUrl,
   size = "md",
   className = ""
 }: ToolLogoProps) {
-  const [imageError, setImageError] = useState(false);
   const [faviconError, setFaviconError] = useState(false);
 
-  // Priority: custom logo URL → favicon from product URL → initials
+  // Priority: favicon from product URL → initials
   const faviconUrl = getFaviconUrl(productUrl);
-  const displayUrl = logoUrl || (!imageError && faviconUrl);
+  const displayUrl = faviconUrl && !faviconError ? faviconUrl : null;
 
-  const showInitials = !displayUrl || (imageError && faviconError);
+  const showInitials = !displayUrl;
   const initials = getInitials(toolName);
   const bgColor = getColorFromString(toolName);
 
@@ -113,13 +110,7 @@ export function ToolLogo({
         src={displayUrl}
         alt={`${toolName} logo`}
         className="w-full h-full object-contain p-1"
-        onError={() => {
-          if (displayUrl === logoUrl) {
-            setImageError(true);
-          } else {
-            setFaviconError(true);
-          }
-        }}
+        onError={() => setFaviconError(true)}
       />
     </div>
   );

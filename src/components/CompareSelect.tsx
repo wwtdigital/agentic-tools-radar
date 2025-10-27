@@ -7,7 +7,7 @@ type Tool = {
   company?: string;
   rating?: number | null;
   quickTake?: string;
-  urls?: { logo?: string; product?: string };
+  urls?: { product?: string };
 };
 
 export function CompareSelect({
@@ -29,7 +29,6 @@ export function CompareSelect({
               title={t.quickTake}
             >
               <ToolLogo
-                logoUrl={t.urls?.logo}
                 toolName={t.tool}
                 companyName={t.company}
                 productUrl={t.urls?.product}

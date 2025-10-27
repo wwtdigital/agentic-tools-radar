@@ -11,8 +11,7 @@ const ToolSchema = z.object({
   urls: z.object({
     product: z.string().optional(),
     docs: z.string().optional(),
-    company: z.string().optional(),
-    logo: z.string().optional()
+    company: z.string().optional()
   }),
   quickTake: z.string().optional(),
   dims: z.object({
@@ -38,7 +37,7 @@ export async function GET() {
       company: "Cognition",
       category: "IDE Assistants",
       status: "Adopted",
-      urls: { product: "https://windsurf.com", logo: undefined },
+      urls: { product: "https://windsurf.com" },
       quickTake: "Fast IDE agent with Cascade planning.",
       dims: { autonomy: 4, collaboration: 4, context: 4, governance: 4, interface: 5 },
       rating: 4.2,
@@ -81,8 +80,7 @@ export async function GET() {
         urls: {
           product: readURL("Product URL"),
           docs: readURL("Documentation Link"),
-          company: readURL("Company URL"),
-          logo: readURL("Logo URL")
+          company: readURL("Company URL")
         },
         quickTake: readText("Quick Take"),
         dims: {

@@ -8,7 +8,7 @@ type Tool = {
   company?: string;
   category: string;
   status?: string;
-  urls?: { product?: string; docs?: string; company?: string; logo?: string };
+  urls?: { product?: string; docs?: string; company?: string };
   quickTake?: string;
   dims: { autonomy: number; collaboration: number; context: number; governance: number; interface: number };
   rating?: number | null;
@@ -42,7 +42,6 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
           >
             <div className="flex items-start gap-3 mb-3">
               <ToolLogo
-                logoUrl={tool.urls?.logo}
                 toolName={tool.tool}
                 companyName={tool.company}
                 productUrl={tool.urls?.product}
