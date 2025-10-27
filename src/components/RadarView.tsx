@@ -4,8 +4,10 @@ import { ResponsiveRadar } from "@nivo/radar";
 type Tool = {
   id: string;
   tool: string;
+  company?: string;
   dims: { autonomy: number; collaboration: number; context: number; governance: number; interface: number };
   rating?: number | null;
+  urls?: { product?: string };
 };
 
 const DIM_LABELS = ["Autonomy","Collaboration","Context","Governance","Interface"] as const;
@@ -34,6 +36,152 @@ export function RadarView({
 
   const keys = selected.map(t => t.tool);
 
+  // Get favicon URL from product URL
+  const getFaviconUrl = (url?: string): string | undefined => {
+    if (!url) return undefined;
+    try {
+      const urlObj = new URL(url);
+      const domain = urlObj.hostname;
+      return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+    } catch {
+      return undefined;
+    }
+  };
+
+  // Get initials for fallback from tool name
+  const getInitials = (name?: string) => {
+    if (!name) return "?";
+    const words = name.split(/[\s-]+/);
+    if (words.length >= 2) {
+      return (words[0][0] + words[1][0]).toUpperCase();
+    }
+    const capitals = name.match(/[A-Z]/g);
+    if (capitals && capitals.length >= 2) {
+      return (capitals[0] + capitals[1]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
+
+  // Custom dots layer with logos and smart collision detection
+  const CustomDotsLayer = ({ radiusScale, angleStep, data, keys, colorByKey, centerX, centerY }: any) => {
+    const angleOffset = Math.PI / 2;
+    const dotRadius = 12;
+    const stackOffset = 18; // Offset for stacked dots
+
+    // Group dots by position to detect collisions
+    const positionMap = new Map<string, Array<{ key: string; keyIndex: number }>>();
+
+    data.forEach((d: any, i: number) => {
+      keys.forEach((key: string, keyIndex: number) => {
+        const value = d[key];
+        if (value === undefined) return;
+
+        const radius = radiusScale(value);
+        const angle = i * angleStep - angleOffset;
+        const x = centerX + Math.cos(angle) * radius;
+        const y = centerY + Math.sin(angle) * radius;
+
+        // Create position key rounded to nearest pixel to group overlapping dots
+        const posKey = `${Math.round(x)},${Math.round(y)}`;
+
+        if (!positionMap.has(posKey)) {
+          positionMap.set(posKey, []);
+        }
+        positionMap.get(posKey)!.push({ key, keyIndex });
+      });
+    });
+
+    // Debug: log positions with collisions
+    const collisions = Array.from(positionMap.entries()).filter(([_, tools]) => tools.length > 1);
+    if (collisions.length > 0) {
+      console.log('Logo collisions detected:', collisions.map(([pos, tools]) => ({
+        position: pos,
+        count: tools.length,
+        tools: tools.map(t => t.key)
+      })));
+    }
+
+    return (
+      <g>
+        {data.map((d: any, i: number) => {
+          const angle = i * angleStep - angleOffset;
+
+          return keys.map((key: string, keyIndex: number) => {
+            const value = d[key];
+            if (value === undefined) return null;
+
+            const radius = radiusScale(value);
+            const baseX = centerX + Math.cos(angle) * radius;
+            const baseY = centerY + Math.sin(angle) * radius;
+            const color = colorByKey[key];
+            const tool = selected.find(t => t.tool === key);
+
+            if (!tool) return null;
+
+            // Check if this position has multiple dots
+            const posKey = `${Math.round(baseX)},${Math.round(baseY)}`;
+            const dotsAtPosition = positionMap.get(posKey) || [];
+            const dotIndexAtPosition = dotsAtPosition.findIndex(d => d.key === key);
+            const totalDotsAtPosition = dotsAtPosition.length;
+
+            // Calculate offset for stacking
+            let offsetX = 0;
+            let offsetY = 0;
+
+            if (totalDotsAtPosition > 1) {
+              // Horizontal stacking with slight vertical offset
+              const stackIndex = dotIndexAtPosition;
+              const totalWidth = (totalDotsAtPosition - 1) * stackOffset;
+              offsetX = (stackIndex * stackOffset) - (totalWidth / 2);
+              offsetY = stackIndex * -3; // Slight upward offset for visibility
+            }
+
+            const x = baseX + offsetX;
+            const y = baseY + offsetY;
+
+            const initials = getInitials(tool.tool);
+            const logoUrl = getFaviconUrl(tool.urls?.product);
+
+            return (
+              <g key={`${key}-${i}`} transform={`translate(${x},${y})`}>
+                {logoUrl ? (
+                  <>
+                    <circle r={dotRadius} fill="white" stroke={color} strokeWidth={2} />
+                    <clipPath id={`clip-${tool.id}-${i}`}>
+                      <circle r={dotRadius - 2} />
+                    </clipPath>
+                    <image
+                      href={logoUrl}
+                      x={-(dotRadius - 2)}
+                      y={-(dotRadius - 2)}
+                      width={(dotRadius - 2) * 2}
+                      height={(dotRadius - 2) * 2}
+                      clipPath={`url(#clip-${tool.id}-${i})`}
+                      preserveAspectRatio="xMidYMid slice"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <circle r={dotRadius} fill={color} />
+                    <text
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      fill="white"
+                      fontSize={8}
+                      fontWeight="bold"
+                    >
+                      {initials}
+                    </text>
+                  </>
+                )}
+              </g>
+            );
+          });
+        })}
+      </g>
+    );
+  };
+
   return (
     <ResponsiveRadar
       data={data}
@@ -52,7 +200,8 @@ export function RadarView({
       colors={{ scheme: "category10" }}
       blendMode="multiply"
       borderWidth={2}
-      dotSize={0}
+      layers={['grid', 'layers', 'slices', CustomDotsLayer, 'legends']}
+      enableDots={false}
       fillOpacity={0.12}
       isInteractive
     />

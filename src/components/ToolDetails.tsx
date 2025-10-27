@@ -1,5 +1,6 @@
 "use client";
 import { DimensionTooltip } from "@/components/DimensionTooltip";
+import { ToolLogo } from "@/components/ToolLogo";
 
 type Tool = {
   id: string;
@@ -39,8 +40,14 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
             key={tool.id}
             className="border border-slate-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
           >
-            <div className="flex items-start justify-between gap-4 mb-3">
-              <div className="flex-1">
+            <div className="flex items-start gap-3 mb-3">
+              <ToolLogo
+                toolName={tool.tool}
+                companyName={tool.company}
+                productUrl={tool.urls?.product}
+                size="lg"
+              />
+              <div className="flex-1 min-w-0">
                 <h3 className="text-base font-semibold text-slate-900">
                   {tool.tool}
                 </h3>
@@ -49,7 +56,7 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
                 )}
               </div>
               {tool.rating !== null && tool.rating !== undefined && (
-                <div className="flex flex-col items-end">
+                <div className="flex flex-col items-end flex-shrink-0">
                   <div className="text-2xl font-bold text-slate-900">
                     {tool.rating.toFixed(1)}
                   </div>
