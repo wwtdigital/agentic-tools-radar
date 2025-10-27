@@ -91,6 +91,16 @@ export function RadarView({
       });
     });
 
+    // Debug: log positions with collisions
+    const collisions = Array.from(positionMap.entries()).filter(([_, tools]) => tools.length > 1);
+    if (collisions.length > 0) {
+      console.log('Logo collisions detected:', collisions.map(([pos, tools]) => ({
+        position: pos,
+        count: tools.length,
+        tools: tools.map(t => t.key)
+      })));
+    }
+
     return (
       <g>
         {data.map((d: any, i: number) => {
