@@ -62,26 +62,72 @@ export function RadarView({
     return name.substring(0, 2).toUpperCase();
   };
 
-  // Custom dots layer with logos
+  // Custom dots layer with logos and smart collision detection
   const CustomDotsLayer = ({ radiusScale, angleStep, data, keys, colorByKey, centerX, centerY }: any) => {
     const angleOffset = Math.PI / 2;
+    const dotRadius = 12;
+    const stackOffset = 18; // Offset for stacked dots
+
+    // Group dots by position to detect collisions
+    const positionMap = new Map<string, Array<{ key: string; keyIndex: number }>>();
+
+    data.forEach((d: any, i: number) => {
+      keys.forEach((key: string, keyIndex: number) => {
+        const value = d[key];
+        if (value === undefined) return;
+
+        const radius = radiusScale(value);
+        const angle = i * angleStep - angleOffset;
+        const x = centerX + Math.cos(angle) * radius;
+        const y = centerY + Math.sin(angle) * radius;
+
+        // Create position key rounded to nearest pixel to group overlapping dots
+        const posKey = `${Math.round(x)},${Math.round(y)}`;
+
+        if (!positionMap.has(posKey)) {
+          positionMap.set(posKey, []);
+        }
+        positionMap.get(posKey)!.push({ key, keyIndex });
+      });
+    });
 
     return (
       <g>
         {data.map((d: any, i: number) => {
           const angle = i * angleStep - angleOffset;
 
-          return keys.map((key: string) => {
+          return keys.map((key: string, keyIndex: number) => {
             const value = d[key];
             if (value === undefined) return null;
 
             const radius = radiusScale(value);
-            const x = centerX + Math.cos(angle) * radius;
-            const y = centerY + Math.sin(angle) * radius;
+            const baseX = centerX + Math.cos(angle) * radius;
+            const baseY = centerY + Math.sin(angle) * radius;
             const color = colorByKey[key];
             const tool = selected.find(t => t.tool === key);
 
             if (!tool) return null;
+
+            // Check if this position has multiple dots
+            const posKey = `${Math.round(baseX)},${Math.round(baseY)}`;
+            const dotsAtPosition = positionMap.get(posKey) || [];
+            const dotIndexAtPosition = dotsAtPosition.findIndex(d => d.key === key);
+            const totalDotsAtPosition = dotsAtPosition.length;
+
+            // Calculate offset for stacking
+            let offsetX = 0;
+            let offsetY = 0;
+
+            if (totalDotsAtPosition > 1) {
+              // Horizontal stacking with slight vertical offset
+              const stackIndex = dotIndexAtPosition;
+              const totalWidth = (totalDotsAtPosition - 1) * stackOffset;
+              offsetX = (stackIndex * stackOffset) - (totalWidth / 2);
+              offsetY = stackIndex * -3; // Slight upward offset for visibility
+            }
+
+            const x = baseX + offsetX;
+            const y = baseY + offsetY;
 
             const initials = getInitials(tool.tool);
             const logoUrl = getFaviconUrl(tool.urls?.product);
@@ -90,23 +136,23 @@ export function RadarView({
               <g key={`${key}-${i}`} transform={`translate(${x},${y})`}>
                 {logoUrl ? (
                   <>
-                    <circle r={12} fill="white" stroke={color} strokeWidth={2} />
+                    <circle r={dotRadius} fill="white" stroke={color} strokeWidth={2} />
                     <clipPath id={`clip-${tool.id}-${i}`}>
-                      <circle r={10} />
+                      <circle r={dotRadius - 2} />
                     </clipPath>
                     <image
                       href={logoUrl}
-                      x={-10}
-                      y={-10}
-                      width={20}
-                      height={20}
+                      x={-(dotRadius - 2)}
+                      y={-(dotRadius - 2)}
+                      width={(dotRadius - 2) * 2}
+                      height={(dotRadius - 2) * 2}
                       clipPath={`url(#clip-${tool.id}-${i})`}
                       preserveAspectRatio="xMidYMid slice"
                     />
                   </>
                 ) : (
                   <>
-                    <circle r={12} fill={color} />
+                    <circle r={dotRadius} fill={color} />
                     <text
                       textAnchor="middle"
                       dominantBaseline="central"
