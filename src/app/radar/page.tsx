@@ -99,10 +99,19 @@ export default function RadarPage() {
         </div>
       </nav>
 
+      {/* Backdrop overlay for drawer */}
+      {drawerOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 z-20 top-[57px]"
+          onClick={() => setDrawerOpen(null)}
+          aria-label="Close drawer"
+        />
+      )}
+
       {/* Drawer - slides down from top */}
       <div
         className={`fixed left-0 right-0 top-[57px] bg-white shadow-lg z-30 overflow-y-auto transition-all duration-300 ${
-          drawerOpen ? 'max-h-96 border-b' : 'max-h-0'
+          drawerOpen ? 'max-h-[50vh] border-b' : 'max-h-0'
         }`}
       >
         <div className="p-6 max-w-6xl mx-auto">
