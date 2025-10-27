@@ -13,7 +13,7 @@ type Tool = {
   company?: string;
   category: string;
   status?: string;
-  urls?: { product?: string; docs?: string; company?: string };
+  urls?: { product?: string; docs?: string; company?: string; logo?: string };
   quickTake?: string;
   dims: { autonomy: number; collaboration: number; context: number; governance: number; interface: number };
   rating?: number | null;
