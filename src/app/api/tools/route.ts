@@ -48,7 +48,7 @@ export async function GET() {
 
   try {
     const pages = await notion.databases.query({ database_id: DB_ID, page_size: 100 });
-    const items = await Promise.all(pages.results.map(async (p: any) => {
+    const items = (await Promise.all(pages.results.map(async (p: any) => {
       const props = p.properties;
       const readSelect = (name: string) => props[name]?.select?.name ?? props[name]?.multi_select?.[0]?.name;
       const readURL = (name: string) => props[name]?.url ?? "";
@@ -64,9 +64,16 @@ export async function GET() {
       };
       const ratingFormula = props["Rating"]?.formula?.number ?? null;
 
+      const toolName = readTitle("Tool") || readTitle("Name") || "";
+
+      // Skip tools with empty names
+      if (!toolName || toolName.trim() === "") {
+        return null;
+      }
+
       const tool = {
         id: p.id,
-        tool: readTitle("Tool") || readTitle("Name") || "Unknown",
+        tool: toolName,
         company: readText("Company"),
         category: readSelect("Category") || "",
         status: readSelect("Evaluation Status") || "",
@@ -87,7 +94,7 @@ export async function GET() {
         lastEdited: p.last_edited_time
       };
       return ToolSchema.parse(tool);
-    }));
+    }))).filter(item => item !== null);
 
     return NextResponse.json(items);
   } catch (error) {

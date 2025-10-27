@@ -31,9 +31,9 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
   }
 
   return (
-    <div className="mt-6 space-y-4">
-      <h2 className="text-lg font-semibold text-slate-900">Tool Details</h2>
-      <div className="grid gap-4">
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold text-slate-900 sticky top-0 bg-white py-2 border-b">Tool Details</h2>
+      <div className="space-y-4 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 150px)' }}>
         {tools.map((tool) => (
           <div
             key={tool.id}
@@ -64,19 +64,19 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
               </p>
             )}
 
-            <div className="grid grid-cols-5 gap-2 mb-3">
+            <div className="space-y-1 mb-3">
               {DIMENSION_LABELS.map(({ key, label }) => {
                 const value = tool.dims[key];
                 return (
                   <div
                     key={key}
-                    className="bg-slate-50 rounded px-2 py-1.5 text-center"
+                    className="flex items-center justify-between bg-slate-50 rounded px-3 py-2"
                   >
-                    <div className="text-xs text-slate-600 mb-0.5 flex items-center justify-center gap-0.5">
+                    <div className="text-xs text-slate-600 flex items-center gap-1">
                       {label}
                       <DimensionTooltip dimension={label} />
                     </div>
-                    <div className="text-lg font-semibold text-slate-900">
+                    <div className="text-base font-semibold text-slate-900">
                       {value}
                     </div>
                   </div>
