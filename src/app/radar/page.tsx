@@ -123,7 +123,7 @@ export default function RadarPage() {
       {/* Drawer - slides down from top */}
       <div
         className={`fixed left-0 right-0 top-[57px] bg-white shadow-lg z-30 overflow-y-auto transition-all duration-300 ${
-          drawerOpen ? 'max-h-[50vh] border-b' : 'max-h-0'
+          drawerOpen ? 'max-h-[70vh] border-b' : 'max-h-0'
         }`}
       >
         <div className="p-6 max-w-6xl mx-auto">
@@ -133,14 +133,23 @@ export default function RadarPage() {
                 <h2 className="text-lg font-semibold text-slate-900">Select Tools</h2>
                 <button
                   onClick={() => setDrawerOpen(null)}
-                  className="p-2 hover:bg-slate-100 rounded transition-colors"
+                  className="p-2 hover:bg-red-50 bg-slate-100 rounded-lg transition-colors border border-slate-300 hover:border-red-300"
                   aria-label="Close drawer"
                 >
-                  <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg className="w-6 h-6 text-slate-700 hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
+
+              {/* Filters Section */}
+              <div className="mb-4 pb-4 border-b border-slate-200">
+                <div className="flex items-center gap-4">
+                  <Filters all={data} onChange={(f) => setFilters(prev => ({ ...prev, ...f }))} />
+                </div>
+              </div>
+
+              {/* Tools Grid */}
               <CompareSelect all={filtered} selected={compareIds} onChange={setSelected} />
             </div>
           )}
