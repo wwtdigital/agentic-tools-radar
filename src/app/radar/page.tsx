@@ -27,7 +27,7 @@ export default function RadarPage() {
   const [filters, setFilters] = useState<{category?: string; status?: string; months?: number}>({});
   const [selected, setSelected] = useState<string[]>([]);
   const [hiddenDims, setHiddenDims] = useState<Set<string>>(new Set());
-  const [drawerOpen, setDrawerOpen] = useState<'filters' | 'compare' | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState<'tools' | 'filters' | null>(null);
 
   const filtered = useMemo(() => {
     let out = data;
@@ -74,6 +74,17 @@ export default function RadarPage() {
           <h1 className="text-2xl font-bold">Agentic Developer Tools Radar</h1>
           <div className="flex items-center gap-3">
             <button
+              onClick={() => setDrawerOpen(drawerOpen === 'tools' ? null : 'tools')}
+              className={`px-4 py-2 rounded transition-colors flex items-center gap-2 ${
+                drawerOpen === 'tools' ? 'bg-slate-700' : 'hover:bg-slate-700'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              <span className="text-sm font-medium">Tools</span>
+            </button>
+            <button
               onClick={() => setDrawerOpen(drawerOpen === 'filters' ? null : 'filters')}
               className={`px-4 py-2 rounded transition-colors flex items-center gap-2 ${
                 drawerOpen === 'filters' ? 'bg-slate-700' : 'hover:bg-slate-700'
@@ -83,17 +94,6 @@ export default function RadarPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
               </svg>
               <span className="text-sm font-medium">Filters</span>
-            </button>
-            <button
-              onClick={() => setDrawerOpen(drawerOpen === 'compare' ? null : 'compare')}
-              className={`px-4 py-2 rounded transition-colors flex items-center gap-2 ${
-                drawerOpen === 'compare' ? 'bg-slate-700' : 'hover:bg-slate-700'
-              }`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-              <span className="text-sm font-medium">Compare</span>
             </button>
           </div>
         </div>
@@ -106,6 +106,24 @@ export default function RadarPage() {
         }`}
       >
         <div className="p-6 max-w-6xl mx-auto">
+          {drawerOpen === 'tools' && (
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-slate-900">Select Tools</h2>
+                <button
+                  onClick={() => setDrawerOpen(null)}
+                  className="p-2 hover:bg-slate-100 rounded transition-colors"
+                  aria-label="Close drawer"
+                >
+                  <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <CompareSelect all={filtered} selected={compareIds} onChange={setSelected} />
+            </div>
+          )}
+
           {drawerOpen === 'filters' && (
             <div>
               <div className="flex items-center justify-between mb-6">
@@ -153,24 +171,6 @@ export default function RadarPage() {
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-
-          {drawerOpen === 'compare' && (
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-slate-900">Compare Tools</h2>
-                <button
-                  onClick={() => setDrawerOpen(null)}
-                  className="p-2 hover:bg-slate-100 rounded transition-colors"
-                  aria-label="Close drawer"
-                >
-                  <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              <CompareSelect all={filtered} selected={compareIds} onChange={setSelected} />
             </div>
           )}
         </div>
