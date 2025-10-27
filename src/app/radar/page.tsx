@@ -1,6 +1,6 @@
 "use client";
 import useSWR from "swr";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { RadarView } from "@/components/RadarView";
 import { Filters } from "@/components/Filters";
 import { CompareSelect } from "@/components/CompareSelect";
@@ -28,6 +28,18 @@ export default function RadarPage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [hiddenDims, setHiddenDims] = useState<Set<string>>(new Set());
   const [drawerOpen, setDrawerOpen] = useState<'tools' | 'filters' | null>(null);
+
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    if (drawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [drawerOpen]);
 
   const filtered = useMemo(() => {
     let out = data;
