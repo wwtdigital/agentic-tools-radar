@@ -1,4 +1,5 @@
 "use client";
+import { DimensionTooltip } from "@/components/DimensionTooltip";
 
 type Tool = {
   id: string;
@@ -71,7 +72,10 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
                     key={key}
                     className="bg-slate-50 rounded px-2 py-1.5 text-center"
                   >
-                    <div className="text-xs text-slate-600 mb-0.5">{label}</div>
+                    <div className="text-xs text-slate-600 mb-0.5 flex items-center justify-center gap-0.5">
+                      {label}
+                      <DimensionTooltip dimension={label} />
+                    </div>
                     <div className="text-lg font-semibold text-slate-900">
                       {value}
                     </div>
