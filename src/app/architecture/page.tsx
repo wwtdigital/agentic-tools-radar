@@ -18,12 +18,7 @@ export default function ArchitecturePage() {
       {/* Header */}
       <nav className="w-full bg-black text-white">
         <div className="mx-auto max-w-4xl px-6 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold">Agentic Developer Tools Radar</h1>
-            <a href="/radar" className="px-4 py-2 rounded transition-colors hover:bg-slate-700 text-sm font-medium">
-              View Radar →
-            </a>
-          </div>
+          <h1 className="text-xl font-bold">Agentic Developer Tools Radar - Architecture</h1>
         </div>
       </nav>
 
