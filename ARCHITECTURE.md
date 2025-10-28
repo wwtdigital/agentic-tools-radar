@@ -11,20 +11,74 @@ Two-tier architecture separating AI-assisted research from interactive presentat
 ### Research Methodology
 
 **AI-Powered Research Pipeline:**
-- **Notion MCP** (Claude/ChatGPT): Conversational database updates via Model Context Protocol
-- **Perplexity Deep Research**: Market analysis and trend identification
-- **Row-level validation**: AI agents verify facts and specifications per tool
+
+The research process combines multiple AI platforms to ensure comprehensive, accurate tool evaluations:
+
+**1. Strategic Research (Perplexity Deep Research)**
+- Generate comprehensive market analysis reports on tool categories
+- Identify emerging trends and patterns across the agentic tools landscape
+- Discover new tools through trend analysis and market monitoring
+- Provide competitive context for evaluation criteria
+- Synthesize industry insights to inform dimension scoring
+
+**2. Database Management (Notion MCP)**
+- **Model Context Protocol** enables direct database access through AI conversations
+- Natural language commands create/update tool records without manual forms
+- Used in both Claude and ChatGPT for flexible research workflows
+- Example: "Add a new tool called X with these dimensions..." updates Notion directly
+- Conversational iteration allows rapid refinement of tool profiles
+- MCP removes friction between research insights and data entry
+
+**3. Row-Level Validation (AI Agents)**
+- Access individual tool records for detailed fact-checking
+- Verify product specifications, URLs, and company information
+- Cross-reference claims across multiple AI platforms for accuracy
+- Iterative refinement: AI agents review and suggest improvements to existing entries
+- Ensure consistency in how dimensions are scored across similar tools
+
+**Research Workflow Example:**
+```
+1. Perplexity: "Research agentic IDE assistants released in Q4 2024"
+   → Generates comprehensive report with 10+ tools and trend analysis
+
+2. Claude (with Notion MCP): "Create entries for Windsurf, Cursor, and Copilot"
+   → Conversationally populates database with structured data
+
+3. ChatGPT (with Notion MCP): "Review the Windsurf entry and validate URLs"
+   → Verifies facts and updates fields as needed
+
+4. Scoring: Apply evaluation framework based on research findings
+   → Dimension scores informed by capability analysis and market positioning
+```
 
 **Evaluation Framework:**
-- Five dimensions (1-5 scale): Autonomy, Collaboration, Context, Governance, Interface
-- Metrics based on internal evaluation criteria and observed market trends
-- Formula-driven overall rating computed from dimension scores
+
+**Five Dimensions (1-5 scale):**
+- **Autonomy**: Degree of independent decision-making and task completion
+- **Collaboration**: Multi-user workflows and team integration capabilities
+- **Context**: Ability to understand and leverage codebase/project context
+- **Governance**: Security, compliance, and administrative controls
+- **Interface**: User experience, accessibility, and interaction patterns
+
+**Scoring Methodology:**
+- Metrics grounded in internal evaluation criteria (our team's use cases and requirements)
+- Informed by observed market trends and competitive positioning
+- Relative scoring: tools compared within categories for consistency
+- Formula-driven overall rating computed from dimension scores in Notion
+
+**Quality Assurance:**
+- Multi-platform validation prevents single-source bias
+- Conversational refinement through MCP enables iterative improvement
+- Notion's version history tracks how evaluations evolve
+- Deep research reports provide audit trail for scoring decisions
 
 **Benefits:**
-- AI agents accelerate research 10x vs. manual process
-- MCP enables natural language database updates
-- Team collaboration via Notion UI
-- Built-in version control and audit trail
+- **Research velocity**: AI agents accelerate data collection 10x vs. manual research
+- **Quality**: Multi-platform validation ensures accuracy and reduces bias
+- **Flexibility**: MCP enables rapid iteration without technical barriers
+- **Context**: Deep research provides market understanding beyond individual tools
+- **Collaboration**: Team members can review and discuss entries via Notion UI
+- **Auditability**: Complete edit history and research trail maintained
 
 ---
 
