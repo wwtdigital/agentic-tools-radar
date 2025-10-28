@@ -8,12 +8,19 @@ export const metadata: Metadata = {
 export default function ArchitecturePage() {
   return (
     <div className="min-h-screen bg-white">
+      {/* Mobile Warning */}
+      <div className="md:hidden bg-yellow-50 border-b border-yellow-200 px-4 py-3">
+        <p className="text-sm text-yellow-800 text-center">
+          <strong>Desktop Recommended:</strong> This site is optimized for desktop viewing. Some content may be difficult to read on mobile devices.
+        </p>
+      </div>
+
       {/* Header */}
       <nav className="w-full bg-black text-white">
         <div className="mx-auto max-w-4xl px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold">Agentic Developer Tools Radar</h1>
-            <a href="/radar" className="text-sm hover:underline">
+            <a href="/radar" className="px-4 py-2 rounded transition-colors hover:bg-slate-700 text-sm font-medium">
               View Radar →
             </a>
           </div>

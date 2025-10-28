@@ -81,10 +81,23 @@ export default function RadarPage() {
 
   return (
     <>
+      {/* Mobile Warning */}
+      <div className="md:hidden bg-yellow-50 border-b border-yellow-200 px-4 py-3">
+        <p className="text-sm text-yellow-800 text-center">
+          <strong>Desktop Required:</strong> This radar visualization is optimized for desktop viewing. Please access on a larger screen for the best experience.
+        </p>
+      </div>
+
       <nav className="w-full bg-black text-white relative z-20">
         <div className="px-6 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Agentic Developer Tools Radar</h1>
           <div className="flex items-center gap-3">
+            <a
+              href="/architecture"
+              className="px-4 py-2 rounded transition-colors flex items-center gap-2 hover:bg-slate-700 text-sm font-medium"
+            >
+              Architecture
+            </a>
             <button
               onClick={() => setDrawerOpen(!drawerOpen)}
               className={`px-4 py-2 rounded transition-colors flex items-center gap-2 ${
