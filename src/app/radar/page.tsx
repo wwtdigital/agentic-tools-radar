@@ -1,6 +1,6 @@
 "use client";
 import useSWR from "swr";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { RadarView } from "@/components/RadarView";
 import { Filters } from "@/components/Filters";
 import { CompareSelect } from "@/components/CompareSelect";
@@ -28,6 +28,18 @@ export default function RadarPage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [hiddenDims, setHiddenDims] = useState<Set<string>>(new Set());
   const [drawerOpen, setDrawerOpen] = useState<'tools' | 'filters' | null>(null);
+
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    if (drawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [drawerOpen]);
 
   const filtered = useMemo(() => {
     let out = data;
@@ -99,10 +111,19 @@ export default function RadarPage() {
         </div>
       </nav>
 
+      {/* Backdrop overlay for drawer */}
+      {drawerOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 z-20 top-[57px]"
+          onClick={() => setDrawerOpen(null)}
+          aria-label="Close drawer"
+        />
+      )}
+
       {/* Drawer - slides down from top */}
       <div
         className={`fixed left-0 right-0 top-[57px] bg-white shadow-lg z-30 overflow-y-auto transition-all duration-300 ${
-          drawerOpen ? 'max-h-96 border-b' : 'max-h-0'
+          drawerOpen ? 'max-h-[70vh] border-b' : 'max-h-0'
         }`}
       >
         <div className="p-6 max-w-6xl mx-auto">
@@ -112,14 +133,23 @@ export default function RadarPage() {
                 <h2 className="text-lg font-semibold text-slate-900">Select Tools</h2>
                 <button
                   onClick={() => setDrawerOpen(null)}
-                  className="p-2 hover:bg-slate-100 rounded transition-colors"
+                  className="p-2 hover:bg-red-50 bg-slate-100 rounded-lg transition-colors border border-slate-300 hover:border-red-300"
                   aria-label="Close drawer"
                 >
-                  <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg className="w-6 h-6 text-slate-700 hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
+
+              {/* Filters Section */}
+              <div className="mb-4 pb-4 border-b border-slate-200">
+                <div className="flex items-center gap-4">
+                  <Filters all={data} onChange={(f) => setFilters(prev => ({ ...prev, ...f }))} />
+                </div>
+              </div>
+
+              {/* Tools Grid */}
               <CompareSelect all={filtered} selected={compareIds} onChange={setSelected} />
             </div>
           )}
