@@ -92,12 +92,6 @@ export default function RadarPage() {
         <div className="px-6 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Agentic Developer Tools Radar</h1>
           <div className="flex items-center gap-3">
-            <a
-              href="/architecture"
-              className="px-4 py-2 rounded transition-colors flex items-center gap-2 hover:bg-slate-700 text-sm font-medium"
-            >
-              Architecture
-            </a>
             <button
               onClick={() => setDrawerOpen(!drawerOpen)}
               className={`px-4 py-2 rounded transition-colors flex items-center gap-2 ${
