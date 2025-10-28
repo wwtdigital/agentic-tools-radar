@@ -23,44 +23,100 @@ export function Filters({
   const cats = Array.from(new Set(all.map(t => t.category))).sort();
   const statuses = Array.from(new Set(all.map(t => t.status).filter(Boolean))) as string[];
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [selectedMonths, setSelectedMonths] = useState<number | undefined>(undefined);
+
+  const handleCategoryClick = (cat: string) => {
+    const newCat = selectedCategory === cat ? "" : cat;
+    setSelectedCategory(newCat);
+    onChange({ category: newCat || undefined });
+  };
+
+  const handleStatusClick = (status: string) => {
+    const newStatus = selectedStatus === status ? "" : status;
+    setSelectedStatus(newStatus);
+    onChange({ status: newStatus || undefined });
+  };
+
+  const handleMonthsClick = (months: number) => {
+    const newMonths = selectedMonths === months ? undefined : months;
+    setSelectedMonths(newMonths);
+    onChange({ months: newMonths });
+  };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
+      {/* Category Filter */}
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
-        <select
-          className="w-full border rounded p-1"
-          onChange={(e) => {
-            setSelectedCategory(e.target.value);
-            onChange({ category: e.target.value || undefined });
-          }}
-        >
-          <option value="">All categories</option>
-          {cats.map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
+        <label className="block text-sm font-medium text-slate-700 mb-2">Category</label>
+        <div className="flex flex-wrap gap-2">
+          {cats.map(c => (
+            <button
+              key={c}
+              onClick={() => handleCategoryClick(c)}
+              className={`px-3 py-1.5 text-xs border rounded transition-colors ${
+                selectedCategory === c
+                  ? "bg-slate-900 text-white border-slate-900"
+                  : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
+              }`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
         {selectedCategory && CATEGORY_TIPS[selectedCategory] ? (
-          <p className="mt-1 text-xs text-blue-600 italic">{CATEGORY_TIPS[selectedCategory]}</p>
+          <p className="mt-2 text-xs text-blue-600 italic">{CATEGORY_TIPS[selectedCategory]}</p>
         ) : (
-          <p className="mt-1 text-xs text-slate-500">Filter tools by their primary use case</p>
+          <p className="mt-2 text-xs text-slate-500">Filter tools by their primary use case</p>
         )}
       </div>
+
+      {/* Status Filter */}
+      {statuses.length > 0 && (
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Status</label>
+          <div className="flex flex-wrap gap-2">
+            {statuses.map(s => (
+              <button
+                key={s}
+                onClick={() => handleStatusClick(s)}
+                className={`px-3 py-1.5 text-xs border rounded transition-colors ${
+                  selectedStatus === s
+                    ? "bg-slate-900 text-white border-slate-900"
+                    : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
+                }`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-slate-500">Filter by evaluation or adoption status</p>
+        </div>
+      )}
+
+      {/* Freshness Filter */}
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
-        <select className="w-full border rounded p-1" onChange={(e) => onChange({ status: e.target.value || undefined })}>
-          <option value="">All statuses</option>
-          {statuses.map(s => <option key={s} value={s}>{s}</option>)}
-        </select>
-        <p className="mt-1 text-xs text-slate-500">Filter by evaluation or adoption status</p>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Freshness</label>
-        <select className="w-full border rounded p-1" onChange={(e) => onChange({ months: Number(e.target.value) || undefined })}>
-          <option value="">Any freshness</option>
-          <option value="3">Last 3 months</option>
-          <option value="6">Last 6 months</option>
-          <option value="12">Last 12 months</option>
-        </select>
-        <p className="mt-1 text-xs text-slate-500">Filter by last update date</p>
+        <label className="block text-sm font-medium text-slate-700 mb-2">Freshness</label>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { label: "Last 3 months", value: 3 },
+            { label: "Last 6 months", value: 6 },
+            { label: "Last 12 months", value: 12 }
+          ].map(({ label, value }) => (
+            <button
+              key={value}
+              onClick={() => handleMonthsClick(value)}
+              className={`px-3 py-1.5 text-xs border rounded transition-colors ${
+                selectedMonths === value
+                  ? "bg-slate-900 text-white border-slate-900"
+                  : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <p className="mt-2 text-xs text-slate-500">Filter by last update date</p>
       </div>
     </div>
   );
