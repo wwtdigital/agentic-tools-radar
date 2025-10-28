@@ -138,44 +138,39 @@ export default function RadarPage() {
                 </button>
               </div>
 
-              {/* Filters Section */}
+              {/* Data Filters Section */}
               <div className="mb-4 pb-4 border-b border-slate-200">
-                <div className="grid grid-cols-2 gap-8">
-                  {/* Left: Data Filters */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-slate-700 mb-3">Data Filters</h3>
-                    <Filters all={data} onChange={(f) => setFilters(prev => ({ ...prev, ...f }))} />
-                  </div>
-
-                  {/* Right: Dimension Visibility */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-slate-700 mb-3">Dimension Visibility</h3>
-                    <p className="text-xs text-slate-600 mb-3">Toggle dimensions on the radar chart:</p>
-                    <div className="space-y-2">
-                      {["Autonomy","Collaboration","Context","Governance","Interface"].map(dim => (
-                        <label key={dim} className="flex items-center gap-2 text-sm">
-                          <input
-                            type="checkbox"
-                            checked={!hiddenDims.has(dim)}
-                            onChange={(e) => {
-                              const next = new Set(hiddenDims);
-                              e.target.checked ? next.delete(dim) : next.add(dim);
-                              setHiddenDims(next);
-                            }}
-                          />
-                          <span className="flex items-center">
-                            {dim}
-                            <DimensionTooltip dimension={dim} />
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <h3 className="text-sm font-semibold text-slate-700 mb-3">Data Filters</h3>
+                <Filters all={data} onChange={(f) => setFilters(prev => ({ ...prev, ...f }))} />
               </div>
 
               {/* Tools Grid */}
               <CompareSelect all={filtered} selected={compareIds} onChange={setSelected} />
+
+              {/* Dimension Visibility */}
+              <div className="mt-4 pt-4 border-t border-slate-200">
+                <h3 className="text-sm font-semibold text-slate-700 mb-3">Dimension Visibility</h3>
+                <p className="text-xs text-slate-600 mb-3">Toggle dimensions on the radar chart:</p>
+                <div className="flex gap-4 flex-wrap">
+                  {["Autonomy","Collaboration","Context","Governance","Interface"].map(dim => (
+                    <label key={dim} className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={!hiddenDims.has(dim)}
+                        onChange={(e) => {
+                          const next = new Set(hiddenDims);
+                          e.target.checked ? next.delete(dim) : next.add(dim);
+                          setHiddenDims(next);
+                        }}
+                      />
+                      <span className="flex items-center">
+                        {dim}
+                        <DimensionTooltip dimension={dim} />
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
         </div>
