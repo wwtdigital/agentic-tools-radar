@@ -94,8 +94,10 @@ export default function RadarPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setDrawerOpen(!drawerOpen)}
-              className={`px-4 py-2 rounded transition-colors flex items-center gap-2 ${
-                drawerOpen ? 'bg-slate-700' : 'hover:bg-slate-700'
+              className={`px-4 py-2 rounded border-2 transition-all flex items-center gap-2 ${
+                drawerOpen
+                  ? 'bg-slate-700 border-slate-500'
+                  : 'border-slate-600 hover:bg-slate-700 hover:border-slate-500 hover:scale-105'
               }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
