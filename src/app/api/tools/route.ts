@@ -58,7 +58,7 @@ export async function GET() {
         const prop = props[name];
         if (!prop) return 0;
         if (prop[prop.type] && typeof prop[prop.type].number === "number") return prop[prop.type].number;
-        // Handle select 1–5 stored as names
+        // Handle select 1–20 stored as names
         if (prop.select?.name) return Number(prop.select.name) || 0;
         return 0;
       };
@@ -84,11 +84,11 @@ export async function GET() {
         },
         quickTake: readText("Quick Take"),
         dims: {
-          autonomy: readNumberLike("Autonomy"),
+          autonomy: readNumberLike("AI Autonomy"),
           collaboration: readNumberLike("Collaboration"),
-          context: readNumberLike("Context"),
+          context: readNumberLike("Contextual Understanding"),
           governance: readNumberLike("Governance"),
-          interface: readNumberLike("Interface")
+          interface: readNumberLike("User Interface")
         },
         rating: ratingFormula,
         lastEdited: p.last_edited_time

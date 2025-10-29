@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Next.js application for displaying an interactive radar chart of agentic developer tools. The data is sourced from a Notion database with read-only API access. The app renders a radar visualization using Nivo with filtering, comparison, and dimension selection capabilities.
 
-**Tech Stack:** Next.js 15.5.6 (App Router), React 18, TypeScript, Tailwind CSS 3, Nivo 0.99 (radar charts), SWR (data fetching), Zod (validation), Notion API v2.3.0
+**Tech Stack:** Next.js 15.5.6 (App Router), React 18.3.1, TypeScript 5.5.4, Tailwind CSS 3.4.10, Nivo 0.99.0 (radar charts), SWR 2.2.5 (data fetching), Zod 3.23.8 (validation), Notion API v2.2.15
 
 ## Development Commands
 
@@ -51,20 +51,25 @@ The API route expects a Notion database with these properties:
 - **Evaluation Status** (Select)
 - **Product URL, Documentation Link, Company URL** (URL fields)
 - **Quick Take** (Rich Text)
-- **Autonomy, Collaboration, Context, Governance, Interface** (Number or Select 1-5)
-- **Rating** (Formula) — calculated overall rating
+- **AI Autonomy, Collaboration, Contextual Understanding, Governance, User Interface** (Number or Select 1-20)
+- **Rating** (Formula) — calculated overall rating (0-100)
 
 The route handles flexible property types (route.ts:56-63), supporting both number and select fields for dimensions.
 
 ### Component Structure
-- **`/app/radar/page.tsx`** — Main page with filters, comparison selector, dimension toggles
-  - State: filters (category/status/months), selected tool IDs, hidden dimensions
+- **`/app/radar/page.tsx`** — Main page with drawer interface, filters, comparison selector, dimension toggles
+  - State: filters (category/status/months), selected tool IDs, hidden dimensions, drawer open/closed
+  - Mobile warning banner for desktop optimization
   - Defaults to top 5 tools by rating when nothing selected
-- **`RadarView.tsx`** — Nivo ResponsiveRadar wrapper
+- **`RadarView.tsx`** — Nivo ResponsiveRadar wrapper with custom logo dots
   - Takes up to 5 tools, transforms dims into Nivo data format
   - Respects `hiddenDims` set to exclude dimensions
-- **`Filters.tsx`** — Category/status/recency filters
-- **`CompareSelect.tsx`** — Multi-select for choosing up to 5 tools
+  - Smart collision detection with auto-stacking for overlapping tool logos
+- **`Filters.tsx`** — Category/status/recency filters with tooltips
+- **`CompareSelect.tsx`** — Category-grouped multi-select for choosing up to 5 tools
+- **`ToolDetails.tsx`** — Selected tools info panel with ratings and dimension breakdowns
+- **`ToolLogo.tsx`** — Logo component with favicon fallbacks and consistent color generation
+- **`DimensionTooltip.tsx`** — Interactive dimension explanations with hover tooltips
 
 ### Styling
 - Tailwind CSS with minimal palette
@@ -84,12 +89,12 @@ Uses `@/` alias for `src/` directory (configured via Next.js).
 
 ## Dependency Management
 
-### Current Versions (Last Updated: 2025-10-25)
+### Current Versions (Last Updated: 2025-01-27)
 - **Next.js:** 15.5.6 (latest stable in 15.x line)
 - **React:** 18.3.1 (avoid React 19 until ecosystem stabilizes)
 - **Nivo:** 0.99.0 (updated from 0.85.1)
-- **@notionhq/client:** 2.3.0 (**DO NOT UPDATE**)
-- **Tailwind CSS:** 3.4.18 (avoid Tailwind 4 - major rewrite)
+- **@notionhq/client:** 2.2.15 (**DO NOT UPDATE**)
+- **Tailwind CSS:** 3.4.10 (avoid Tailwind 4 - major rewrite)
 
 ### Update Policy
 
@@ -99,7 +104,7 @@ Uses `@/` alias for `src/` directory (configured via Next.js).
 - Type definitions (@types/*)
 
 **Do not update without review:**
-- **@notionhq/client** - Version 5.x has breaking changes (removed `databases.list`, new data source API). Current v2.3.0 works perfectly for our read-only database queries. No migration needed.
+- **@notionhq/client** - Version 5.x has breaking changes (removed `databases.list`, new data source API). Current v2.2.15 works perfectly for our read-only database queries. No migration needed.
 - **React 19** - Ecosystem still catching up, many libraries not yet compatible
 - **Tailwind 4** - Complete rewrite with breaking changes requiring migration
 - **Zod 4** - Major version, check for breaking changes first

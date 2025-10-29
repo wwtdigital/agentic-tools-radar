@@ -23,76 +23,160 @@ export default function ArchitecturePage() {
       </nav>
 
       {/* Content */}
-      <main className="mx-auto max-w-4xl px-6 py-12">
+      <main className="mx-auto max-w-4xl px-6 py-16">
         <article className="prose prose-slate max-w-none">
-          <h1>Architecture</h1>
-
-          <p className="lead">
-            Two-tier architecture separating AI-assisted research from interactive presentation.
-          </p>
-
-          <hr />
-
-          <h2>1. Data Collection (Notion Database)</h2>
-
-          <h3>Research Methodology</h3>
-
-          <p><strong>AI-Powered Research Pipeline:</strong></p>
-
-          <p>
-            The research process combines multiple AI platforms with desktop tool integration to ensure
-            comprehensive, accurate tool evaluations:
-          </p>
-
-          <h4>1. Strategic Research (Perplexity Deep Research)</h4>
-          <ul>
-            <li>Generate comprehensive market analysis reports on tool categories</li>
-            <li>Identify emerging trends and patterns across the agentic tools landscape</li>
-            <li>Discover new tools through trend analysis and market monitoring</li>
-            <li>Provide competitive context for evaluation criteria</li>
-            <li>Synthesize industry insights to inform dimension scoring</li>
-          </ul>
-
-          <h4>2. Database Management via MCP (Model Context Protocol)</h4>
-
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 my-6">
-            <p className="font-semibold text-blue-900 mb-2">🔌 Desktop Tool Integration</p>
-            <p className="text-sm text-blue-800">
-              <strong>Model Context Protocol (MCP)</strong> enables Claude Desktop and ChatGPT Desktop
-              to directly access and modify the Notion database through conversational interfaces.
-              This breakthrough integration removes the traditional barrier between AI research and data entry.
+          <div className="text-center mb-16">
+            <h1 className="text-4xl font-bold text-gray-900 mb-6">Architecture</h1>
+            <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+              Two-tier architecture separating AI-assisted research from interactive presentation.
             </p>
           </div>
 
-          <ul>
-            <li><strong>Direct database access</strong> through AI conversations in desktop applications</li>
-            <li><strong>Natural language commands</strong> create/update tool records without manual forms</li>
-            <li><strong>Claude Desktop + ChatGPT Desktop</strong>: Flexible research workflows across platforms</li>
-            <li><strong>Example</strong>: "Add a new tool called Windsurf with Autonomy: 4, Context: 5..." updates Notion directly</li>
-            <li><strong>Conversational iteration</strong> allows rapid refinement of tool profiles</li>
-            <li><strong>Zero-friction workflow</strong>: Research insights flow directly into structured data</li>
-          </ul>
+          <div className="space-y-16">
+            <section className="space-y-8">
+              <div className="border-l-4 border-blue-500 pl-6">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">1. Data Collection (Notion Database)</h2>
+                <h3 className="text-2xl font-semibold text-gray-800 mb-6">Research Methodology</h3>
+              </div>
 
-          <div className="bg-green-50 border-l-4 border-green-500 p-4 my-6">
-            <p className="font-semibold text-green-900 mb-2">⚡ MCP Advantage</p>
-            <p className="text-sm text-green-800">
-              Traditional workflow: Research → Copy notes → Open browser → Navigate to Notion →
-              Find database → Click add → Fill 10+ fields → Save<br /><br />
-              <strong>MCP workflow</strong>: Research → "Add to database: [tool info]" → Done
-            </p>
-          </div>
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-8 mb-8">
+                <h4 className="text-xl font-semibold text-gray-900 mb-4">AI-Powered Research Pipeline</h4>
+                <p className="text-gray-700 leading-relaxed">
+                  The research process combines multiple AI platforms with desktop tool integration to ensure
+                  comprehensive, accurate tool evaluations:
+                </p>
+              </div>
 
-          <h4>3. Row-Level Validation (AI Agents)</h4>
-          <ul>
-            <li>Access individual tool records for detailed fact-checking</li>
-            <li>Verify product specifications, URLs, and company information</li>
-            <li>Cross-reference claims across multiple AI platforms for accuracy</li>
-            <li>Iterative refinement: AI agents review and suggest improvements to existing entries</li>
-            <li>Ensure consistency in how dimensions are scored across similar tools</li>
-          </ul>
+              <div className="space-y-6">
+                <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full mr-3">1</span>
+                    Strategic Research (Perplexity Deep Research)
+                  </h4>
+                  <ul className="space-y-2 text-gray-700">
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      Generate comprehensive market analysis reports on tool categories
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      Identify emerging trends and patterns across the agentic tools landscape
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      Discover new tools through trend analysis and market monitoring
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      Provide competitive context for evaluation criteria
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      Synthesize industry insights to inform dimension scoring
+                    </li>
+                  </ul>
+                </div>
 
-          <h4>Research Workflow Example:</h4>
-          <pre className="bg-slate-50 p-4 rounded-lg text-sm overflow-x-auto">
+                <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <span className="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full mr-3">2</span>
+                    Database Management via MCP (Model Context Protocol)
+                  </h4>
+
+                  <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg mb-6">
+                    <div className="flex items-start">
+                      <span className="text-2xl mr-3">🔌</span>
+                      <div>
+                        <p className="font-semibold text-blue-900 mb-2">Desktop Tool Integration</p>
+                        <p className="text-blue-800 leading-relaxed">
+                          <strong>Model Context Protocol (MCP)</strong> enables Claude Desktop and ChatGPT Desktop
+                          to directly access and modify the Notion database through conversational interfaces.
+                          This breakthrough integration removes the traditional barrier between AI research and data entry.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <ul className="space-y-3 text-gray-700">
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <strong>Direct database access</strong> through AI conversations in desktop applications
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <strong>Natural language commands</strong> create/update tool records without manual forms
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <strong>Claude Desktop + ChatGPT Desktop</strong>: Flexible research workflows across platforms
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <strong>Example</strong>: "Add a new tool called Windsurf with AI Autonomy: 4, Contextual Understanding: 5..." updates Notion directly
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <strong>Conversational iteration</strong> allows rapid refinement of tool profiles
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <strong>Zero-friction workflow</strong>: Research insights flow directly into structured data
+                    </li>
+                  </ul>
+
+                  <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg mt-6">
+                    <div className="flex items-start">
+                      <span className="text-2xl mr-3">⚡</span>
+                      <div>
+                        <p className="font-semibold text-green-900 mb-3">MCP Advantage</p>
+                        <div className="text-green-800 space-y-2">
+                          <p className="text-sm">
+                            <strong>Traditional workflow:</strong> Research → Copy notes → Open browser → Navigate to Notion →
+                            Find database → Click add → Fill 10+ fields → Save
+                          </p>
+                          <p className="text-sm font-semibold">
+                            <strong>MCP workflow:</strong> Research → "Add to database: [tool info]" → Done
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <span className="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-full mr-3">3</span>
+                    Row-Level Validation (AI Agents)
+                  </h4>
+                  <ul className="space-y-2 text-gray-700">
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      Access individual tool records for detailed fact-checking
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      Verify product specifications, URLs, and company information
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      Cross-reference claims across multiple AI platforms for accuracy
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      Iterative refinement: AI agents review and suggest improvements to existing entries
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      Ensure consistency in how dimensions are scored across similar tools
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 rounded-lg p-8">
+                <h4 className="text-lg font-semibold text-gray-900 mb-6">Research Workflow Example</h4>
+                <div className="bg-white rounded-lg p-6 border border-gray-200">
+                  <pre className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap font-mono">
 {`1. Perplexity: "Research agentic IDE assistants released in Q4 2024"
    → Generates comprehensive report with 10+ tools and trend analysis
 
@@ -106,44 +190,135 @@ export default function ArchitecturePage() {
 
 4. Scoring: Apply evaluation framework based on research findings
    → Dimension scores informed by capability analysis and market positioning`}
-          </pre>
+                  </pre>
+                </div>
+              </div>
 
-          <h4>Evaluation Framework:</h4>
+              <div className="bg-white rounded-lg border border-gray-200 p-8 shadow-sm">
+                <h4 className="text-xl font-semibold text-gray-900 mb-6">Evaluation Framework</h4>
+                
+                <div className="mb-8">
+                  <h5 className="text-lg font-medium text-gray-800 mb-4">Five Dimensions (1-20 scale)</h5>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <div className="flex items-start">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mr-3 mt-1">1</span>
+                        <div>
+                          <strong className="text-gray-900">AI Autonomy</strong>
+                          <p className="text-sm text-gray-600">Degree of independent decision-making and task completion</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full mr-3 mt-1">2</span>
+                        <div>
+                          <strong className="text-gray-900">Collaboration</strong>
+                          <p className="text-sm text-gray-600">Multi-user workflows and team integration capabilities</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full mr-3 mt-1">3</span>
+                        <div>
+                          <strong className="text-gray-900">Contextual Understanding</strong>
+                          <p className="text-sm text-gray-600">Ability to understand and leverage codebase/project context</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-start">
+                        <span className="bg-orange-100 text-orange-800 text-xs font-medium px-2 py-1 rounded-full mr-3 mt-1">4</span>
+                        <div>
+                          <strong className="text-gray-900">Governance</strong>
+                          <p className="text-sm text-gray-600">Security, compliance, and administrative controls</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="bg-pink-100 text-pink-800 text-xs font-medium px-2 py-1 rounded-full mr-3 mt-1">5</span>
+                        <div>
+                          <strong className="text-gray-900">User Interface</strong>
+                          <p className="text-sm text-gray-600">User experience, accessibility, and interaction patterns</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-          <p><strong>Five Dimensions (1-5 scale):</strong></p>
-          <ul>
-            <li><strong>Autonomy</strong>: Degree of independent decision-making and task completion</li>
-            <li><strong>Collaboration</strong>: Multi-user workflows and team integration capabilities</li>
-            <li><strong>Context</strong>: Ability to understand and leverage codebase/project context</li>
-            <li><strong>Governance</strong>: Security, compliance, and administrative controls</li>
-            <li><strong>Interface</strong>: User experience, accessibility, and interaction patterns</li>
-          </ul>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <h5 className="text-lg font-medium text-gray-800 mb-4">Scoring Methodology</h5>
+                    <ul className="space-y-2 text-gray-700">
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Metrics grounded in internal evaluation criteria (our team's use cases and requirements)
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Informed by observed market trends and competitive positioning
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Relative scoring: tools compared within categories for consistency
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Formula-driven overall rating (0-100) computed from dimension scores in Notion
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h5 className="text-lg font-medium text-gray-800 mb-4">Quality Assurance</h5>
+                    <ul className="space-y-2 text-gray-700">
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Multi-platform validation prevents single-source bias
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Conversational refinement through MCP enables iterative improvement
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Notion's version history tracks how evaluations evolve
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Deep research reports provide audit trail for scoring decisions
+                      </li>
+                    </ul>
+                  </div>
+                </div>
 
-          <p><strong>Scoring Methodology:</strong></p>
-          <ul>
-            <li>Metrics grounded in internal evaluation criteria (our team's use cases and requirements)</li>
-            <li>Informed by observed market trends and competitive positioning</li>
-            <li>Relative scoring: tools compared within categories for consistency</li>
-            <li>Formula-driven overall rating computed from dimension scores in Notion</li>
-          </ul>
-
-          <p><strong>Quality Assurance:</strong></p>
-          <ul>
-            <li>Multi-platform validation prevents single-source bias</li>
-            <li>Conversational refinement through MCP enables iterative improvement</li>
-            <li>Notion's version history tracks how evaluations evolve</li>
-            <li>Deep research reports provide audit trail for scoring decisions</li>
-          </ul>
-
-          <p><strong>Benefits:</strong></p>
-          <ul>
-            <li><strong>Research velocity</strong>: AI agents + MCP accelerate data collection 10x vs. manual research</li>
-            <li><strong>Quality</strong>: Multi-platform validation ensures accuracy and reduces bias</li>
-            <li><strong>Flexibility</strong>: Desktop tool integration enables rapid iteration without technical barriers</li>
-            <li><strong>Context</strong>: Deep research provides market understanding beyond individual tools</li>
-            <li><strong>Collaboration</strong>: Team members can review and discuss entries via Notion UI</li>
-            <li><strong>Auditability</strong>: Complete edit history and research trail maintained</li>
-          </ul>
+                <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6">
+                  <h5 className="text-lg font-semibold text-gray-900 mb-4">Key Benefits</h5>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                      <h6 className="font-semibold text-gray-900 mb-2">Research velocity</h6>
+                      <p className="text-sm text-gray-600">AI agents + MCP accelerate data collection 10x vs. manual research</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                      <h6 className="font-semibold text-gray-900 mb-2">Quality</h6>
+                      <p className="text-sm text-gray-600">Multi-platform validation ensures accuracy and reduces bias</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                      <h6 className="font-semibold text-gray-900 mb-2">Flexibility</h6>
+                      <p className="text-sm text-gray-600">Desktop tool integration enables rapid iteration without technical barriers</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                      <h6 className="font-semibold text-gray-900 mb-2">Context</h6>
+                      <p className="text-sm text-gray-600">Deep research provides market understanding beyond individual tools</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                      <h6 className="font-semibold text-gray-900 mb-2">Collaboration</h6>
+                      <p className="text-sm text-gray-600">Team members can review and discuss entries via Notion UI</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                      <h6 className="font-semibold text-gray-900 mb-2">Auditability</h6>
+                      <p className="text-sm text-gray-600">Complete edit history and research trail maintained</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
 
           <hr />
 

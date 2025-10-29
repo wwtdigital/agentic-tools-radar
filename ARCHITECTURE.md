@@ -53,18 +53,18 @@ The research process combines multiple AI platforms to ensure comprehensive, acc
 
 **Evaluation Framework:**
 
-**Five Dimensions (1-5 scale):**
-- **Autonomy**: Degree of independent decision-making and task completion
+**Five Dimensions (1-20 scale):**
+- **AI Autonomy**: Degree of independent decision-making and task completion
 - **Collaboration**: Multi-user workflows and team integration capabilities
-- **Context**: Ability to understand and leverage codebase/project context
+- **Contextual Understanding**: Ability to understand and leverage codebase/project context
 - **Governance**: Security, compliance, and administrative controls
-- **Interface**: User experience, accessibility, and interaction patterns
+- **User Interface**: User experience, accessibility, and interaction patterns
 
 **Scoring Methodology:**
 - Metrics grounded in internal evaluation criteria (our team's use cases and requirements)
 - Informed by observed market trends and competitive positioning
 - Relative scoring: tools compared within categories for consistency
-- Formula-driven overall rating computed from dimension scores in Notion
+- Formula-driven overall rating (0-100) computed from dimension scores in Notion
 
 **Quality Assurance:**
 - Multi-platform validation prevents single-source bias
@@ -100,14 +100,17 @@ The research process combines multiple AI platforms to ensure comprehensive, acc
 
 **Interactive Radar**
 - Compare up to 5 tools across dimensions
-- Tool logos via favicon API
+- Tool logos via favicon API with fallback to initials
 - Smart collision detection with auto-stacking
+- Interactive dimension tooltips with detailed explanations
 
 **User Interface**
 - Unified drawer (tools, filters, dimensions)
 - Category-grouped selection with bulk actions
 - Real-time filtering (category, status, recency)
 - Dynamic dimension visibility controls
+- Mobile warning banner for optimal desktop experience
+- Dedicated architecture documentation page (`/architecture`)
 
 ---
 

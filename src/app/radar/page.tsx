@@ -52,12 +52,21 @@ export default function RadarPage() {
     return out.sort((a,b) => (b.rating ?? 0) - (a.rating ?? 0));
   }, [data, filters]);
 
-  const defaultIds = filtered.slice(0, 5).map(t => t.id);
+  // Default tools to display when nothing is selected
+  const defaultToolNames = ["Claude Code", "Gemini Code Assist", "Windsurf", "GitHub Copilot", "Cursor"];
+  const defaultIds = useMemo(() => {
+    const matchedTools = defaultToolNames
+      .map(name => filtered.find(t => t.tool === name))
+      .filter((t): t is Tool => t !== undefined)
+      .map(t => t.id);
+    // Fallback to top 5 by rating if default tools not found
+    return matchedTools.length > 0 ? matchedTools : filtered.slice(0, 5).map(t => t.id);
+  }, [filtered]);
   const compareIds = selected.length ? selected : defaultIds;
-  // Sort selected tools so that newly selected items appear at the top
+  // Sort selected tools by rating (highest to lowest)
   const selectedTools = filtered
     .filter(t => compareIds.includes(t.id))
-    .sort((a, b) => compareIds.indexOf(a.id) - compareIds.indexOf(b.id));
+    .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
 
   if (isLoading) {
     return (
@@ -154,7 +163,7 @@ export default function RadarPage() {
                 <h3 className="text-sm font-semibold text-slate-700 mb-3">Dimension Visibility</h3>
                 <p className="text-xs text-slate-600 mb-3">Toggle dimensions on the radar chart:</p>
                 <div className="flex gap-4 flex-wrap">
-                  {["Autonomy","Collaboration","Context","Governance","Interface"].map(dim => (
+                  {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => (
                     <label key={dim} className="flex items-center gap-2 text-sm">
                       <input
                         type="checkbox"
@@ -167,7 +176,6 @@ export default function RadarPage() {
                       />
                       <span className="flex items-center">
                         {dim}
-                        <DimensionTooltip dimension={dim} />
                       </span>
                     </label>
                   ))}
@@ -188,7 +196,7 @@ export default function RadarPage() {
                 <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
               </div>
               <figcaption className="mt-3 text-xs text-slate-500">
-                Data: Agentic Developer Tools (Notion). Ratings 1–5. Overall <strong>Rating</strong> is your Notion formula.
+                Data: Agentic Developer Tools (Notion). Dimensions rated 1–20. Overall <strong>Rating</strong> (0-100) calculated via Notion formula.
               </figcaption>
             </figure>
           </div>

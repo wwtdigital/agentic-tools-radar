@@ -2,11 +2,11 @@
 import { useState } from "react";
 
 export const DIMENSION_DESCRIPTIONS = {
-  autonomy: "Ability to plan and execute multi-step tasks (assistive → agentic → self-directed)",
-  collaboration: "Human + AI co-creation fluency (prompting → pairing → natural collaboration)",
-  context: "Depth of understanding across repos, projects, and systems (file → repo → ecosystem)",
-  governance: "Enterprise readiness: compliance, observability, and trust controls",
-  interface: "Interaction maturity: keyboard → chat → multimodal (\"vibe coding\")"
+  "AI Autonomy": "Ability to plan and execute multi-step tasks (assistive → agentic → self-directed)",
+  "Collaboration": "Human + AI co-creation fluency (prompting → pairing → natural collaboration)",
+  "Contextual Understanding": "Depth of understanding across repos, projects, and systems (file → repo → ecosystem)",
+  "Governance": "Enterprise readiness: compliance, observability, and trust controls",
+  "User Interface": "Interaction maturity: keyboard → chat → multimodal (\"vibe coding\")"
 } as const;
 
 type DimensionKey = keyof typeof DIMENSION_DESCRIPTIONS;
@@ -17,8 +17,7 @@ export function DimensionTooltip({
   dimension: string
 }) {
   const [isVisible, setIsVisible] = useState(false);
-  const key = dimension.toLowerCase() as DimensionKey;
-  const description = DIMENSION_DESCRIPTIONS[key];
+  const description = DIMENSION_DESCRIPTIONS[dimension as DimensionKey];
 
   if (!description) return null;
 
@@ -46,10 +45,16 @@ export function DimensionTooltip({
         </svg>
       </button>
       {isVisible && (
-        <div className="absolute left-0 top-full mt-1 z-50 w-64 p-3 bg-slate-900 text-white text-xs rounded-lg shadow-xl">
+        <div
+          className="fixed z-[9999] w-64 p-3 bg-slate-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
+          style={{
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
           <div className="font-semibold mb-1">{dimension}</div>
           <div className="text-slate-200 leading-relaxed">{description}</div>
-          <div className="absolute -top-1 left-3 w-2 h-2 bg-slate-900 transform rotate-45"></div>
         </div>
       )}
     </div>

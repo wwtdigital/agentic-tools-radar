@@ -10,7 +10,7 @@ type Tool = {
   urls?: { product?: string };
 };
 
-const DIM_LABELS = ["Autonomy","Collaboration","Context","Governance","Interface"] as const;
+const DIM_LABELS = ["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"] as const;
 type Dim = typeof DIM_LABELS[number];
 
 export function RadarView({
@@ -25,10 +25,20 @@ export function RadarView({
   const selected = tools.filter(t => selectedIds.includes(t.id));
   const dims = DIM_LABELS.filter(d => !hiddenDims.has(d));
 
+  // Map display labels to internal keys
+  const labelToKey: Record<string, keyof Tool['dims']> = {
+    "AI Autonomy": "autonomy",
+    "Collaboration": "collaboration",
+    "Contextual Understanding": "context",
+    "Governance": "governance",
+    "User Interface": "interface"
+  };
+
   const data = dims.map(axis => {
     const row: Record<string, number | string> = { dimension: axis };
     selected.forEach(t => {
-      const value = (t.dims as any)[axis.toLowerCase()] ?? 0;
+      const key = labelToKey[axis];
+      const value = key ? t.dims[key] : 0;
       row[t.tool] = value;
     });
     return row;
@@ -187,8 +197,8 @@ export function RadarView({
       data={data}
       keys={keys}
       indexBy="dimension"
-      maxValue={5}
-      margin={{ top: 40, right: 90, bottom: 50, left: 60 }}
+      maxValue={20}
+      margin={{ top: 40, right: 110, bottom: 50, left: 110 }}
       curve="linearClosed"
       gridLevels={5}
       theme={{
