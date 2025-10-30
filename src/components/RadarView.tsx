@@ -207,13 +207,13 @@ export function RadarView({
         axis: { ticks: { text: { fontSize: 12 } } },
         legends: { text: { fontSize: 12 } }
       }}
-      colors={{ scheme: "category10" }}
+      colors={{ scheme: "blues" }}
       blendMode="multiply"
       borderWidth={2}
-      layers={['grid', 'layers', 'slices', CustomDotsLayer, 'legends']}
+      layers={['grid', 'layers', 'slices', CustomDotsLayer]}
       enableDots={false}
       fillOpacity={0.12}
-      isInteractive
+      isInteractive={false}
     />
   );
 }
