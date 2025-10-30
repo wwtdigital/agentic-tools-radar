@@ -320,48 +320,79 @@ export default function ArchitecturePage() {
               </div>
             </section>
 
-          <hr />
+            <section className="space-y-8">
+              <div className="border-l-4 border-green-500 pl-6">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">2. Presentation Layer (Next.js Application)</h2>
+              </div>
 
-          <h2>2. Presentation Layer (Next.js Application)</h2>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6">Tech Stack</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                      <span className="font-medium text-gray-700">Framework</span>
+                      <span className="text-sm text-gray-600">Next.js 15 + React 18 + TypeScript</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                      <span className="font-medium text-gray-700">Deployment</span>
+                      <span className="text-sm text-gray-600">Vercel (serverless, global CDN)</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                      <span className="font-medium text-gray-700">Visualization</span>
+                      <span className="text-sm text-gray-600">Nivo (D3-based radar charts)</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                      <span className="font-medium text-gray-700">Data Fetching</span>
+                      <span className="text-sm text-gray-600">SWR (client-side caching)</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="font-medium text-gray-700">Validation</span>
+                      <span className="text-sm text-gray-600">Zod (runtime type safety)</span>
+                    </div>
+                  </div>
+                </div>
 
-          <h3>Stack</h3>
-          <ul>
-            <li><strong>Framework</strong>: Next.js 15 + React 18 + TypeScript</li>
-            <li><strong>Deployment</strong>: Vercel (serverless, global CDN)</li>
-            <li><strong>Visualization</strong>: Nivo (D3-based radar charts)</li>
-            <li><strong>Data Fetching</strong>: SWR (client-side caching)</li>
-            <li><strong>Validation</strong>: Zod (runtime type safety)</li>
-          </ul>
+                <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6">Key Features</h3>
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className="font-semibold text-gray-800 mb-3">API Integration (<code className="bg-gray-100 px-2 py-1 rounded text-sm">/api/tools</code>)</h4>
+                      <ul className="space-y-2 text-sm text-gray-600">
+                        <li>• Server-side Notion query (up to 100 tools)</li>
+                        <li>• Schema validation and data transformation</li>
+                        <li>• Graceful fallback to demo data</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-800 mb-3">Interactive Radar</h4>
+                      <ul className="space-y-2 text-sm text-gray-600">
+                        <li>• Compare up to 5 tools across dimensions</li>
+                        <li>• Tool logos via favicon API</li>
+                        <li>• Smart collision detection with auto-stacking</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-800 mb-3">User Interface</h4>
+                      <ul className="space-y-2 text-sm text-gray-600">
+                        <li>• Unified drawer (tools, filters, dimensions)</li>
+                        <li>• Category-grouped selection with bulk actions</li>
+                        <li>• Real-time filtering (category, status, recency)</li>
+                        <li>• Dynamic dimension visibility controls</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
 
-          <h3>Key Features</h3>
+            <section className="space-y-8">
+              <div className="border-l-4 border-purple-500 pl-6">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">Data Flow</h2>
+              </div>
 
-          <h4>API Integration (<code>/api/tools</code>)</h4>
-          <ul>
-            <li>Server-side Notion query (up to 100 tools)</li>
-            <li>Schema validation and data transformation</li>
-            <li>Graceful fallback to demo data</li>
-          </ul>
-
-          <h4>Interactive Radar</h4>
-          <ul>
-            <li>Compare up to 5 tools across dimensions</li>
-            <li>Tool logos via favicon API</li>
-            <li>Smart collision detection with auto-stacking</li>
-          </ul>
-
-          <h4>User Interface</h4>
-          <ul>
-            <li>Unified drawer (tools, filters, dimensions)</li>
-            <li>Category-grouped selection with bulk actions</li>
-            <li>Real-time filtering (category, status, recency)</li>
-            <li>Dynamic dimension visibility controls</li>
-          </ul>
-
-          <hr />
-
-          <h2>Data Flow</h2>
-
-          <pre className="bg-slate-50 p-4 rounded-lg text-sm overflow-x-auto">
+              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-8">
+                <div className="bg-white rounded-lg p-6 border border-gray-200">
+                  <pre className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap font-mono">
 {`AI Research Layer
 ├── Perplexity Desktop → Market analysis & trend reports
 ├── Claude Desktop (MCP) → Conversational database updates
@@ -374,110 +405,197 @@ Next.js API (/api/tools)
 SWR Cache (Client)
         ↓
 React UI (Radar + Controls)`}
-          </pre>
+                  </pre>
+                </div>
+              </div>
+            </section>
 
-          <hr />
+            <section className="space-y-8">
+              <div className="border-l-4 border-orange-500 pl-6">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">Key Benefits</h2>
+              </div>
 
-          <h2>Key Benefits</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                    <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full mr-3">Research</span>
+                  </h3>
+                  <ul className="space-y-3 text-gray-700">
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Velocity</strong>: AI-assisted research + MCP desktop integration dramatically accelerates data collection
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Accuracy</strong>: Multi-platform validation ensures quality
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Scalability</strong>: New tools added quickly through AI workflow
+                      </div>
+                    </li>
+                  </ul>
+                </div>
 
-          <h3>Research</h3>
-          <ul>
-            <li><strong>Velocity</strong>: AI-assisted research + MCP desktop integration dramatically accelerates data collection</li>
-            <li><strong>Accuracy</strong>: Multi-platform validation ensures quality</li>
-            <li><strong>Scalability</strong>: New tools added quickly through AI workflow</li>
-          </ul>
+                <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                    <span className="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full mr-3">Technology</span>
+                  </h3>
+                  <ul className="space-y-3 text-gray-700">
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Type Safety</strong>: TypeScript + Zod prevent runtime errors
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Performance</strong>: Serverless auto-scales, SWR minimizes API calls
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Maintainability</strong>: No database/servers to manage
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Cost</strong>: Pay-per-use serverless model
+                      </div>
+                    </li>
+                  </ul>
+                </div>
 
-          <h3>Technology</h3>
-          <ul>
-            <li><strong>Type Safety</strong>: TypeScript + Zod prevent runtime errors</li>
-            <li><strong>Performance</strong>: Serverless auto-scales, SWR minimizes API calls</li>
-            <li><strong>Maintainability</strong>: No database/servers to manage</li>
-            <li><strong>Cost</strong>: Pay-per-use serverless model</li>
-          </ul>
+                <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                    <span className="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-full mr-3">Operations</span>
+                  </h3>
+                  <ul className="space-y-3 text-gray-700">
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Zero-downtime deploys</strong>: Vercel auto-deploy on git push
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Team collaboration</strong>: Non-technical users edit via Notion
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Audit ready</strong>: Complete edit history maintained
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Fast iteration</strong>: Changes flow instantly to production
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
 
-          <h3>Operations</h3>
-          <ul>
-            <li><strong>Zero-downtime deploys</strong>: Vercel auto-deploy on git push</li>
-            <li><strong>Team collaboration</strong>: Non-technical users edit via Notion</li>
-            <li><strong>Audit ready</strong>: Complete edit history maintained</li>
-            <li><strong>Fast iteration</strong>: Changes flow instantly to production</li>
-          </ul>
+            <section className="space-y-8">
+              <div className="border-l-4 border-indigo-500 pl-6">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">Tech Stack Summary</h2>
+              </div>
 
-          <hr />
+              <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Layer</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Technology</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Purpose</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 bg-white">
+                      <tr className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Research</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Notion MCP (Claude/ChatGPT Desktop), Perplexity</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">AI-assisted data collection via desktop tools</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Data</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Notion Database</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Source of truth with version control</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">API</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Next.js Server Routes</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Transform and validate</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Frontend</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">React + TypeScript</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Interactive UI</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Visualization</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Nivo</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">D3-based radar charts</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Deploy</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Vercel</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Serverless hosting + CDN</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Validation</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Zod</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Runtime type safety</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Cache</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">SWR</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Client-side data management</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
 
-          <h2>Tech Stack Summary</h2>
+            <section className="space-y-8">
+              <div className="bg-gradient-to-r from-slate-50 to-gray-50 border-l-4 border-slate-500 rounded-r-lg p-8">
+                <div className="flex items-start">
+                  <span className="text-3xl mr-4">🏗️</span>
+                  <div>
+                    <h3 className="text-xl font-semibold text-slate-900 mb-3">Architecture Philosophy</h3>
+                    <p className="text-slate-700 leading-relaxed">
+                      Combine AI-assisted research with desktop tool integration (MCP) for rapid, accurate data collection,
+                      paired with modern web infrastructure for robust, scalable delivery.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
 
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead>
-                <tr>
-                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Layer</th>
-                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Technology</th>
-                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Purpose</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                <tr>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">Research</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">Notion MCP (Claude/ChatGPT Desktop), Perplexity</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">AI-assisted data collection via desktop tools</td>
-                </tr>
-                <tr>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">Data</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">Notion Database</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">Source of truth with version control</td>
-                </tr>
-                <tr>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">API</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">Next.js Server Routes</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">Transform and validate</td>
-                </tr>
-                <tr>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">Frontend</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">React + TypeScript</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">Interactive UI</td>
-                </tr>
-                <tr>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">Visualization</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">Nivo</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">D3-based radar charts</td>
-                </tr>
-                <tr>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">Deploy</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">Vercel</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">Serverless hosting + CDN</td>
-                </tr>
-                <tr>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">Validation</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">Zod</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">Runtime type safety</td>
-                </tr>
-                <tr>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">Cache</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">SWR</td>
-                  <td className="px-3 py-4 text-sm text-gray-900">Client-side data management</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <hr />
-
-          <div className="bg-slate-50 border-l-4 border-slate-500 p-4 my-6">
-            <p className="font-semibold text-slate-900">Architecture Philosophy</p>
-            <p className="text-sm text-slate-700 mt-2">
-              Combine AI-assisted research with desktop tool integration (MCP) for rapid, accurate data collection,
-              paired with modern web infrastructure for robust, scalable delivery.
-            </p>
-          </div>
-
-          <div className="mt-12 pt-8 border-t text-center">
-            <a
-              href="/radar"
-              className="inline-block bg-black text-white px-6 py-3 rounded hover:bg-slate-800 transition-colors"
-            >
-              View the Radar →
-            </a>
+            <div className="mt-16 pt-8 border-t border-gray-200 text-center">
+              <a
+                href="/radar"
+                className="inline-flex items-center bg-black text-white px-8 py-4 rounded-lg hover:bg-slate-800 transition-colors font-medium text-lg"
+              >
+                View the Radar
+                <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
           </div>
         </article>
       </main>
