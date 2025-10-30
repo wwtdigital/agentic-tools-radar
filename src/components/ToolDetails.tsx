@@ -15,11 +15,11 @@ type Tool = {
 };
 
 const DIMENSION_LABELS = [
-  { key: "autonomy", label: "Autonomy" },
+  { key: "autonomy", label: "AI Autonomy" },
   { key: "collaboration", label: "Collaboration" },
-  { key: "context", label: "Context" },
+  { key: "context", label: "Contextual Understanding" },
   { key: "governance", label: "Governance" },
-  { key: "interface", label: "Interface" }
+  { key: "interface", label: "User Interface" }
 ] as const;
 
 export function ToolDetails({ tools }: { tools: Tool[] }) {
