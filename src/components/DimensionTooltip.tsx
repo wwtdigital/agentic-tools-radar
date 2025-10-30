@@ -45,16 +45,10 @@ export function DimensionTooltip({
         </svg>
       </button>
       {isVisible && (
-        <div
-          className="fixed z-[9999] w-64 p-3 bg-slate-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
-          style={{
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)'
-          }}
-        >
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-[9999] w-64 p-3 bg-slate-900 text-white text-xs rounded-lg shadow-xl pointer-events-none">
           <div className="font-semibold mb-1">{dimension}</div>
           <div className="text-slate-200 leading-relaxed">{description}</div>
+          <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-slate-900"></div>
         </div>
       )}
     </div>
