@@ -16,29 +16,35 @@ export function Toast({ message, type = "error", onClose, duration = 5000 }: Toa
     return () => clearTimeout(timer);
   }, [onClose, duration]);
 
-  const bgColor = {
-    error: "bg-red-50 border-red-200",
-    success: "bg-green-50 border-green-200",
-    info: "bg-blue-50 border-blue-200",
-  }[type];
-
-  const textColor = {
-    error: "text-red-800",
-    success: "text-green-800",
-    info: "text-blue-800",
+  const styles = {
+    error: {
+      bg: "bg-red-50 border-red-200",
+      text: "text-red-800",
+      button: "text-red-400 hover:text-red-600",
+    },
+    success: {
+      bg: "bg-green-50 border-green-200",
+      text: "text-green-800",
+      button: "text-green-400 hover:text-green-600",
+    },
+    info: {
+      bg: "bg-blue-50 border-blue-200",
+      text: "text-blue-800",
+      button: "text-blue-400 hover:text-blue-600",
+    },
   }[type];
 
   return (
     <div className="fixed top-4 right-4 z-50 animate-slide-in">
       <div
-        className={`${bgColor} ${textColor} px-4 py-3 rounded border shadow-lg max-w-md flex items-start gap-3`}
+        className={`${styles.bg} ${styles.text} px-4 py-3 rounded border shadow-lg max-w-md flex items-start gap-3`}
       >
         <div className="flex-1">
           <p className="text-sm font-medium">{message}</p>
         </div>
         <button
           onClick={onClose}
-          className="text-gray-400 hover:text-gray-600 transition-colors"
+          className={`${styles.button} transition-colors`}
           aria-label="Close"
         >
           <svg
