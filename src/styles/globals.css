@@ -5,3 +5,18 @@
 :root { color-scheme: light dark; }
 body { @apply text-gray-900 bg-white dark:bg-[#0a0a0a] dark:text-[#f2f2f2]; }
 figure { @apply bg-white dark:bg-[#0f0f10]; }
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}

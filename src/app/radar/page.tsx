@@ -7,6 +7,7 @@ import { Filters } from "@/components/Filters";
 import { CompareSelect } from "@/components/CompareSelect";
 import { ToolDetails } from "@/components/ToolDetails";
 import { DimensionTooltip } from "@/components/DimensionTooltip";
+import { Toast } from "@/components/Toast";
 
 type Tool = {
   id: string;
@@ -30,6 +31,7 @@ export default function RadarPage() {
   const [hiddenDims, setHiddenDims] = useState<Set<string>>(new Set());
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [isExporting, setIsExporting] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const radarRef = useRef<HTMLDivElement>(null);
 
   // Export radar chart as PNG
@@ -52,7 +54,7 @@ export default function RadarPage() {
       link.click();
     } catch (error) {
       console.error('Export failed:', error);
-      alert('Failed to export chart. Please try again.');
+      setToastMessage('Failed to export chart. Please try again.');
     } finally {
       setIsExporting(false);
     }
@@ -244,6 +246,15 @@ export default function RadarPage() {
           </div>
         </div>
       </main>
+
+      {/* Toast Notification */}
+      {toastMessage && (
+        <Toast
+          message={toastMessage}
+          type="error"
+          onClose={() => setToastMessage(null)}
+        />
+      )}
     </>
   );
 }
