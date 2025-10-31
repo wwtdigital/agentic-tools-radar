@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       status: 200,
       headers: {
         'Content-Type': response.headers.get('Content-Type') || 'image/png',
-        'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800', // Cache for 1 day, revalidate for 1 week
+        'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800', // Cache for 1 day, allow serving stale responses for up to 1 week while revalidating
       },
     });
   } catch (error) {
