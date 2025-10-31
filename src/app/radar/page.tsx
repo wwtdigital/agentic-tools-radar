@@ -129,32 +129,19 @@ export default function RadarPage() {
       <nav className="w-full bg-black text-white relative z-20">
         <div className="px-6 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Agentic Developer Tools Radar</h1>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleExport}
-              disabled={isExporting}
-              className="px-4 py-2 rounded border border-slate-600 hover:bg-slate-700 hover:border-slate-500 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              title="Export radar chart as PNG"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              <span className="text-sm font-medium">{isExporting ? 'Exporting...' : 'Export PNG'}</span>
-            </button>
-            <button
-              onClick={() => setDrawerOpen(!drawerOpen)}
-              className={`px-4 py-2 rounded border transition-colors flex items-center gap-2 ${
-                drawerOpen
-                  ? 'bg-slate-700 border-slate-500'
-                  : 'border-slate-600 hover:bg-slate-700 hover:border-slate-500'
-              }`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-              <span className="text-sm font-medium">Add Tools & Edit Filters</span>
-            </button>
-          </div>
+          <button
+            onClick={() => setDrawerOpen(!drawerOpen)}
+            className={`px-4 py-2 rounded border transition-colors flex items-center gap-2 ${
+              drawerOpen
+                ? 'bg-slate-700 border-slate-500'
+                : 'border-slate-600 hover:bg-slate-700 hover:border-slate-500'
+            }`}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            <span className="text-sm font-medium">Add Tools & Edit Filters</span>
+          </button>
         </div>
       </nav>
 
@@ -227,12 +214,25 @@ export default function RadarPage() {
       </div>
 
       {/* Main Content - Split Layout */}
-      <main className="w-full">
-        <div className="flex gap-6 p-6">
+      <main className="w-full h-[calc(100vh-57px)] flex flex-col">
+        <div className="flex gap-6 p-6 flex-1 min-h-0">
           {/* Left: Radar Chart (2/3) */}
-          <div className="w-2/3">
-            <figure ref={radarRef} className="border rounded p-4 bg-white h-full">
-              <div style={{ height: '700px' }}>
+          <div className="w-2/3 flex flex-col">
+            <div className="flex justify-end mb-3">
+              <button
+                onClick={handleExport}
+                disabled={isExporting}
+                className="px-4 py-2 rounded border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-slate-700"
+                title="Export radar chart as PNG"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span className="text-sm font-medium">{isExporting ? 'Exporting...' : 'Export PNG'}</span>
+              </button>
+            </div>
+            <figure ref={radarRef} className="border rounded p-4 bg-white flex-1 min-h-0">
+              <div className="w-full h-full">
                 <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
               </div>
             </figure>
