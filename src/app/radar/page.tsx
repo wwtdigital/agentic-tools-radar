@@ -38,10 +38,23 @@ export default function RadarPage() {
 
     setIsExporting(true);
     try {
+      // Filter function to skip external images that might cause CORS issues
+      const filter = (node: HTMLElement) => {
+        // Skip external images loaded via <image> tags (favicons)
+        if (node.tagName === 'image') {
+          const href = node.getAttribute('href');
+          if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
+            return false; // Skip external images
+          }
+        }
+        return true;
+      };
+
       const dataUrl = await toPng(radarRef.current, {
         cacheBust: true,
         pixelRatio: 2, // Higher quality export
         backgroundColor: '#ffffff',
+        filter: filter,
       });
 
       // Create download link
@@ -51,7 +64,9 @@ export default function RadarPage() {
       link.click();
     } catch (error) {
       console.error('Failed to export radar chart:', error);
-      alert('Failed to export chart. Please try again.');
+      // Provide more specific error message
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Failed to export chart: ${errorMessage}\n\nPlease try again or check the browser console for details.`);
     } finally {
       setIsExporting(false);
     }
