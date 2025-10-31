@@ -90,7 +90,7 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
                         </div>
                       )}
                     </div>
-                    <div className="text-xl font-semibold text-slate-900 ml-3 flex-shrink-0">
+                    <div className="text-xl font-semibold text-slate-900 ml-3 pl-3 border-l-2 border-slate-300 flex-shrink-0">
                       {value}
                     </div>
                   </div>

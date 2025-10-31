@@ -37,67 +37,22 @@ export default function RadarPage() {
     if (!radarRef.current) return;
 
     setIsExporting(true);
-    console.log('Starting export...');
 
     try {
-      // More comprehensive filter to handle SVG elements
-      const filter = (node: Node) => {
-        // Filter out SVG image elements with external hrefs
-        if (node instanceof SVGImageElement) {
-          const href = node.getAttribute('href') || node.getAttribute('xlink:href');
-          if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
-            console.log('Filtering out external image:', href);
-            return false;
-          }
-        }
-        return true;
-      };
-
-      console.log('Attempting to convert DOM to PNG...');
-
-      // Try export with more forgiving options and retry logic
-      let dataUrl: string | null = null;
-      let lastError: Error | null = null;
-
-      // Try multiple times with different settings
-      for (let attempt = 0; attempt < 3; attempt++) {
-        try {
-          dataUrl = await toPng(radarRef.current, {
-            cacheBust: attempt === 0, // Try with cache bust first, then without
-            pixelRatio: 2,
-            backgroundColor: '#ffffff',
-            filter: filter,
-            skipAutoScale: true,
-          });
-          console.log('Export successful on attempt', attempt + 1);
-          break;
-        } catch (err) {
-          lastError = err instanceof Error ? err : new Error('Unknown error');
-          console.warn(`Attempt ${attempt + 1} failed:`, err);
-          // Wait a bit before retrying
-          await new Promise(resolve => setTimeout(resolve, 100));
-        }
-      }
-
-      if (!dataUrl) {
-        throw lastError || new Error('Failed after multiple attempts');
-      }
+      const dataUrl = await toPng(radarRef.current, {
+        cacheBust: false,
+        pixelRatio: 2,
+        backgroundColor: '#ffffff',
+      });
 
       // Create download link
       const link = document.createElement('a');
       link.download = `agentic-tools-radar-${new Date().toISOString().split('T')[0]}.png`;
       link.href = dataUrl;
       link.click();
-      console.log('Download triggered successfully');
     } catch (error) {
       console.error('Export failed:', error);
-      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
-
-      // More detailed error reporting
-      const errorMessage = error instanceof Error
-        ? `${error.name}: ${error.message}`
-        : 'Unknown error occurred';
-      alert(`Failed to export chart: ${errorMessage}\n\nPlease check the browser console for more details.`);
+      alert('Failed to export chart. Please try again.');
     } finally {
       setIsExporting(false);
     }
@@ -280,9 +235,6 @@ export default function RadarPage() {
               <div style={{ height: '700px' }}>
                 <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
               </div>
-              <figcaption className="mt-3 text-xs text-slate-500">
-                Data: Agentic Developer Tools (Notion). Dimensions rated 1–20. Overall <strong>Rating</strong> (0-100) calculated via Notion formula.
-              </figcaption>
             </figure>
           </div>
 
