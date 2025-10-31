@@ -46,6 +46,9 @@ export function Toast({ message, type = "error", onClose, duration = 5000 }: Toa
   return (
     <div className="fixed top-4 right-4 z-50 animate-slide-in">
       <div
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
         className={`${styles.bg} ${styles.text} px-4 py-3 rounded border shadow-lg max-w-md flex items-start gap-3`}
       >
         <div className="flex-1">
@@ -54,7 +57,7 @@ export function Toast({ message, type = "error", onClose, duration = 5000 }: Toa
         <button
           onClick={onClose}
           className={`${styles.button} transition-colors`}
-          aria-label="Close"
+          aria-label="Close notification"
         >
           <svg
             className="w-4 h-4"
