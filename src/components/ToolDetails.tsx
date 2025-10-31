@@ -1,5 +1,5 @@
 "use client";
-import { DimensionTooltip } from "@/components/DimensionTooltip";
+import { DIMENSION_DESCRIPTIONS } from "@/components/DimensionTooltip";
 import { ToolLogo } from "@/components/ToolLogo";
 
 type Tool = {
@@ -74,16 +74,23 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
             <div className="space-y-1 mb-3">
               {DIMENSION_LABELS.map(({ key, label }) => {
                 const value = tool.dims[key];
+                const description = DIMENSION_DESCRIPTIONS[label as keyof typeof DIMENSION_DESCRIPTIONS];
                 return (
                   <div
                     key={key}
                     className="flex items-center justify-between bg-slate-50 rounded px-3 py-2"
                   >
-                    <div className="text-xs text-slate-600 flex items-center gap-1">
-                      {label}
-                      <DimensionTooltip dimension={label} />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-medium text-slate-900">
+                        {label}
+                      </div>
+                      {description && (
+                        <div className="text-xs text-slate-500 mt-0.5">
+                          {description}
+                        </div>
+                      )}
                     </div>
-                    <div className="text-base font-semibold text-slate-900">
+                    <div className="text-xl font-semibold text-slate-900 ml-3 flex-shrink-0">
                       {value}
                     </div>
                   </div>
