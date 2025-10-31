@@ -37,36 +37,67 @@ export default function RadarPage() {
     if (!radarRef.current) return;
 
     setIsExporting(true);
+    console.log('Starting export...');
+
     try {
-      // Filter function to skip external images that might cause CORS issues
-      const filter = (node: HTMLElement) => {
-        // Skip external images loaded via <image> tags (favicons)
-        if (node.tagName === 'image') {
-          const href = node.getAttribute('href');
+      // More comprehensive filter to handle SVG elements
+      const filter = (node: Node) => {
+        // Filter out SVG image elements with external hrefs
+        if (node instanceof SVGImageElement) {
+          const href = node.getAttribute('href') || node.getAttribute('xlink:href');
           if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
-            return false; // Skip external images
+            console.log('Filtering out external image:', href);
+            return false;
           }
         }
         return true;
       };
 
-      const dataUrl = await toPng(radarRef.current, {
-        cacheBust: true,
-        pixelRatio: 2, // Higher quality export
-        backgroundColor: '#ffffff',
-        filter: filter,
-      });
+      console.log('Attempting to convert DOM to PNG...');
+
+      // Try export with more forgiving options and retry logic
+      let dataUrl: string | null = null;
+      let lastError: Error | null = null;
+
+      // Try multiple times with different settings
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          dataUrl = await toPng(radarRef.current, {
+            cacheBust: attempt === 0, // Try with cache bust first, then without
+            pixelRatio: 2,
+            backgroundColor: '#ffffff',
+            filter: filter,
+            skipAutoScale: true,
+          });
+          console.log('Export successful on attempt', attempt + 1);
+          break;
+        } catch (err) {
+          lastError = err instanceof Error ? err : new Error('Unknown error');
+          console.warn(`Attempt ${attempt + 1} failed:`, err);
+          // Wait a bit before retrying
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+      }
+
+      if (!dataUrl) {
+        throw lastError || new Error('Failed after multiple attempts');
+      }
 
       // Create download link
       const link = document.createElement('a');
       link.download = `agentic-tools-radar-${new Date().toISOString().split('T')[0]}.png`;
       link.href = dataUrl;
       link.click();
+      console.log('Download triggered successfully');
     } catch (error) {
-      console.error('Failed to export radar chart:', error);
-      // Provide more specific error message
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      alert(`Failed to export chart: ${errorMessage}\n\nPlease try again or check the browser console for details.`);
+      console.error('Export failed:', error);
+      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+
+      // More detailed error reporting
+      const errorMessage = error instanceof Error
+        ? `${error.name}: ${error.message}`
+        : 'Unknown error occurred';
+      alert(`Failed to export chart: ${errorMessage}\n\nPlease check the browser console for more details.`);
     } finally {
       setIsExporting(false);
     }
