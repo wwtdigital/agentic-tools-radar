@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Client } from "@notionhq/client";
-import type { PageObjectResponse, PartialPageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 // Validate URLs to prevent malicious protocols (javascript:, data:, etc.)
 const validateUrl = (url: string): string | undefined => {
@@ -67,34 +67,42 @@ export async function GET() {
 
   try {
     const pages = await notion.databases.query({ database_id: DB_ID, page_size: 100 });
-    const items = (await Promise.all(pages.results.map(async (p: PageObjectResponse | PartialPageObjectResponse) => {
-      // Type guard to ensure we have a full page object
-      if (!("properties" in p)) {
+    const items = (await Promise.all(pages.results.map(async (p) => {
+      // Type guard to ensure we have a full page object (not a database object or partial)
+      if (p.object !== "page" || !("properties" in p) || !("last_edited_time" in p)) {
         return null;
       }
 
-      const props = p.properties;
+      const page = p as PageObjectResponse;
+      const props = page.properties;
       const readSelect = (name: string) => {
         const prop = props[name];
         if (!prop || (prop.type !== "select" && prop.type !== "multi_select")) return undefined;
-        if (prop.type === "select") return prop.select?.name;
-        if (prop.type === "multi_select") return prop.multi_select?.[0]?.name;
+        if (prop.type === "select" && "select" in prop && prop.select && typeof prop.select === "object" && "name" in prop.select) {
+          return prop.select.name;
+        }
+        if (prop.type === "multi_select" && "multi_select" in prop && Array.isArray(prop.multi_select) && prop.multi_select.length > 0) {
+          const first = prop.multi_select[0];
+          if (first && typeof first === "object" && "name" in first) {
+            return first.name;
+          }
+        }
         return undefined;
       };
       const readURL = (name: string) => {
         const prop = props[name];
         if (!prop || prop.type !== "url") return "";
-        const url = prop.url ?? "";
+        const url = typeof prop.url === "string" ? prop.url : "";
         return url;
       };
       const readTitle = (name: string) => {
         const prop = props[name];
-        if (!prop || prop.type !== "title") return "";
+        if (!prop || prop.type !== "title" || !Array.isArray(prop.title)) return "";
         return prop.title[0]?.plain_text ?? "";
       };
       const readText = (name: string) => {
         const prop = props[name];
-        if (!prop || prop.type !== "rich_text") return "";
+        if (!prop || prop.type !== "rich_text" || !Array.isArray(prop.rich_text)) return "";
         return prop.rich_text[0]?.plain_text ?? "";
       };
       const readNumberLike = (name: string) => {
@@ -107,7 +115,7 @@ export async function GET() {
         }
         
         // Handle select with numeric names (1-20)
-        if (prop.type === "select" && prop.select?.name) {
+        if (prop.type === "select" && "select" in prop && prop.select && typeof prop.select === "object" && "name" in prop.select) {
           return Number(prop.select.name) || 0;
         }
         
@@ -117,7 +125,12 @@ export async function GET() {
       const ratingProp = props["Rating"];
       const ratingFormula = ratingProp && 
         ratingProp.type === "formula" && 
-        ratingProp.formula.type === "number" 
+        "formula" in ratingProp &&
+        ratingProp.formula &&
+        typeof ratingProp.formula === "object" &&
+        "type" in ratingProp.formula &&
+        ratingProp.formula.type === "number" &&
+        "number" in ratingProp.formula
           ? ratingProp.formula.number 
           : null;
 
@@ -129,7 +142,7 @@ export async function GET() {
       }
 
       const tool = {
-        id: p.id,
+        id: page.id,
         tool: toolName,
         company: readText("Company"),
         category: readSelect("Category") || "",
@@ -148,7 +161,7 @@ export async function GET() {
           interface: readNumberLike("User Interface")
         },
         rating: ratingFormula,
-        lastEdited: p.last_edited_time
+        lastEdited: page.last_edited_time
       };
       return ToolSchema.parse(tool);
     }))).filter((item): item is z.infer<typeof ToolSchema> => item !== null);
