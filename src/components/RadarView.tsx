@@ -46,13 +46,13 @@ export function RadarView({
 
   const keys = selected.map(t => t.tool);
 
-  // Get favicon URL from product URL
+  // Get favicon URL from product URL through our proxy to avoid CORS
   const getFaviconUrl = (url?: string): string | undefined => {
     if (!url) return undefined;
     try {
       const urlObj = new URL(url);
       const domain = urlObj.hostname;
-      return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+      return `/api/favicon?domain=${domain}`;
     } catch {
       return undefined;
     }

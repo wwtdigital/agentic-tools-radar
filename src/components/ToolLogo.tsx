@@ -9,7 +9,7 @@ type ToolLogoProps = {
   className?: string;
 };
 
-// Extract domain from URL and generate favicon URL
+// Extract domain from URL and generate favicon URL through our proxy
 function getFaviconUrl(url?: string): string | undefined {
   if (!url) return undefined;
 
@@ -17,8 +17,8 @@ function getFaviconUrl(url?: string): string | undefined {
     const urlObj = new URL(url);
     const domain = urlObj.hostname;
 
-    // Use Google's favicon service as a reliable fallback
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+    // Use our proxy endpoint to avoid CORS issues
+    return `/api/favicon?domain=${domain}`;
   } catch {
     return undefined;
   }
