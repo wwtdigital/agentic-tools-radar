@@ -1,6 +1,25 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Client } from "@notionhq/client";
+import type { PageObjectResponse, PartialPageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+
+// Validate URLs to prevent malicious protocols (javascript:, data:, etc.)
+const validateUrl = (url: string): string | undefined => {
+  if (!url || url.trim() === "") return undefined;
+  
+  try {
+    const urlObj = new URL(url);
+    // Only allow http and https protocols
+    if (!["http:", "https:"].includes(urlObj.protocol)) {
+      return undefined;
+    }
+    return url;
+  } catch {
+    return undefined;
+  }
+};
+
+const urlSchema = z.string().url().optional().or(z.literal("").transform(() => undefined));
 
 const ToolSchema = z.object({
   id: z.string(),
@@ -9,9 +28,9 @@ const ToolSchema = z.object({
   category: z.string(),
   status: z.string().optional(),
   urls: z.object({
-    product: z.string().optional(),
-    docs: z.string().optional(),
-    company: z.string().optional()
+    product: urlSchema,
+    docs: urlSchema,
+    company: urlSchema
   }),
   quickTake: z.string().optional(),
   dims: z.object({
@@ -25,12 +44,12 @@ const ToolSchema = z.object({
   lastEdited: z.string()
 });
 
-const notion = new Client({ auth: process.env.NOTION_API_KEY! });
-const DB_ID = process.env.NOTION_DB_ID!;
+const notion = process.env.NOTION_API_KEY ? new Client({ auth: process.env.NOTION_API_KEY }) : null;
+const DB_ID = process.env.NOTION_DB_ID;
 
 export async function GET() {
   // If no Notion credentials, serve a small demo dataset
-  if (!process.env.NOTION_API_KEY || !process.env.NOTION_DB_ID) {
+  if (!notion || !DB_ID) {
     const demo = [{
       id: "demo-1",
       tool: "Windsurf",
@@ -48,21 +67,59 @@ export async function GET() {
 
   try {
     const pages = await notion.databases.query({ database_id: DB_ID, page_size: 100 });
-    const items = (await Promise.all(pages.results.map(async (p: any) => {
+    const items = (await Promise.all(pages.results.map(async (p: PageObjectResponse | PartialPageObjectResponse) => {
+      // Type guard to ensure we have a full page object
+      if (!("properties" in p)) {
+        return null;
+      }
+
       const props = p.properties;
-      const readSelect = (name: string) => props[name]?.select?.name ?? props[name]?.multi_select?.[0]?.name;
-      const readURL = (name: string) => props[name]?.url ?? "";
-      const readTitle = (name: string) => props[name]?.title?.[0]?.plain_text ?? "";
-      const readText = (name: string) => props[name]?.rich_text?.[0]?.plain_text ?? "";
+      const readSelect = (name: string) => {
+        const prop = props[name];
+        if (!prop || (prop.type !== "select" && prop.type !== "multi_select")) return undefined;
+        if (prop.type === "select") return prop.select?.name;
+        if (prop.type === "multi_select") return prop.multi_select?.[0]?.name;
+        return undefined;
+      };
+      const readURL = (name: string) => {
+        const prop = props[name];
+        if (!prop || prop.type !== "url") return "";
+        const url = prop.url ?? "";
+        return url;
+      };
+      const readTitle = (name: string) => {
+        const prop = props[name];
+        if (!prop || prop.type !== "title") return "";
+        return prop.title[0]?.plain_text ?? "";
+      };
+      const readText = (name: string) => {
+        const prop = props[name];
+        if (!prop || prop.type !== "rich_text") return "";
+        return prop.rich_text[0]?.plain_text ?? "";
+      };
       const readNumberLike = (name: string) => {
         const prop = props[name];
         if (!prop) return 0;
-        if (prop[prop.type] && typeof prop[prop.type].number === "number") return prop[prop.type].number;
-        // Handle select 1–20 stored as names
-        if (prop.select?.name) return Number(prop.select.name) || 0;
+        
+        // Handle number type
+        if (prop.type === "number" && typeof prop.number === "number") {
+          return prop.number;
+        }
+        
+        // Handle select with numeric names (1-20)
+        if (prop.type === "select" && prop.select?.name) {
+          return Number(prop.select.name) || 0;
+        }
+        
         return 0;
       };
-      const ratingFormula = props["Rating"]?.formula?.number ?? null;
+      
+      const ratingProp = props["Rating"];
+      const ratingFormula = ratingProp && 
+        ratingProp.type === "formula" && 
+        ratingProp.formula.type === "number" 
+          ? ratingProp.formula.number 
+          : null;
 
       const toolName = readTitle("Tool") || readTitle("Name") || "";
 
@@ -78,9 +135,9 @@ export async function GET() {
         category: readSelect("Category") || "",
         status: readSelect("Evaluation Status") || "",
         urls: {
-          product: readURL("Product URL"),
-          docs: readURL("Documentation Link"),
-          company: readURL("Company URL")
+          product: validateUrl(readURL("Product URL")),
+          docs: validateUrl(readURL("Documentation Link")),
+          company: validateUrl(readURL("Company URL"))
         },
         quickTake: readText("Quick Take"),
         dims: {
@@ -94,11 +151,12 @@ export async function GET() {
         lastEdited: p.last_edited_time
       };
       return ToolSchema.parse(tool);
-    }))).filter(item => item !== null);
+    }))).filter((item): item is z.infer<typeof ToolSchema> => item !== null);
 
     return NextResponse.json(items);
   } catch (error) {
-    console.error("Error fetching from Notion:", error);
+    // Log full error for server-side debugging but don't expose details to client
+    console.error("Error fetching from Notion:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Failed to fetch tools data" },
       { status: 500 }
