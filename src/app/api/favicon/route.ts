@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Validate domain format to prevent abuse
-  if (!/^[a-zA-Z0-9][a-zA-Z0-9-_.]+[a-zA-Z0-9]$/.test(domain)) {
+  if (!/^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/.test(domain)) {
     return NextResponse.json({ error: "Invalid domain format" }, { status: 400 });
   }
 
