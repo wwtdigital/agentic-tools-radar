@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 type ToastProps = {
   message: string;
@@ -7,32 +7,41 @@ type ToastProps = {
   duration?: number;
 };
 
+const TOAST_STYLES = {
+  error: {
+    bg: "bg-red-50 border-red-200",
+    text: "text-red-800",
+    button: "text-red-400 hover:text-red-600",
+  },
+  success: {
+    bg: "bg-green-50 border-green-200",
+    text: "text-green-800",
+    button: "text-green-400 hover:text-green-600",
+  },
+  info: {
+    bg: "bg-blue-50 border-blue-200",
+    text: "text-blue-800",
+    button: "text-blue-400 hover:text-blue-600",
+  },
+} as const;
+
 export function Toast({ message, type = "error", onClose, duration = 5000 }: ToastProps) {
+  const onCloseRef = useRef(onClose);
+  
+  // Keep ref up to date
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      onClose();
+      onCloseRef.current();
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [onClose, duration]);
+  }, [duration]);
 
-  const styles = {
-    error: {
-      bg: "bg-red-50 border-red-200",
-      text: "text-red-800",
-      button: "text-red-400 hover:text-red-600",
-    },
-    success: {
-      bg: "bg-green-50 border-green-200",
-      text: "text-green-800",
-      button: "text-green-400 hover:text-green-600",
-    },
-    info: {
-      bg: "bg-blue-50 border-blue-200",
-      text: "text-blue-800",
-      button: "text-blue-400 hover:text-blue-600",
-    },
-  }[type];
+  const styles = TOAST_STYLES[type];
 
   return (
     <div className="fixed top-4 right-4 z-50 animate-slide-in">
