@@ -1,6 +1,6 @@
 "use client";
 import useSWR from "swr";
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import { toPng } from "html-to-image";
 import { RadarView } from "@/components/RadarView";
 import { Filters } from "@/components/Filters";
@@ -33,6 +33,11 @@ export default function RadarPage() {
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const radarRef = useRef<HTMLDivElement>(null);
+
+  // Close toast notification
+  const handleCloseToast = useCallback(() => {
+    setToastMessage(null);
+  }, []);
 
   // Export radar chart as PNG
   const handleExport = async () => {
@@ -252,7 +257,7 @@ export default function RadarPage() {
         <Toast
           message={toastMessage}
           type="error"
-          onClose={() => setToastMessage(null)}
+          onClose={handleCloseToast}
         />
       )}
     </>

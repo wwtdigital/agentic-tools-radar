@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 type ToastProps = {
   message: string;
@@ -26,20 +26,13 @@ const TOAST_STYLES = {
 } as const;
 
 export function Toast({ message, type = "error", onClose, duration = 5000 }: ToastProps) {
-  const onCloseRef = useRef(onClose);
-  
-  // Keep ref up to date
-  useEffect(() => {
-    onCloseRef.current = onClose;
-  }, [onClose]);
-
   useEffect(() => {
     const timer = setTimeout(() => {
-      onCloseRef.current();
+      onClose();
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [duration]);
+  }, [onClose, duration]);
 
   const styles = TOAST_STYLES[type];
 
