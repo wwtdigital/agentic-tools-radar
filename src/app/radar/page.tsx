@@ -1,6 +1,7 @@
 "use client";
 import useSWR from "swr";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
+import { toPng } from "html-to-image";
 import { RadarView } from "@/components/RadarView";
 import { Filters } from "@/components/Filters";
 import { CompareSelect } from "@/components/CompareSelect";
@@ -28,6 +29,33 @@ export default function RadarPage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [hiddenDims, setHiddenDims] = useState<Set<string>>(new Set());
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
+  const radarRef = useRef<HTMLDivElement>(null);
+
+  // Export radar chart as PNG
+  const handleExport = async () => {
+    if (!radarRef.current) return;
+
+    setIsExporting(true);
+    try {
+      const dataUrl = await toPng(radarRef.current, {
+        cacheBust: true,
+        pixelRatio: 2, // Higher quality export
+        backgroundColor: '#ffffff',
+      });
+
+      // Create download link
+      const link = document.createElement('a');
+      link.download = `agentic-tools-radar-${new Date().toISOString().split('T')[0]}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error('Failed to export radar chart:', error);
+      alert('Failed to export chart. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   // Lock body scroll when drawer is open
   useEffect(() => {
@@ -101,6 +129,17 @@ export default function RadarPage() {
         <div className="px-6 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Agentic Developer Tools Radar</h1>
           <div className="flex items-center gap-3">
+            <button
+              onClick={handleExport}
+              disabled={isExporting}
+              className="px-4 py-2 rounded border border-slate-600 hover:bg-slate-700 hover:border-slate-500 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Export radar chart as PNG"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span className="text-sm font-medium">{isExporting ? 'Exporting...' : 'Export PNG'}</span>
+            </button>
             <button
               onClick={() => setDrawerOpen(!drawerOpen)}
               className={`px-4 py-2 rounded border transition-colors flex items-center gap-2 ${
@@ -191,7 +230,7 @@ export default function RadarPage() {
         <div className="flex gap-6 p-6">
           {/* Left: Radar Chart (2/3) */}
           <div className="w-2/3">
-            <figure className="border rounded p-4 bg-white h-full">
+            <figure ref={radarRef} className="border rounded p-4 bg-white h-full">
               <div style={{ height: '700px' }}>
                 <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
               </div>
