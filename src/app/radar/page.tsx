@@ -233,7 +233,7 @@ export default function RadarPage() {
                     <button
                       key={cat}
                       onClick={() => setFilters(prev => ({ ...prev, category: prev.category === cat ? undefined : cat }))}
-                      className={`px-3 py-1.5 text-xs border rounded transition-colors ${
+                      className={`px-4 py-2 text-sm border rounded transition-colors ${
                         filters.category === cat
                           ? "bg-slate-900 text-white border-slate-900"
                           : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
