@@ -105,7 +105,7 @@ export function ToolLogo({
   }
 
   return (
-    <div className={`${sizeClasses[size]} rounded-lg overflow-hidden bg-white border border-slate-200 flex items-center justify-center ${className}`}>
+    <div className={`${sizeClasses[size]} rounded-lg overflow-hidden bg-slate-100 border border-slate-300 flex items-center justify-center ${className}`}>
       <img
         src={displayUrl}
         alt={`${toolName} logo`}
