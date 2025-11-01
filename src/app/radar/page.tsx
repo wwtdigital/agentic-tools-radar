@@ -84,13 +84,19 @@ export default function RadarPage() {
   // Default tools to display when nothing is selected
   const defaultToolNames = ["Claude Code", "Gemini Code Assist", "Windsurf", "GitHub Copilot", "Cursor"];
   const defaultIds = useMemo(() => {
+    // If a category filter is active and no manual selection, show all tools in that category
+    if (filters.category && selected.length === 0) {
+      return filtered.map(t => t.id);
+    }
+
+    // Otherwise use the default tool names
     const matchedTools = defaultToolNames
       .map(name => filtered.find(t => t.tool === name))
       .filter((t): t is Tool => t !== undefined)
       .map(t => t.id);
     // Fallback to top 5 by rating if default tools not found
     return matchedTools.length > 0 ? matchedTools : filtered.slice(0, 5).map(t => t.id);
-  }, [filtered]);
+  }, [filtered, filters.category, selected.length]);
   const compareIds = selected.length ? selected : defaultIds;
   // Sort selected tools by rating (highest to lowest)
   const selectedTools = filtered
@@ -218,7 +224,28 @@ export default function RadarPage() {
         <div className="flex gap-6 p-6 flex-1 min-h-0">
           {/* Left: Radar Chart (2/3) */}
           <div className="w-2/3 flex flex-col">
-            <div className="flex justify-end mb-3">
+            <div className="flex justify-between items-center mb-3">
+              {/* Category Filters */}
+              <div className="flex gap-2 flex-wrap">
+                {Array.from(new Set(data.map(t => t.category))).sort().map(cat => {
+                  const count = data.filter(t => t.category === cat).length;
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setFilters(prev => ({ ...prev, category: prev.category === cat ? undefined : cat }))}
+                      className={`px-3 py-1.5 text-xs border rounded transition-colors ${
+                        filters.category === cat
+                          ? "bg-slate-900 text-white border-slate-900"
+                          : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
+                      }`}
+                    >
+                      {cat} <span className="ml-1 opacity-70">({count})</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Export Button */}
               <button
                 onClick={handleExport}
                 disabled={isExporting}
