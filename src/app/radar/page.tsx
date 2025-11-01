@@ -133,21 +133,8 @@ export default function RadarPage() {
       </div>
 
       <nav className="w-full bg-black text-white relative z-20">
-        <div className="px-6 py-4 flex items-center justify-between">
+        <div className="px-6 py-4">
           <h1 className="text-2xl font-bold">Agentic Developer Tools Radar</h1>
-          <button
-            onClick={() => setDrawerOpen(!drawerOpen)}
-            className={`px-4 py-2 rounded border transition-colors flex items-center gap-2 ${
-              drawerOpen
-                ? 'bg-slate-700 border-slate-500'
-                : 'border-slate-600 hover:bg-slate-700 hover:border-slate-500'
-            }`}
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            <span className="text-sm font-medium">Add Tools & Edit Filters</span>
-          </button>
         </div>
       </nav>
 
@@ -190,30 +177,6 @@ export default function RadarPage() {
 
               {/* Tools Grid */}
               <CompareSelect all={filtered} selected={compareIds} onChange={setSelected} />
-
-              {/* Dimension Visibility */}
-              <div className="mt-4 pt-4 border-t border-slate-200">
-                <h3 className="text-sm font-semibold text-slate-700 mb-3">Dimension Visibility</h3>
-                <p className="text-xs text-slate-600 mb-3">Toggle dimensions on the radar chart:</p>
-                <div className="flex gap-4 flex-wrap">
-                  {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => (
-                    <label key={dim} className="flex items-center gap-2 text-sm">
-                      <input
-                        type="checkbox"
-                        checked={!hiddenDims.has(dim)}
-                        onChange={(e) => {
-                          const next = new Set(hiddenDims);
-                          e.target.checked ? next.delete(dim) : next.add(dim);
-                          setHiddenDims(next);
-                        }}
-                      />
-                      <span className="flex items-center">
-                        {dim}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </div>
             </div>
           )}
         </div>
@@ -226,7 +189,21 @@ export default function RadarPage() {
           <div className="w-2/3 flex flex-col">
             <div className="flex justify-between items-center mb-3">
               {/* Category Filters */}
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex gap-2 flex-wrap items-center">
+                <button
+                  onClick={() => {
+                    setFilters({});
+                    setDrawerOpen(true);
+                  }}
+                  className={`px-4 py-2 text-sm border rounded transition-colors ${
+                    !filters.category
+                      ? "bg-slate-900 text-white border-slate-900"
+                      : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
+                  }`}
+                  title="Select custom tools"
+                >
+                  Select Tools <span className="ml-1 opacity-70">({selected.length || 5})</span>
+                </button>
                 {Array.from(new Set(data.map(t => t.category))).sort().map(cat => {
                   const count = data.filter(t => t.category === cat).length;
                   return (
@@ -243,23 +220,22 @@ export default function RadarPage() {
                     </button>
                   );
                 })}
-              </div>
-
-              {/* Reset and Export Buttons */}
-              <div className="flex gap-2">
                 <button
                   onClick={() => {
                     setFilters({});
                     setSelected([]);
                   }}
-                  className="px-4 py-2 rounded border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-colors flex items-center gap-2 text-slate-700"
+                  className="px-3 py-2 rounded border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-colors text-slate-700"
                   title="Reset to default view"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
-                  <span className="text-sm font-medium">Reset</span>
                 </button>
+              </div>
+
+              {/* Export Button */}
+              <div className="flex gap-2">
                 <button
                   onClick={handleExport}
                   disabled={isExporting}
@@ -278,6 +254,28 @@ export default function RadarPage() {
                 <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
               </div>
             </figure>
+
+            {/* Dimension Visibility Controls */}
+            <div className="mt-3 p-3 bg-slate-50 rounded border border-slate-200">
+              <div className="flex items-center gap-4 flex-wrap">
+                <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Dimensions:</span>
+                {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => (
+                  <label key={dim} className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={!hiddenDims.has(dim)}
+                      onChange={(e) => {
+                        const next = new Set(hiddenDims);
+                        e.target.checked ? next.delete(dim) : next.add(dim);
+                        setHiddenDims(next);
+                      }}
+                      className="cursor-pointer"
+                    />
+                    <span className="text-slate-700">{dim}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Right: Tool Details (1/3) */}
