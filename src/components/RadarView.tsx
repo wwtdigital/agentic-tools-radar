@@ -76,7 +76,7 @@ export function RadarView({
   const CustomDotsLayer = ({ radiusScale, angleStep, data, keys, colorByKey, centerX, centerY }: any) => {
     const angleOffset = Math.PI / 2;
     const dotRadius = 12;
-    const stackOffset = 18; // Offset for stacked dots
+    const stackOffset = 26; // Horizontal spacing between stacked logos (slightly overlapping like browser tabs)
 
     // Group dots by position to detect collisions
     const positionMap = new Map<string, Array<{ key: string; keyIndex: number }>>();
@@ -91,7 +91,7 @@ export function RadarView({
         const x = centerX + Math.cos(angle) * radius;
         const y = centerY + Math.sin(angle) * radius;
 
-        // Create position key rounded to nearest pixel to group overlapping dots
+        // Create position key - only group dots at exact same position
         const posKey = `${Math.round(x)},${Math.round(y)}`;
 
         if (!positionMap.has(posKey)) {
@@ -128,7 +128,7 @@ export function RadarView({
 
             if (!tool) return null;
 
-            // Check if this position has multiple dots
+            // Check if this position has multiple dots (must match the key format above)
             const posKey = `${Math.round(baseX)},${Math.round(baseY)}`;
             const dotsAtPosition = positionMap.get(posKey) || [];
             const dotIndexAtPosition = dotsAtPosition.findIndex(d => d.key === key);
@@ -139,11 +139,21 @@ export function RadarView({
             let offsetY = 0;
 
             if (totalDotsAtPosition > 1) {
-              // Horizontal stacking with slight vertical offset
               const stackIndex = dotIndexAtPosition;
-              const totalWidth = (totalDotsAtPosition - 1) * stackOffset;
-              offsetX = (stackIndex * stackOffset) - (totalWidth / 2);
-              offsetY = stackIndex * -3; // Slight upward offset for visibility
+              const totalHeight = (totalDotsAtPosition - 1) * stackOffset;
+
+              // Determine if this position is more horizontal or vertical from center
+              const dx = baseX - centerX;
+              const dy = baseY - centerY;
+              const isMoreHorizontal = Math.abs(dx) > Math.abs(dy);
+
+              if (isMoreHorizontal) {
+                // Stack vertically for left/right positions
+                offsetY = (stackIndex * stackOffset) - (totalHeight / 2);
+              } else {
+                // Stack horizontally for top/bottom positions
+                offsetX = (stackIndex * stackOffset) - (totalHeight / 2);
+              }
             }
 
             const x = baseX + offsetX;
@@ -198,7 +208,7 @@ export function RadarView({
       keys={keys}
       indexBy="dimension"
       maxValue={20}
-      margin={{ top: 40, right: 110, bottom: 50, left: 110 }}
+      margin={{ top: 70, right: 140, bottom: 80, left: 140 }}
       curve="linearClosed"
       gridLevels={5}
       theme={{
