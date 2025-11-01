@@ -46,31 +46,6 @@ export function Filters({
 
   return (
     <div className="space-y-4">
-      {/* Category Filter */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">Category</label>
-        <div className="flex flex-wrap gap-2">
-          {cats.map(c => (
-            <button
-              key={c}
-              onClick={() => handleCategoryClick(c)}
-              className={`px-3 py-1.5 text-xs border rounded transition-colors ${
-                selectedCategory === c
-                  ? "bg-slate-900 text-white border-slate-900"
-                  : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-        {selectedCategory && CATEGORY_TIPS[selectedCategory] ? (
-          <p className="mt-2 text-xs text-blue-600 italic">{CATEGORY_TIPS[selectedCategory]}</p>
-        ) : (
-          <p className="mt-2 text-xs text-slate-500">Filter tools by their primary use case</p>
-        )}
-      </div>
-
       {/* Status Filter */}
       {statuses.length > 0 && (
         <div>
@@ -93,31 +68,6 @@ export function Filters({
           <p className="mt-2 text-xs text-slate-500">Filter by evaluation or adoption status</p>
         </div>
       )}
-
-      {/* Freshness Filter */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">Freshness</label>
-        <div className="flex flex-wrap gap-2">
-          {[
-            { label: "Last 3 months", value: 3 },
-            { label: "Last 6 months", value: 6 },
-            { label: "Last 12 months", value: 12 }
-          ].map(({ label, value }) => (
-            <button
-              key={value}
-              onClick={() => handleMonthsClick(value)}
-              className={`px-3 py-1.5 text-xs border rounded transition-colors ${
-                selectedMonths === value
-                  ? "bg-slate-900 text-white border-slate-900"
-                  : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        <p className="mt-2 text-xs text-slate-500">Filter by last update date</p>
-      </div>
     </div>
   );
 }
