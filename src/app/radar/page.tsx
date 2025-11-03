@@ -107,8 +107,22 @@ export default function RadarPage() {
     return (
       <>
         <nav className="w-full bg-black text-white">
-          <div className="mx-auto max-w-[1100px] px-6 py-4">
+          <div className="mx-auto max-w-[1100px] px-6 py-4 flex items-center justify-between">
             <h1 className="text-2xl font-bold">Agentic Developer Tools Radar</h1>
+            <div className="flex gap-3">
+              <a
+                href="/radar"
+                className="px-4 py-2 rounded border border-white text-white bg-white/10 text-sm font-medium"
+              >
+                Radar
+              </a>
+              <a
+                href="/tools"
+                className="px-4 py-2 rounded border border-white/30 hover:bg-white/10 transition-colors text-white text-sm font-medium"
+              >
+                Tools
+              </a>
+            </div>
           </div>
         </nav>
         <main className="mx-auto max-w-[1100px] p-6">
@@ -133,8 +147,22 @@ export default function RadarPage() {
       </div>
 
       <nav className="w-full bg-black text-white relative z-20">
-        <div className="px-6 py-4">
+        <div className="px-6 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Agentic Developer Tools Radar</h1>
+          <div className="flex gap-3">
+            <a
+              href="/radar"
+              className="px-4 py-2 rounded border border-white text-white bg-white/10 text-sm font-medium"
+            >
+              Radar
+            </a>
+            <a
+              href="/tools"
+              className="px-4 py-2 rounded border border-white/30 hover:bg-white/10 transition-colors text-white text-sm font-medium"
+            >
+              Tools
+            </a>
+          </div>
         </div>
       </nav>
 
