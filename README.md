@@ -67,7 +67,30 @@ An editorial, Notion-powered radar to compare agentic developer tools across fiv
    pnpm dev # http://localhost:3000/radar
    ```
 
-> **Demo Mode**: If env vars are missing, `/api/tools` serves demo data so the UI still works.
+## Data Architecture
+
+### Development vs Production
+
+**Development Mode** (`pnpm dev`):
+- Fetches live data from Notion API on every request
+- Instant content updates as you edit Notion
+- Requires `NOTION_API_KEY` and `NOTION_DB_ID` in `.env.local`
+
+**Production Build** (`pnpm build`):
+- Generates static snapshot from Notion at build time via `prebuild` script
+- Snapshot saved to `src/data/tools-snapshot.json` (gitignored)
+- Production `/api/tools` serves the static snapshot
+- No runtime Notion API calls = faster, cheaper, more reliable
+
+**Benefits**:
+- 🚀 Fast production performance (no API overhead)
+- 💰 Lower costs (no serverless function calls)
+- 🔒 Stable production data (immune to Notion API issues)
+- ⚡ Live development (see Notion changes immediately)
+
+**Updating Production**: Simply rebuild and redeploy. Vercel CI/CD automatically generates a fresh snapshot during each build.
+
+> **Demo Mode**: If env vars are missing during build, the snapshot generation is skipped and demo data is served instead.
 
 ## Tech Stack
 

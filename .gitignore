@@ -22,6 +22,9 @@ yarn-error.log*
 .env*.local
 .env
 
+# Generated static data (created at build time)
+src/data/tools-snapshot.json
+
 # Vercel
 .vercel
 

@@ -2,11 +2,13 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Client } from "@notionhq/client";
 import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 // Validate URLs to prevent malicious protocols (javascript:, data:, etc.)
 const validateUrl = (url: string): string | undefined => {
   if (!url || url.trim() === "") return undefined;
-  
+
   try {
     const urlObj = new URL(url);
     // Only allow http and https protocols
@@ -46,8 +48,23 @@ const ToolSchema = z.object({
 
 const notion = process.env.NOTION_API_KEY ? new Client({ auth: process.env.NOTION_API_KEY }) : null;
 const DB_ID = process.env.NOTION_DB_ID;
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 export async function GET() {
+  // In production, serve static snapshot data
+  if (IS_PRODUCTION) {
+    try {
+      const snapshotPath = join(process.cwd(), "src", "data", "tools-snapshot.json");
+      const data = readFileSync(snapshotPath, "utf-8");
+      const tools = JSON.parse(data);
+      return NextResponse.json(tools);
+    } catch (error) {
+      console.error("Failed to load static snapshot, falling back to demo data:", error);
+      // Fall through to demo data if snapshot doesn't exist
+    }
+  }
+
+  // In development, use live Notion API
   // If no Notion credentials, serve a small demo dataset
   if (!notion || !DB_ID) {
     const demo = [{
