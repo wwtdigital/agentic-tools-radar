@@ -287,22 +287,32 @@ export default function RadarPage() {
             <div className="mt-3 p-3 bg-slate-50 rounded border border-slate-200">
               <div className="flex items-center gap-4 flex-wrap">
                 <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Dimensions:</span>
-                {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => (
-                  <label key={dim} className="flex items-center gap-2 text-sm cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={!hiddenDims.has(dim)}
-                      onChange={(e) => {
-                        const next = new Set(hiddenDims);
-                        e.target.checked ? next.delete(dim) : next.add(dim);
-                        setHiddenDims(next);
-                      }}
-                      className="cursor-pointer"
-                    />
-                    <span className="text-slate-700">{dim}</span>
-                  </label>
-                ))}
+                {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => {
+                  const totalDimensions = 5;
+                  const visibleCount = totalDimensions - hiddenDims.size;
+                  const isChecked = !hiddenDims.has(dim);
+                  const wouldBeUnderMinimum = isChecked && visibleCount <= 3;
+
+                  return (
+                    <label key={dim} className={`flex items-center gap-2 text-sm ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        disabled={wouldBeUnderMinimum}
+                        onChange={(e) => {
+                          const next = new Set(hiddenDims);
+                          e.target.checked ? next.delete(dim) : next.add(dim);
+                          setHiddenDims(next);
+                        }}
+                        className={wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}
+                        title={wouldBeUnderMinimum ? 'Minimum 3 dimensions required' : ''}
+                      />
+                      <span className={wouldBeUnderMinimum ? 'text-slate-400' : 'text-slate-700'}>{dim}</span>
+                    </label>
+                  );
+                })}
               </div>
+              <p className="text-xs text-slate-500 mt-2">At least 3 dimensions must be selected</p>
             </div>
           </div>
 
