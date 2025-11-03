@@ -51,7 +51,10 @@ export default function ToolsPage() {
       <>
         <nav className="w-full bg-black text-white">
           <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-            <h1 className="text-2xl font-bold">All Agentic Developer Tools</h1>
+            <div>
+              <h1 className="text-2xl font-bold">All Agentic Developer Tools</h1>
+              <p className="text-xs text-slate-400 mt-0.5">v0.3.0</p>
+            </div>
             <div className="flex gap-3">
               <a
                 href="/radar"
@@ -84,7 +87,10 @@ export default function ToolsPage() {
     <>
       <nav className="w-full bg-black text-white">
         <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">All Agentic Developer Tools</h1>
+          <div>
+            <h1 className="text-2xl font-bold">All Agentic Developer Tools</h1>
+            <p className="text-xs text-slate-400 mt-0.5">v0.3.0</p>
+          </div>
           <div className="flex gap-3">
             <a
               href="/radar"
