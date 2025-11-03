@@ -50,7 +50,7 @@ export default function ToolsPage() {
     return (
       <>
         <nav className="w-full bg-black text-white">
-          <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
+          <div className="mx-auto max-w-[1100px] px-6 py-4 flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold">All Agentic Developer Tools</h1>
               <p className="text-xs text-slate-400 mt-0.5">v0.3.0</p>
@@ -79,7 +79,7 @@ export default function ToolsPage() {
             </div>
           </div>
         </nav>
-        <main className="mx-auto max-w-7xl p-6">
+        <main className="mx-auto max-w-[1100px] p-6">
           <div className="flex items-center justify-center min-h-[600px]">
             <div className="text-center space-y-4">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-slate-300 border-t-slate-900"></div>
@@ -94,7 +94,7 @@ export default function ToolsPage() {
   return (
     <>
       <nav className="w-full bg-black text-white">
-        <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
+        <div className="mx-auto max-w-[1100px] px-6 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">All Agentic Developer Tools</h1>
             <p className="text-xs text-slate-400 mt-0.5">v0.3.0</p>
@@ -124,7 +124,7 @@ export default function ToolsPage() {
         </div>
       </nav>
 
-      <main className="mx-auto max-w-7xl p-6">
+      <main className="mx-auto max-w-[1100px] p-6">
         {/* Header */}
         <div className="mb-6">
           <p className="text-slate-600">
