@@ -48,19 +48,24 @@ The API route expects a Notion database with these properties:
 - **Tool/Name** (Title) — tool name
 - **Company** (Rich Text)
 - **Category** (Select) — e.g., "IDE Assistants"
-- **Evaluation Status** (Select)
+- **Evaluation Status** (Status) — status property with values like "Active", "Adopted", "Feature Risk", "Deferred", "Watchlist", "Emerging", "Not Enterprise Viable", "Reviewed"
 - **Product URL, Documentation Link, Company URL** (URL fields)
 - **Quick Take** (Rich Text)
 - **AI Autonomy, Collaboration, Contextual Understanding, Governance, User Interface** (Number or Select 1-20)
 - **Rating** (Formula) — calculated overall rating (0-100)
 
-The route handles flexible property types (route.ts:56-63), supporting both number and select fields for dimensions.
+The route handles flexible property types (route.ts:95-111), supporting number, select, and status fields for various properties.
 
 ### Component Structure
-- **`/app/radar/page.tsx`** — Main page with drawer interface, filters, comparison selector, dimension toggles
+- **`/app/radar/page.tsx`** — Main radar page with page-based scrolling
   - State: filters (category/status/months), selected tool IDs, hidden dimensions, drawer open/closed
   - Mobile warning banner for desktop optimization
   - Defaults to top 5 tools by rating when nothing selected
+  - Radar chart uses aspect-square for responsive 1:1 ratio
+  - Top-aligned layout with items-start for radar and tool details columns
+- **`/app/tools/page.tsx`** — All tools listing page grouped by category
+  - Displays all tools in card format with color-coded evaluation status badges
+  - Status badges positioned in bottom right corner of each card
 - **`RadarView.tsx`** — Nivo ResponsiveRadar wrapper with custom logo dots
   - Takes up to 5 tools, transforms dims into Nivo data format
   - Respects `hiddenDims` set to exclude dimensions
@@ -68,24 +73,43 @@ The route handles flexible property types (route.ts:56-63), supporting both numb
 - **`Filters.tsx`** — Category/status/recency filters with tooltips
 - **`CompareSelect.tsx`** — Category-grouped multi-select for choosing up to 5 tools
 - **`ToolDetails.tsx`** — Selected tools info panel with ratings and dimension breakdowns
+  - Sticky header with tool details scrolling naturally with page
+  - Displays evaluation status badges with Notion colors
 - **`ToolLogo.tsx`** — Logo component with favicon fallbacks and consistent color generation
 - **`DimensionTooltip.tsx`** — Interactive dimension explanations with hover tooltips
+- **`Navbar.tsx`** — Shared navigation component with radar/tools toggle and version info
 
 ### Styling
 - Tailwind CSS with minimal palette
 - Designed for Notion Embed blocks (900–1100px width)
 - Chart styling: thin strokes, low fill opacity (0.12), subtle grid (RadarView.tsx:46-56)
+- Status badges: Color-coded to match Notion status colors (see `src/utils/status.ts`)
+  - Red: Not Enterprise Viable
+  - Gray: Watchlist
+  - Purple: Emerging
+  - Yellow: Active
+  - Orange: Feature Risk
+  - Amber: Deferred
+  - Green: Adopted
+  - Blue: Reviewed
 
 ## Key Behaviors
 
 - **Auto-selection:** If user hasn't selected tools, show top 5 by rating (page.tsx:40-41)
 - **Max 5 tools:** Radar comparison limited to 5 tools (page.tsx:23, RadarView.tsx:23)
 - **Dimension filtering:** User can hide dimensions via checkboxes; chart updates dynamically
+- **Evaluation status badges:** Display color-coded status from Notion on both tools page and radar tool details
+- **Page-based scrolling:** Radar page uses natural page scrolling instead of fixed containers
 - **Graceful fallback:** Missing Notion credentials → demo data, UI still functional
 
 ## TypeScript Path Aliases
 
 Uses `@/` alias for `src/` directory (configured via Next.js).
+
+## Utilities
+
+### Status Color Mapping (`src/utils/status.ts`)
+Shared utility function `getStatusColor(status: string)` that maps Notion evaluation status values to Tailwind CSS color classes. Used by both tools page and radar tool details to ensure consistent status badge styling across the application.
 
 ## Dependency Management
 

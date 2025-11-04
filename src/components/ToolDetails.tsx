@@ -2,6 +2,8 @@
 import { DIMENSION_DESCRIPTIONS } from "@/components/DimensionTooltip";
 import { ToolLogo } from "@/components/ToolLogo";
 
+import { getStatusColor } from "@/utils/status";
+
 type Tool = {
   id: string;
   tool: string;
@@ -32,8 +34,8 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between sticky top-0 bg-white py-2 border-b">
+    <div className="space-y-4 flex flex-col h-full">
+      <div className="flex items-center justify-between bg-white py-2 border-b flex-shrink-0">
         <h2 className="text-lg font-semibold text-slate-900">Tool Details</h2>
         <a
           href="/tools"
@@ -43,7 +45,7 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
           View All
         </a>
       </div>
-      <div className="space-y-4 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 150px)' }}>
+      <div className="space-y-4 overflow-y-auto pr-3" style={{ maxHeight: 'calc(100vh - 150px)' }}>
         {tools.map((tool) => (
           <div
             key={tool.id}
@@ -103,36 +105,46 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
             </div>
 
             {tool.urls && (
-              <div className="flex flex-wrap gap-3 text-xs">
-                {tool.urls.product && (
-                  <a
-                    href={tool.urls.product}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 hover:underline"
-                  >
-                    Product →
-                  </a>
-                )}
-                {tool.urls.docs && (
-                  <a
-                    href={tool.urls.docs}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 hover:underline"
-                  >
-                    Documentation →
-                  </a>
-                )}
-                {tool.urls.company && (
-                  <a
-                    href={tool.urls.company}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 hover:underline"
-                  >
-                    Company →
-                  </a>
+              <div className="flex items-center justify-between gap-3 text-xs">
+                <div className="flex flex-wrap gap-3">
+                  {tool.urls.product && (
+                    <a
+                      href={tool.urls.product}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline"
+                    >
+                      Product →
+                    </a>
+                  )}
+                  {tool.urls.docs && (
+                    <a
+                      href={tool.urls.docs}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline"
+                    >
+                      Documentation →
+                    </a>
+                  )}
+                  {tool.urls.company && (
+                    <a
+                      href={tool.urls.company}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline"
+                    >
+                      Company →
+                    </a>
+                  )}
+                </div>
+                {tool.status && tool.status.trim() !== "" && (
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <span className="text-xs text-slate-500">Evaluation Status:</span>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getStatusColor(tool.status)}`}>
+                      {tool.status}
+                    </span>
+                  </div>
                 )}
               </div>
             )}

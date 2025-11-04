@@ -19,7 +19,8 @@ An editorial, Notion-powered radar to compare agentic developer tools across fiv
 
 - **Browse all tools** at `/tools` in a comprehensive card-based layout
 - **Organized by category** with clear section headers and tool counts
-- Each card displays full details: ratings, all dimension scores, quick take, and external links
+- **Color-coded evaluation status badges** matching Notion status colors (Active, Adopted, Feature Risk, etc.)
+- Each card displays full details: ratings, all dimension scores, quick take, external links, and evaluation status
 - Tools automatically sorted by rating within categories
 - Easy navigation between radar and tools views via header buttons
 
@@ -37,12 +38,15 @@ An editorial, Notion-powered radar to compare agentic developer tools across fiv
 ### 🎨 Polished UI/UX
 
 - **Unified Navigation**: Seamless switching between Radar and Tools pages via header buttons
+- **Page-based scrolling**: Natural scrolling experience on radar page instead of fixed containers
+- **Responsive radar sizing**: Square aspect ratio for consistent, responsive radar chart dimensions
 - Full-width navigation with slide-down drawer interface
 - 70vh drawer with integrated filters and tool selection
 - Background scroll lock when drawer is open
 - Click-outside-to-close behavior
 - Prominent close button with visual feedback
-- Tool details panel with links, quick takes, and "View All" button
+- Tool details panel with links, quick takes, evaluation status, and "View All" button
+- Sticky tool details header for easy navigation while scrolling
 - Mobile warning banner for optimal desktop experience
 - Enhanced logo visibility with darker backgrounds for better contrast
 
@@ -118,9 +122,12 @@ src/
     ├── RadarView.tsx          # Nivo radar chart with custom logo dots
     ├── CompareSelect.tsx      # Category-grouped tool selection grid
     ├── Filters.tsx            # Status filter with tooltips
-    ├── ToolDetails.tsx        # Selected tools info panel with ratings
+    ├── ToolDetails.tsx        # Selected tools info panel with ratings and status
     ├── ToolLogo.tsx           # Logo component with favicon fallbacks
+    ├── Navbar.tsx             # Shared navigation component
     └── DimensionTooltip.tsx   # Interactive dimension explanations
+└── utils/
+    └── status.ts              # Status color mapping utility
 ```
 
 ## Notion Database Schema
@@ -130,7 +137,15 @@ Required properties:
 - **Tool/Name** (Title) — Tool name
 - **Company** (Rich Text) — Company name
 - **Category** (Select) — Tool category
-- **Evaluation Status** (Select) — Current status
+- **Evaluation Status** (Status) — Current evaluation status with color-coded values:
+  - 🔴 Not Enterprise Viable (Red)
+  - ⚫ Watchlist (Gray)
+  - 🟣 Emerging (Purple)
+  - 🟡 Active (Yellow)
+  - 🟠 Feature Risk (Orange)
+  - 🟤 Deferred (Amber)
+  - 🟢 Adopted (Green)
+  - 🔵 Reviewed (Blue)
 - **Product URL, Documentation Link, Company URL** (URL)
 - **Quick Take** (Rich Text) — Brief description
 - **AI Autonomy, Collaboration, Contextual Understanding, Governance, User Interface** (Number 1-20)

@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { DIMENSION_DESCRIPTIONS } from "@/components/DimensionTooltip";
 import { ToolLogo } from "@/components/ToolLogo";
 import { Navbar } from "@/components/Navbar";
+import { getStatusColor } from "@/utils/status";
 
 type Tool = {
   id: string;
@@ -165,36 +166,46 @@ export default function ToolsPage() {
                     </div>
 
                     {tool.urls && (
-                      <div className="flex flex-wrap gap-3 text-xs pt-3 border-t border-slate-200">
-                        {tool.urls.product && (
-                          <a
-                            href={tool.urls.product}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 hover:underline"
-                          >
-                            Product →
-                          </a>
-                        )}
-                        {tool.urls.docs && (
-                          <a
-                            href={tool.urls.docs}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 hover:underline"
-                          >
-                            Documentation →
-                          </a>
-                        )}
-                        {tool.urls.company && (
-                          <a
-                            href={tool.urls.company}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 hover:underline"
-                          >
-                            Company →
-                          </a>
+                      <div className="flex items-center justify-between gap-3 text-xs pt-3 border-t border-slate-200">
+                        <div className="flex flex-wrap gap-3">
+                          {tool.urls.product && (
+                            <a
+                              href={tool.urls.product}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:text-blue-800 hover:underline"
+                            >
+                              Product →
+                            </a>
+                          )}
+                          {tool.urls.docs && (
+                            <a
+                              href={tool.urls.docs}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:text-blue-800 hover:underline"
+                            >
+                              Documentation →
+                            </a>
+                          )}
+                          {tool.urls.company && (
+                            <a
+                              href={tool.urls.company}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:text-blue-800 hover:underline"
+                            >
+                              Company →
+                            </a>
+                          )}
+                        </div>
+                        {tool.status && tool.status.trim() !== "" && (
+                          <div className="flex items-center gap-1.5 flex-shrink-0">
+                            <span className="text-xs text-slate-500">Evaluation Status:</span>
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getStatusColor(tool.status)}`}>
+                              {tool.status}
+                            </span>
+                          </div>
                         )}
                       </div>
                     )}
