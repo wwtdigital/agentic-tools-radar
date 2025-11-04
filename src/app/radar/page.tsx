@@ -306,18 +306,10 @@ export default function RadarPage() {
                 <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
               </div>
             </figure>
-          </div>
 
-          {/* Right: Tool Details (1/3) */}
-          <div className="w-1/3">
-            <ToolDetails tools={selectedTools} />
-          </div>
-        </div>
-
-        {/* Dimension Visibility Controls - Full Width */}
-        <div className="px-6 pb-6">
-          <div className="p-3 bg-slate-50 rounded border border-slate-200">
-            <div className="grid grid-cols-5 gap-4">
+            {/* Dimension Visibility Controls */}
+            <div className="mt-3 p-3 bg-slate-50 rounded border border-slate-200">
+              <div className="grid grid-cols-5 gap-4">
               {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => {
                 const totalDimensions = 5;
                 const visibleCount = totalDimensions - hiddenDims.size;
@@ -349,8 +341,14 @@ export default function RadarPage() {
                   </label>
                 );
               })}
+              </div>
+              <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-200">At least 3 dimensions must be selected</p>
             </div>
-            <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-200">At least 3 dimensions must be selected</p>
+          </div>
+
+          {/* Right: Tool Details (1/3) */}
+          <div className="w-1/3">
+            <ToolDetails tools={selectedTools} />
           </div>
         </div>
       </main>
