@@ -206,7 +206,7 @@ export default function ToolsPage() {
                                 </div>
                               )}
                             </div>
-                            <div className="text-lg font-semibold text-slate-900 ml-2 flex-shrink-0">
+                            <div className="text-lg font-semibold text-slate-900 ml-2 pl-2 border-l-2 border-slate-300 flex-shrink-0">
                               {value}
                             </div>
                           </div>

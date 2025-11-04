@@ -6,7 +6,7 @@ import { RadarView } from "@/components/RadarView";
 import { Filters } from "@/components/Filters";
 import { CompareSelect } from "@/components/CompareSelect";
 import { ToolDetails } from "@/components/ToolDetails";
-import { DimensionTooltip } from "@/components/DimensionTooltip";
+import { DimensionTooltip, DIMENSION_DESCRIPTIONS } from "@/components/DimensionTooltip";
 
 type Tool = {
   id: string;
@@ -317,6 +317,8 @@ export default function RadarPage() {
                   const isChecked = !hiddenDims.has(dim);
                   const wouldBeUnderMinimum = isChecked && visibleCount <= 3;
 
+                  const description = DIMENSION_DESCRIPTIONS[dim as keyof typeof DIMENSION_DESCRIPTIONS];
+
                   return (
                     <label key={dim} className={`flex items-center gap-2 text-sm ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                       <input
@@ -332,6 +334,17 @@ export default function RadarPage() {
                         title={wouldBeUnderMinimum ? 'Minimum 3 dimensions required' : ''}
                       />
                       <span className={wouldBeUnderMinimum ? 'text-slate-400' : 'text-slate-700'}>{dim}</span>
+                      {description && (
+                        <div className="group/tooltip relative inline-block">
+                          <svg className="w-3 h-3 text-slate-400 hover:text-slate-600 cursor-help" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                          </svg>
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded shadow-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity duration-200 w-64 z-10 whitespace-normal">
+                            {description}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900"></div>
+                          </div>
+                        </div>
+                      )}
                     </label>
                   );
                 })}
