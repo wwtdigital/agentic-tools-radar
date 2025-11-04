@@ -130,7 +130,7 @@ export default function RadarPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-screen flex flex-col overflow-hidden">
       {/* Mobile Warning */}
       <div className="md:hidden bg-yellow-50 border-b border-yellow-200 px-4 py-3 flex-shrink-0">
         <p className="text-sm text-yellow-800 text-center">
@@ -187,8 +187,8 @@ export default function RadarPage() {
       </div>
 
       {/* Main Content - Split Layout */}
-      <main className="w-full flex-1 flex flex-col">
-        <div className="flex gap-6 p-6 items-start">
+      <main className="w-full flex-1 flex flex-col overflow-hidden">
+        <div className="flex gap-6 p-6 flex-1 min-h-0">
           {/* Left: Radar Chart (2/3) */}
           <div className="w-2/3 flex flex-col">
             <div className="flex justify-between items-center mb-3">
@@ -253,7 +253,7 @@ export default function RadarPage() {
                 </button>
               </div>
             </div>
-            <figure ref={radarRef} className="border rounded p-4 bg-white isolate aspect-square">
+            <figure ref={radarRef} className="border rounded p-4 bg-white flex-1 min-h-0 isolate">
               <div className="w-full h-full">
                 <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
               </div>

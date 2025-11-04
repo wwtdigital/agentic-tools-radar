@@ -34,8 +34,8 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between sticky top-0 bg-white py-2 border-b z-10">
+    <div className="space-y-4 flex flex-col h-full">
+      <div className="flex items-center justify-between bg-white py-2 border-b flex-shrink-0">
         <h2 className="text-lg font-semibold text-slate-900">Tool Details</h2>
         <a
           href="/tools"
@@ -45,7 +45,7 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
           View All
         </a>
       </div>
-      <div className="space-y-4 pb-8">
+      <div className="space-y-4 overflow-y-auto pr-3" style={{ maxHeight: 'calc(100vh - 150px)' }}>
         {tools.map((tool) => (
           <div
             key={tool.id}
