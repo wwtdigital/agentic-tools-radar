@@ -105,7 +105,7 @@ export default function RadarPage() {
 
   if (isLoading) {
     return (
-      <>
+      <div className="h-screen overflow-hidden flex flex-col">
         <nav className="w-full bg-black text-white">
           <div className="px-6 py-4 flex items-center justify-between">
             <div>
@@ -145,12 +145,12 @@ export default function RadarPage() {
             </div>
           </div>
         </main>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="h-screen overflow-hidden flex flex-col">
       {/* Mobile Warning */}
       <div className="md:hidden bg-yellow-50 border-b border-yellow-200 px-4 py-3">
         <p className="text-sm text-yellow-800 text-center">
@@ -346,6 +346,6 @@ export default function RadarPage() {
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 }

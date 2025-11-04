@@ -48,7 +48,7 @@ export default function ToolsPage() {
 
   if (isLoading) {
     return (
-      <>
+      <div className="h-screen overflow-y-auto">
         <nav className="w-full bg-black text-white">
           <div className="px-6 py-4 flex items-center justify-between">
             <div>
@@ -88,12 +88,12 @@ export default function ToolsPage() {
             </div>
           </div>
         </main>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="h-screen overflow-y-auto">
       <nav className="w-full bg-black text-white">
         <div className="px-6 py-4 flex items-center justify-between">
           <div>
@@ -249,6 +249,6 @@ export default function ToolsPage() {
           ))}
         </div>
       </main>
-    </>
+    </div>
   );
 }
