@@ -46,6 +46,15 @@ export default function ToolsPage() {
     return groups;
   }, [data]);
 
+  // Get the most recent lastEdited date
+  const latestUpdate = useMemo(() => {
+    if (data.length === 0) return null;
+    const dates = data.map(t => new Date(t.lastEdited)).filter(d => !isNaN(d.getTime()));
+    if (dates.length === 0) return null;
+    const latest = new Date(Math.max(...dates.map(d => d.getTime())));
+    return latest.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }, [data]);
+
   if (isLoading) {
     return (
       <>
@@ -53,7 +62,7 @@ export default function ToolsPage() {
           <div className="px-6 py-4 flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold">All Agentic Developer Tools</h1>
-              <p className="text-xs text-slate-400 mt-0.5">v0.3.0</p>
+              <p className="text-xs text-slate-400 mt-0.5">v0.3.0 {latestUpdate && `• Updated ${latestUpdate}`}</p>
             </div>
             <div className="flex gap-3">
               <a
@@ -98,7 +107,7 @@ export default function ToolsPage() {
         <div className="px-6 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">All Agentic Developer Tools</h1>
-            <p className="text-xs text-slate-400 mt-0.5">v0.3.0</p>
+            <p className="text-xs text-slate-400 mt-0.5">v0.3.0 {latestUpdate && `• Updated ${latestUpdate}`}</p>
           </div>
           <div className="flex gap-3">
             <a

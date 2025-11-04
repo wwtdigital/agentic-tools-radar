@@ -103,6 +103,15 @@ export default function RadarPage() {
     .filter(t => compareIds.includes(t.id))
     .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
 
+  // Get the most recent lastEdited date
+  const latestUpdate = useMemo(() => {
+    if (data.length === 0) return null;
+    const dates = data.map(t => new Date(t.lastEdited)).filter(d => !isNaN(d.getTime()));
+    if (dates.length === 0) return null;
+    const latest = new Date(Math.max(...dates.map(d => d.getTime())));
+    return latest.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }, [data]);
+
   if (isLoading) {
     return (
       <div className="h-screen flex flex-col overflow-hidden">
@@ -162,7 +171,7 @@ export default function RadarPage() {
         <div className="px-6 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">Agentic Developer Tools Radar</h1>
-            <p className="text-xs text-slate-400 mt-0.5">v0.3.0</p>
+            <p className="text-xs text-slate-400 mt-0.5">v0.3.0 {latestUpdate && `• Updated ${latestUpdate}`}</p>
           </div>
           <div className="flex gap-3">
             <a
