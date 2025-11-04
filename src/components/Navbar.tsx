@@ -13,7 +13,7 @@ export function Navbar({ title, latestUpdate, currentPage }: NavbarProps) {
         <div>
           <h1 className="text-2xl font-bold">{title}</h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            v0.3.0 {latestUpdate && `• Updated ${latestUpdate}`}
+            v0.4.0 {latestUpdate && `• Updated ${latestUpdate}`}
           </p>
         </div>
         <div className="flex gap-3">
