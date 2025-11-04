@@ -80,28 +80,29 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
               </p>
             )}
 
-            <div className="space-y-1 mb-3">
+            <div className="grid grid-cols-2 gap-2 mb-3">
               {DIMENSION_LABELS.map(({ key, label }) => {
                 const value = tool.dims[key];
                 const description = DIMENSION_DESCRIPTIONS[label as keyof typeof DIMENSION_DESCRIPTIONS];
                 return (
                   <div
                     key={key}
-                    className="flex items-center justify-between bg-slate-50 rounded px-3 py-2"
+                    className="flex items-center justify-between bg-slate-50 rounded px-3 py-2 group relative"
                   >
                     <div className="flex-1 min-w-0">
-                      <div className="text-xs font-medium text-slate-900">
+                      <div className="text-xs font-medium text-slate-900 cursor-help">
                         {label}
                       </div>
-                      {description && (
-                        <div className="text-xs text-slate-500 mt-0.5">
-                          {description}
-                        </div>
-                      )}
                     </div>
-                    <div className="text-xl font-semibold text-slate-900 ml-3 pl-3 border-l-2 border-slate-300 flex-shrink-0">
+                    <div className="text-lg font-semibold text-slate-900 ml-2 flex-shrink-0">
                       {value}
                     </div>
+                    {description && (
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 w-64 z-10">
+                        {description}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900"></div>
+                      </div>
+                    )}
                   </div>
                 );
               })}

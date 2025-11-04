@@ -189,7 +189,6 @@ export default function ToolsPage() {
                           <div
                             key={key}
                             className="flex items-center justify-between bg-slate-50 rounded px-3 py-2 group relative"
-                            title={description || ''}
                           >
                             <div className="flex-1 min-w-0">
                               <div className="text-xs font-medium text-slate-900 cursor-help">
@@ -199,6 +198,12 @@ export default function ToolsPage() {
                             <div className="text-lg font-semibold text-slate-900 ml-2 flex-shrink-0">
                               {value}
                             </div>
+                            {description && (
+                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 w-64 z-10">
+                                {description}
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900"></div>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
