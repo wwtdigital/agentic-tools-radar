@@ -308,9 +308,9 @@ export default function RadarPage() {
             </figure>
 
             {/* Dimension Visibility Controls */}
-            <div className="mt-3 p-3 bg-slate-50 rounded border border-slate-200 relative z-50">
-              <div className="flex items-center gap-4 flex-wrap">
-                <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Dimensions:</span>
+            <div className="mt-3 p-3 bg-slate-50 rounded border border-slate-200">
+              <div className="space-y-2">
+                <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide block mb-3">Dimensions:</span>
                 {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => {
                   const totalDimensions = 5;
                   const visibleCount = totalDimensions - hiddenDims.size;
@@ -320,7 +320,7 @@ export default function RadarPage() {
                   const description = DIMENSION_DESCRIPTIONS[dim as keyof typeof DIMENSION_DESCRIPTIONS];
 
                   return (
-                    <label key={dim} className={`flex items-center gap-2 text-sm ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                    <label key={dim} className={`flex items-start gap-2 text-sm ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                       <input
                         type="checkbox"
                         checked={isChecked}
@@ -330,26 +330,20 @@ export default function RadarPage() {
                           e.target.checked ? next.delete(dim) : next.add(dim);
                           setHiddenDims(next);
                         }}
-                        className={wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}
+                        className={`mt-0.5 ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                         title={wouldBeUnderMinimum ? 'Minimum 3 dimensions required' : ''}
                       />
-                      <span className={wouldBeUnderMinimum ? 'text-slate-400' : 'text-slate-700'}>{dim}</span>
-                      {description && (
-                        <div className="group/tooltip relative inline-block">
-                          <svg className="w-3 h-3 text-slate-400 hover:text-slate-600 cursor-help" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                          </svg>
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded shadow-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity duration-200 w-64 z-[9999] whitespace-normal">
-                            {description}
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900"></div>
-                          </div>
-                        </div>
-                      )}
+                      <div>
+                        <span className={`font-medium ${wouldBeUnderMinimum ? 'text-slate-400' : 'text-slate-700'}`}>{dim}</span>
+                        {description && (
+                          <div className="text-xs text-slate-500 mt-0.5">{description}</div>
+                        )}
+                      </div>
                     </label>
                   );
                 })}
               </div>
-              <p className="text-xs text-slate-500 mt-2">At least 3 dimensions must be selected</p>
+              <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-200">At least 3 dimensions must be selected</p>
             </div>
           </div>
 
