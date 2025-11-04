@@ -105,8 +105,8 @@ export default function RadarPage() {
 
   if (isLoading) {
     return (
-      <div className="h-screen overflow-hidden flex flex-col">
-        <nav className="w-full bg-black text-white">
+      <div className="h-screen flex flex-col overflow-hidden">
+        <nav className="w-full bg-black text-white flex-shrink-0">
           <div className="px-6 py-4 flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold">Agentic Developer Tools Radar</h1>
@@ -137,7 +137,7 @@ export default function RadarPage() {
             </div>
           </div>
         </nav>
-        <main className="p-6">
+        <main className="flex-1 p-6 overflow-hidden">
           <div className="flex items-center justify-center min-h-[600px]">
             <div className="text-center space-y-4">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-slate-300 border-t-slate-900"></div>
@@ -150,15 +150,15 @@ export default function RadarPage() {
   }
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col">
+    <div className="h-screen flex flex-col overflow-hidden">
       {/* Mobile Warning */}
-      <div className="md:hidden bg-yellow-50 border-b border-yellow-200 px-4 py-3">
+      <div className="md:hidden bg-yellow-50 border-b border-yellow-200 px-4 py-3 flex-shrink-0">
         <p className="text-sm text-yellow-800 text-center">
           <strong>Desktop Required:</strong> This radar visualization is optimized for desktop viewing. Please access on a larger screen for the best experience.
         </p>
       </div>
 
-      <nav className="w-full bg-black text-white relative z-20">
+      <nav className="w-full bg-black text-white relative z-20 flex-shrink-0">
         <div className="px-6 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">Agentic Developer Tools Radar</h1>
@@ -235,7 +235,7 @@ export default function RadarPage() {
       </div>
 
       {/* Main Content - Split Layout */}
-      <main className="w-full h-[calc(100vh-57px)] flex flex-col">
+      <main className="w-full flex-1 flex flex-col overflow-hidden">
         <div className="flex gap-6 p-6 flex-1 min-h-0">
           {/* Left: Radar Chart (2/3) */}
           <div className="w-2/3 flex flex-col">
