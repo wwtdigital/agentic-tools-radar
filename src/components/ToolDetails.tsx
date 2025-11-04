@@ -47,7 +47,7 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
         {tools.map((tool) => (
           <div
             key={tool.id}
-            className="border border-slate-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
+            className="border border-slate-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow overflow-visible"
           >
             <div className="flex items-start gap-3 mb-3">
               <ToolLogo
@@ -80,14 +80,14 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
               </p>
             )}
 
-            <div className="grid grid-cols-2 gap-2 mb-3">
+            <div className="grid grid-cols-2 gap-2 mb-3 overflow-visible">
               {DIMENSION_LABELS.map(({ key, label }) => {
                 const value = tool.dims[key];
                 const description = DIMENSION_DESCRIPTIONS[label as keyof typeof DIMENSION_DESCRIPTIONS];
                 return (
                   <div
                     key={key}
-                    className="flex items-center justify-between bg-slate-50 rounded px-3 py-2 relative"
+                    className="flex items-center justify-between bg-slate-50 rounded px-3 py-2 relative overflow-visible"
                   >
                     <div className="flex-1 min-w-0 flex items-center gap-1">
                       <div className="text-xs font-medium text-slate-900">
@@ -98,7 +98,7 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
                           <svg className="w-3 h-3 text-slate-400 hover:text-slate-600 cursor-help" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                           </svg>
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded shadow-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity duration-200 w-64 z-10 whitespace-normal">
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded shadow-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity duration-200 w-64 z-50 whitespace-normal">
                             {description}
                             <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900"></div>
                           </div>
