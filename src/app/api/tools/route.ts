@@ -94,9 +94,12 @@ export async function GET() {
       const props = page.properties;
       const readSelect = (name: string) => {
         const prop = props[name];
-        if (!prop || (prop.type !== "select" && prop.type !== "multi_select")) return undefined;
+        if (!prop || (prop.type !== "select" && prop.type !== "multi_select" && prop.type !== "status")) return undefined;
         if (prop.type === "select" && "select" in prop && prop.select && typeof prop.select === "object" && "name" in prop.select) {
           return prop.select.name;
+        }
+        if (prop.type === "status" && "status" in prop && prop.status && typeof prop.status === "object" && "name" in prop.status) {
+          return prop.status.name;
         }
         if (prop.type === "multi_select" && "multi_select" in prop && Array.isArray(prop.multi_select) && prop.multi_select.length > 0) {
           const first = prop.multi_select[0];
