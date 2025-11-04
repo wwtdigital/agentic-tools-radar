@@ -306,50 +306,51 @@ export default function RadarPage() {
                 <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
               </div>
             </figure>
-
-            {/* Dimension Visibility Controls */}
-            <div className="mt-3 p-3 bg-slate-50 rounded border border-slate-200">
-              <div className="space-y-2">
-                <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide block mb-3">Dimensions:</span>
-                {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => {
-                  const totalDimensions = 5;
-                  const visibleCount = totalDimensions - hiddenDims.size;
-                  const isChecked = !hiddenDims.has(dim);
-                  const wouldBeUnderMinimum = isChecked && visibleCount <= 3;
-
-                  const description = DIMENSION_DESCRIPTIONS[dim as keyof typeof DIMENSION_DESCRIPTIONS];
-
-                  return (
-                    <label key={dim} className={`flex items-start gap-2 text-sm ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        disabled={wouldBeUnderMinimum}
-                        onChange={(e) => {
-                          const next = new Set(hiddenDims);
-                          e.target.checked ? next.delete(dim) : next.add(dim);
-                          setHiddenDims(next);
-                        }}
-                        className={`mt-0.5 ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                        title={wouldBeUnderMinimum ? 'Minimum 3 dimensions required' : ''}
-                      />
-                      <div>
-                        <span className={`font-medium ${wouldBeUnderMinimum ? 'text-slate-400' : 'text-slate-700'}`}>{dim}</span>
-                        {description && (
-                          <div className="text-xs text-slate-500 mt-0.5">{description}</div>
-                        )}
-                      </div>
-                    </label>
-                  );
-                })}
-              </div>
-              <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-200">At least 3 dimensions must be selected</p>
-            </div>
           </div>
 
           {/* Right: Tool Details (1/3) */}
           <div className="w-1/3">
             <ToolDetails tools={selectedTools} />
+          </div>
+        </div>
+
+        {/* Dimension Visibility Controls - Full Width */}
+        <div className="px-6 pb-6">
+          <div className="p-3 bg-slate-50 rounded border border-slate-200">
+            <div className="grid grid-cols-5 gap-4">
+              {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => {
+                const totalDimensions = 5;
+                const visibleCount = totalDimensions - hiddenDims.size;
+                const isChecked = !hiddenDims.has(dim);
+                const wouldBeUnderMinimum = isChecked && visibleCount <= 3;
+
+                const description = DIMENSION_DESCRIPTIONS[dim as keyof typeof DIMENSION_DESCRIPTIONS];
+
+                return (
+                  <label key={dim} className={`flex items-start gap-2 text-sm ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      disabled={wouldBeUnderMinimum}
+                      onChange={(e) => {
+                        const next = new Set(hiddenDims);
+                        e.target.checked ? next.delete(dim) : next.add(dim);
+                        setHiddenDims(next);
+                      }}
+                      className={`mt-0.5 ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                      title={wouldBeUnderMinimum ? 'Minimum 3 dimensions required' : ''}
+                    />
+                    <div>
+                      <span className={`font-medium ${wouldBeUnderMinimum ? 'text-slate-400' : 'text-slate-700'}`}>{dim}</span>
+                      {description && (
+                        <div className="text-xs text-slate-500 mt-0.5">{description}</div>
+                      )}
+                    </div>
+                  </label>
+                );
+              })}
+            </div>
+            <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-200">At least 3 dimensions must be selected</p>
           </div>
         </div>
       </main>
