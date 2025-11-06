@@ -213,7 +213,7 @@ export function RadarView({
       borderWidth={2}
       layers={['grid', 'layers', 'slices', CustomDotsLayer]}
       enableDots={false}
-      fillOpacity={0.12}
+      fillOpacity={0.25}
       isInteractive={false}
       animate={true}
       motionConfig={{
