@@ -38,23 +38,25 @@ Required environment variables (see `.env.example`):
 ## Architecture
 
 ### Data Flow
-1. **Notion Database → API Route → Client Components**
-   - `/api/tools/route.ts` queries Notion API, transforms properties into standardized `Tool` schema
+1. **Notion Database → Build-Time Snapshot → API Route → Client Components**
+   - **Build Time:** `scripts/generate-static-data.js` runs as prebuild step, fetching fresh data from Notion and saving to `src/data/tools-snapshot.json`
+   - **Production:** `/api/tools/route.ts` serves the static snapshot for fast, reliable responses
+   - **Development:** `/api/tools/route.ts` queries Notion API directly for live data (falls back to demo data if no credentials)
    - Client uses SWR to fetch from `/api/tools` endpoint
-   - Schema validated with Zod (`ToolSchema` in route.ts:5)
+   - Schema validated with Zod (`ToolSchema` in route.ts:26-47)
 
 ### Expected Notion Schema
-The API route expects a Notion database with these properties:
+Both the API route and static data generator expect a Notion database with these properties:
 - **Tool/Name** (Title) — tool name
 - **Company** (Rich Text)
 - **Category** (Select) — e.g., "IDE Assistants"
-- **Evaluation Status** (Status) — status property with values like "Active", "Adopted", "Feature Risk", "Deferred", "Watchlist", "Emerging", "Not Enterprise Viable", "Reviewed"
+- **Evaluation Status** (Status) — **IMPORTANT:** Must be a Status property type (not Select). Values like "Active", "Adopted", "Feature Risk", "Deferred", "Watchlist", "Emerging", "Not Enterprise Viable", "Reviewed"
 - **Product URL, Documentation Link, Company URL** (URL fields)
 - **Quick Take** (Rich Text)
 - **AI Autonomy, Collaboration, Contextual Understanding, Governance, User Interface** (Number or Select 1-20)
 - **Rating** (Formula) — calculated overall rating (0-100)
 
-The route handles flexible property types (route.ts:95-111), supporting number, select, and status fields for various properties.
+Both `route.ts` and `generate-static-data.js` handle flexible property types, supporting number, select, and **status** fields. The status type handling is critical for evaluation status badges to display correctly.
 
 ### Component Structure
 - **`/app/radar/page.tsx`** — Main radar page with page-based scrolling
@@ -100,7 +102,8 @@ The route handles flexible property types (route.ts:95-111), supporting number, 
 - **Dimension filtering:** User can hide dimensions via checkboxes; chart updates dynamically
 - **Evaluation status badges:** Display color-coded status from Notion on both tools page and radar tool details
 - **Page-based scrolling:** Radar page uses natural page scrolling instead of fixed containers
-- **Graceful fallback:** Missing Notion credentials → demo data, UI still functional
+- **Build-time data refresh:** Every production build fetches fresh data from Notion via `prebuild` script (package.json:8)
+- **Graceful fallback:** Missing Notion credentials → demo data in dev, build continues without error in production
 
 ## TypeScript Path Aliases
 
