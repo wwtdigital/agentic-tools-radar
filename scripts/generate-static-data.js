@@ -44,9 +44,12 @@ async function generateStaticData() {
 
     const readSelect = (props, name) => {
       const prop = props[name];
-      if (!prop || (prop.type !== "select" && prop.type !== "multi_select")) return undefined;
+      if (!prop || (prop.type !== "select" && prop.type !== "multi_select" && prop.type !== "status")) return undefined;
       if (prop.type === "select" && prop.select?.name) {
         return prop.select.name;
+      }
+      if (prop.type === "status" && prop.status?.name) {
+        return prop.status.name;
       }
       if (prop.type === "multi_select" && Array.isArray(prop.multi_select) && prop.multi_select.length > 0) {
         return prop.multi_select[0]?.name;
