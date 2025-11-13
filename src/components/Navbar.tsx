@@ -4,7 +4,7 @@ import packageJson from "../../package.json";
 type NavbarProps = {
   title: string;
   latestUpdate: string | null;
-  currentPage: "radar" | "tools";
+  currentPage: "radar" | "tools" | "about";
 };
 
 export function Navbar({ title, latestUpdate, currentPage }: NavbarProps) {
@@ -48,6 +48,20 @@ export function Navbar({ title, latestUpdate, currentPage }: NavbarProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             Tools
+          </a>
+          <a
+            href="/about"
+            className={`px-4 py-2 rounded border text-white text-sm font-medium flex items-center gap-2 ${
+              currentPage === "about"
+                ? "border-white bg-white/10"
+                : "border-white/30 hover:bg-white/10 transition-colors"
+            }`}
+            aria-current={currentPage === "about" ? "page" : undefined}
+          >
+            <svg aria-hidden="true" focusable="false" className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            About
           </a>
         </div>
       </div>

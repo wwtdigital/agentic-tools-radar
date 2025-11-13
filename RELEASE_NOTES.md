@@ -1,5 +1,82 @@
 # Release Notes
 
+## Version 0.6.0 - Weighted Scoring & Accessibility (January 2025)
+
+### 🎉 New Features
+
+#### Weighted Scoring System
+- **Final Score (Weighted Score)** - New risk-adjusted rating that accounts for evaluation status and validation confidence
+- Tools with higher maturity (e.g., "Adopted") maintain their full capability scores
+- Emerging or unvalidated tools receive discounts based on confidence multipliers
+- **Smart dual-score display** - Shows both Weighted Score and Rating when they differ significantly
+- Single score display when weighted and rating values are equivalent
+- Confidence multipliers range from 40% (Not Enterprise Viable) to 100% (Adopted)
+
+#### Evaluation Status Confidence Multipliers
+- Adopted: 100% (fully validated, enterprise-ready)
+- Reviewed: 95% (thorough evaluation completed)
+- Active: 85% (actively in use, proven in practice)
+- Feature Risk: 80% (identified limitations or concerns)
+- Deferred: 75% (evaluation postponed)
+- Emerging: 70% (early stage, limited validation)
+- Watchlist: 60% (monitoring for potential)
+- Not Enterprise Viable: 40% (significant limitations for enterprise use)
+
+### ♿ Accessibility Improvements (WCAG 2.1 Level AA)
+
+#### Visual Enhancements
+- **Increased radar chart fill opacity** from 0.08 to 0.12 for better visibility
+- Improved contrast ratios across all interactive elements
+- Enhanced focus indicators for keyboard navigation
+- Better color differentiation for status badges
+
+#### Interactive Elements
+- Proper ARIA labels and roles throughout the application
+- Keyboard navigation support for all interactive controls
+- Screen reader optimizations for radar visualization
+- Semantic HTML structure improvements
+
+#### Export Functionality
+- **UI controls excluded from PNG exports** - Clean, professional chart images
+- Export button properly labeled for assistive technologies
+- Better error handling and user feedback
+
+### 🐛 Bug Fixes
+
+#### Data Layer
+- Fixed status property type support in static data generator
+- Improved handling of Notion Status property types vs Select types
+- Better validation for tool data schema
+
+#### UI/UX
+- Smart score hiding logic applied consistently across tools page and radar view
+- Resolved layout issues with score display in tool cards
+- Fixed edge cases in dual-score display logic
+
+### 📚 Documentation
+
+#### New Documentation
+- **Accessibility audit documentation** - Comprehensive WCAG 2.1 compliance report
+- **Product roadmap** with feature priorities and planned improvements
+- **Versioning guidelines** in CONTRIBUTING.md
+- Updated CLAUDE.md with weighted scoring implementation details
+
+#### Documentation Updates
+- Cleaned up debug logs and improved inline documentation
+- Enhanced README with scoring methodology explanations
+- Better code comments for complex scoring logic
+
+### 🔧 Technical Improvements
+- Version bumped from 0.4.0 to 0.6.0 (0.5.0 for weighted scoring, 0.6.0 for accessibility milestone)
+- Dynamic version display from package.json
+- Improved type safety in score calculations
+- Better separation of concerns between rating and weighted score logic
+
+---
+
+**Total Changes**: 15+ commits in PR #10
+**Key Areas**: Weighted scoring, WCAG 2.1 AA accessibility, dual-score display, documentation
+
 ## Week of November 3, 2025
 
 ### 🎉 New Features
