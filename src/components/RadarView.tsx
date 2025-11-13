@@ -10,7 +10,7 @@ type Tool = {
   urls?: { product?: string };
 };
 
-const DIM_LABELS = ["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"] as const;
+export const DIM_LABELS = ["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"] as const;
 type Dim = typeof DIM_LABELS[number];
 
 export function RadarView({

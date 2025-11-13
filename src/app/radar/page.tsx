@@ -2,7 +2,7 @@
 import useSWR from "swr";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { toPng } from "html-to-image";
-import { RadarView } from "@/components/RadarView";
+import { RadarView, DIM_LABELS } from "@/components/RadarView";
 import { Filters } from "@/components/Filters";
 import { CompareSelect } from "@/components/CompareSelect";
 import { ToolDetails } from "@/components/ToolDetails";
@@ -300,7 +300,7 @@ export default function RadarPage() {
                     <div className="absolute top-full left-0 mt-1 bg-white rounded border border-slate-200 shadow-lg p-3 max-h-96 overflow-y-auto min-w-[500px]">
                       <h3 className="text-sm font-semibold text-slate-900 mb-3">Dimensions</h3>
                       <div className="grid grid-cols-2 gap-3">
-                        {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => {
+                        {DIM_LABELS.map(dim => {
                           const totalDimensions = 5;
                           const visibleCount = totalDimensions - hiddenDims.size;
                           const isChecked = !hiddenDims.has(dim);
@@ -360,7 +360,7 @@ export default function RadarPage() {
                   Radar Chart Comparing {selectedTools.map(t => t.tool).join(", ")}
                 </figcaption>
                 <div id="chart-desc" className="sr-only">
-                  A radar chart showing dimension scores for {selectedTools.length} {selectedTools.length === 1 ? 'tool' : 'tools'} across {5 - hiddenDims.size} dimensions: {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].filter(d => !hiddenDims.has(d)).join(", ")}.
+                  A radar chart showing dimension scores for {selectedTools.length} {selectedTools.length === 1 ? 'tool' : 'tools'} across {5 - hiddenDims.size} dimensions: {DIM_LABELS.filter(d => !hiddenDims.has(d)).join(", ")}.
                 </div>
                 <div className="w-full h-full">
                   <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
