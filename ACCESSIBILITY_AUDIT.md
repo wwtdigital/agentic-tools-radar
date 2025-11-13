@@ -1,5 +1,7 @@
 # Accessibility Audit Report
 
+> **Note:** This is a point-in-time accessibility audit conducted on November 6, 2025. Code references (file names and line numbers) may have changed since the audit was performed. This document serves as a historical reference and should be updated if a new accessibility audit is conducted.
+
 **Date:** 2025-11-06
 **URL:** https://radar.creative-technology.digital/radar
 **Standards:** WCAG 2.1 Level AA
