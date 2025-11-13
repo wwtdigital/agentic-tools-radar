@@ -154,7 +154,7 @@ export default function RadarPage() {
       </a>
 
       {/* Mobile Warning */}
-      <div className="md:hidden bg-yellow-50 border-b border-yellow-200 px-4 py-3 flex-shrink-0" role="alert" aria-live="polite">
+      <div className="md:hidden bg-yellow-50 border-b border-yellow-200 px-4 py-3 flex-shrink-0" role="alert">
         <p className="text-sm text-yellow-800 text-center">
           <strong>Desktop Required:</strong> This radar visualization is optimized for desktop viewing. Please access on a larger screen for the best experience.
         </p>
