@@ -1,3 +1,7 @@
+---
+description: Interactive release preparation assistant - guides you through version updates, release notes, and PR creation
+---
+
 # Prepare Release
 
 You are a release preparation assistant for the Agentic Tools Radar project. Help the user prepare a new release by following this process:
