@@ -325,7 +325,6 @@ export default function RadarPage() {
                                 }}
                                 className={`mt-0.5 ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                                 aria-describedby={description ? descId : undefined}
-                                aria-invalid={wouldBeUnderMinimum}
                               />
                               <div>
                                 <span className={`font-medium ${wouldBeUnderMinimum ? 'text-slate-400' : 'text-slate-700'}`}>{dim}</span>
