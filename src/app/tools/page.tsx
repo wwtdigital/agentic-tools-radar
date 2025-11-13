@@ -117,36 +117,43 @@ export default function ToolsPage() {
                           {tool.category}
                         </div>
                       </div>
-                      {(tool.finalScore !== null && tool.finalScore !== undefined) || (tool.rating !== null && tool.rating !== undefined) ? (
-                        <div className="flex flex-col items-end flex-shrink-0">
-                          <div className="flex items-center gap-2 text-slate-900">
-                            {tool.finalScore !== null && tool.finalScore !== undefined && (
+                      {(() => {
+                        const hasWeighted = tool.finalScore !== null && tool.finalScore !== undefined;
+                        const hasRating = tool.rating !== null && tool.rating !== undefined;
+                        const scoresDiffer = hasWeighted && hasRating && Math.abs(tool.finalScore! - tool.rating!) > 0.1;
+
+                        if (!hasWeighted && !hasRating) return null;
+
+                        return (
+                          <div className="flex flex-col items-end flex-shrink-0">
+                            {scoresDiffer ? (
+                              // Show both scores when they differ (weighted primary)
                               <>
-                                <span className="text-2xl font-bold">{tool.finalScore.toFixed(1)}</span>
-                                {tool.rating !== null && tool.rating !== undefined && (
+                                <div className="flex items-center gap-2 text-slate-900">
+                                  <span className="text-2xl font-bold">{tool.finalScore!.toFixed(1)}</span>
                                   <span className="text-slate-400">|</span>
-                                )}
-                              </>
-                            )}
-                            {tool.rating !== null && tool.rating !== undefined && (
-                              <span className="text-lg font-semibold text-slate-600">{tool.rating.toFixed(1)}</span>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                            {tool.finalScore !== null && tool.finalScore !== undefined && (
-                              <>
-                                <span>Weighted</span>
-                                {tool.rating !== null && tool.rating !== undefined && (
+                                  <span className="text-lg font-semibold text-slate-600">{tool.rating!.toFixed(1)}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                                  <span>Weighted</span>
                                   <span>|</span>
-                                )}
+                                  <span>Rating</span>
+                                </div>
+                              </>
+                            ) : (
+                              // Show single score when they're the same
+                              <>
+                                <div className="text-2xl font-bold text-slate-900">
+                                  {(hasWeighted ? tool.finalScore! : tool.rating!).toFixed(1)}
+                                </div>
+                                <div className="text-xs text-slate-500 mt-0.5">
+                                  {hasWeighted && hasRating ? 'Score' : hasWeighted ? 'Weighted' : 'Rating'}
+                                </div>
                               </>
                             )}
-                            {tool.rating !== null && tool.rating !== undefined && (
-                              <span>Rating</span>
-                            )}
                           </div>
-                        </div>
-                      ) : null}
+                        );
+                      })()}
                     </div>
 
                     {tool.quickTake && (
