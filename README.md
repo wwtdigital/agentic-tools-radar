@@ -41,15 +41,17 @@ An editorial, Notion-powered radar to compare agentic developer tools across fiv
 - **Unified Navigation**: Seamless switching between Radar and Tools pages via header buttons
 - **Page-based scrolling**: Natural scrolling experience on radar page instead of fixed containers
 - **Responsive radar sizing**: Square aspect ratio for consistent, responsive radar chart dimensions
+- **Accessibility Compliance**: WCAG 2.1 Level AA compliant with semantic HTML, ARIA labels, keyboard navigation, and screen reader support
 - Full-width navigation with slide-down drawer interface
 - 70vh drawer with integrated filters and tool selection
 - Background scroll lock when drawer is open
-- Click-outside-to-close behavior
+- Click-outside-to-close behavior with Escape key support
 - Prominent close button with visual feedback
 - Tool details panel with links, quick takes, evaluation status, and "View All" button
 - Sticky tool details header for easy navigation while scrolling
 - Mobile warning banner for optimal desktop experience
 - Enhanced logo visibility with darker backgrounds for better contrast
+- Skip navigation links on all pages for keyboard users
 
 ### 📊 Tool Details
 
@@ -171,7 +173,7 @@ Required properties:
 # Development server
 pnpm dev
 
-# Production build
+# Production build (includes prebuild data snapshot generation)
 pnpm build
 
 # Start production server
@@ -179,6 +181,12 @@ pnpm start
 
 # Lint
 pnpm lint
+
+# Regenerate tools data snapshot manually
+pnpm generate-snapshot
+
+# Validate release readiness (version, build, docs)
+pnpm validate:release
 ```
 
 ## Deployment
@@ -188,6 +196,24 @@ Optimized for Vercel:
 1. Connect your GitHub repository
 2. Add environment variables in Project Settings
 3. Deploy automatically on push to main
+
+The `prebuild` script automatically generates a fresh data snapshot during each build, ensuring production always serves the latest data from Notion.
+
+## Documentation
+
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** — Technical architecture and data flow
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** — Versioning guidelines and contribution workflow
+- **[RELEASE_PROCESS.md](./RELEASE_PROCESS.md)** — Release preparation and validation
+- **[RELEASE_NOTES.md](./RELEASE_NOTES.md)** — Complete version history and changelog
+- **[ROADMAP.md](./ROADMAP.md)** — Feature priorities and future plans
+- **[ACCESSIBILITY_AUDIT.md](./ACCESSIBILITY_AUDIT.md)** — WCAG 2.1 compliance audit and improvements
+- **[CLAUDE.md](./CLAUDE.md)** — AI assistant instructions for code development
+
+## Current Version
+
+**v0.7.1** — Accessibility Compliance (November 2025)
+
+See [RELEASE_NOTES.md](./RELEASE_NOTES.md) for complete version history and detailed changelog.
 
 ## License
 

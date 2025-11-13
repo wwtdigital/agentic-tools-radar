@@ -96,9 +96,13 @@ Still unsure? Default to PATCH for safety.
 
 ## Version History
 
+- **v0.7.1** - Accessibility compliance improvements (PATCH - bug fixes & non-user-facing accessibility enhancements)
+- **v0.7.0** - Tools enhancements & release system (MINOR - flexible grouping, search, about page, ToolCard component)
+- **v0.6.0** - Weighted scoring & accessibility (MINOR - risk-adjusted scoring system, WCAG 2.1 Level AA improvements)
+- **v0.5.0** - Weighted scoring system implementation (MINOR - new weighted score feature)
 - **v0.4.0** - Add evaluation status badges (MINOR - new feature)
 - **v0.3.0** - Add shared navbar and latest update date (MINOR - new features)
-- **v0.2.0** - Initial feature set with radar and tools pages
+- **v0.2.0** - Initial feature set with radar and tools pages (MINOR - initial release)
 
 ---
 
@@ -111,3 +115,7 @@ We're currently in initial development (v0.x.x). Once the application reaches a 
 - No planned breaking changes
 
 We'll bump to **v1.0.0** to signal production readiness.
+
+---
+
+*Last Updated: 2025-11-13*

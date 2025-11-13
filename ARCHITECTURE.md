@@ -85,18 +85,22 @@ The research process combines multiple AI platforms to ensure comprehensive, acc
 ## 2. Presentation Layer (Next.js Application)
 
 ### Stack
-- **Framework**: Next.js 15 + React 18 + TypeScript
+- **Framework**: Next.js 15.5.6 + React 18.3.1 + TypeScript 5.5.4
 - **Deployment**: Vercel (serverless, global CDN)
-- **Visualization**: Nivo (D3-based radar charts)
-- **Data Fetching**: SWR (client-side caching)
-- **Validation**: Zod (runtime type safety)
+- **Visualization**: Nivo 0.99.0 (D3-based radar charts)
+- **Data Fetching**: SWR 2.2.5 (client-side caching)
+- **Styling**: Tailwind CSS 3.4.10
+- **Validation**: Zod 3.23.8 (runtime type safety)
+- **Notion API**: @notionhq/client 2.2.15 (read-only database access)
 
 ### Key Features
 
 **API Integration** (`/api/tools`)
-- Server-side Notion query (up to 100 tools)
-- Schema validation and data transformation
-- Graceful fallback to demo data
+- **Development Mode**: Live Notion API queries for instant content updates
+- **Production Mode**: Serves static snapshot generated at build time via `prebuild` script
+- Build-time snapshot creation using `scripts/generate-static-data.js`
+- Schema validation and data transformation with Zod
+- Graceful fallback to demo data when credentials are missing
 
 **Interactive Radar**
 - Compare up to 5 tools across dimensions
@@ -105,12 +109,18 @@ The research process combines multiple AI platforms to ensure comprehensive, acc
 - Interactive dimension tooltips with detailed explanations
 
 **User Interface**
-- Unified drawer (tools, filters, dimensions)
+- **Radar Page** (`/radar`): Interactive radar visualization with drawer interface
+- **Tools Page** (`/tools`): Comprehensive tools listing with flexible grouping (Category, Status, Score Range, None) and search
+- **About Page** (`/about`): Evaluation framework documentation and release notes
+- Unified drawer with tools, filters, and dimension controls
 - Category-grouped selection with bulk actions
 - Real-time filtering (category, status, recency)
-- Dynamic dimension visibility controls
+- Dynamic dimension visibility controls with minimum 3 dimensions enforced
+- Smart dual-score display (Weighted Score vs Rating)
+- Color-coded evaluation status badges matching Notion colors
+- PNG export functionality for radar charts
+- WCAG 2.1 Level AA accessibility compliance (keyboard navigation, ARIA labels, semantic HTML)
 - Mobile warning banner for optimal desktop experience
-- Dedicated architecture documentation page (`/architecture`)
 
 ---
 
@@ -124,11 +134,21 @@ AI Research Layer
         ↓
 Notion Database (Source of Truth)
         ↓
-Next.js API (/api/tools)
+        ├──→ Development Mode: Direct API Queries
+        │         ↓
+        │    Next.js API (/api/tools)
+        │
+        └──→ Production Mode: Build-Time Snapshot
+                  ↓
+             scripts/generate-static-data.js (prebuild)
+                  ↓
+             src/data/tools-snapshot.json
+                  ↓
+             Next.js API (/api/tools) serves snapshot
         ↓
 SWR Cache (Client)
         ↓
-React UI (Radar + Controls)
+React UI (Radar + Tools + About Pages)
 ```
 
 ---
@@ -156,17 +176,24 @@ React UI (Radar + Controls)
 
 ## Tech Stack Summary
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Research | Notion MCP, Perplexity | AI-assisted data collection |
-| Data | Notion Database | Source of truth with version control |
-| API | Next.js Server Routes | Transform and validate |
-| Frontend | React + TypeScript | Interactive UI |
-| Visualization | Nivo | D3-based radar charts |
-| Deploy | Vercel | Serverless hosting + CDN |
-| Validation | Zod | Runtime type safety |
-| Cache | SWR | Client-side data management |
+| Layer | Technology | Version | Purpose |
+|-------|-----------|---------|---------|
+| Research | Notion MCP, Perplexity | - | AI-assisted data collection |
+| Data | Notion Database | - | Source of truth with version control |
+| Build | Node.js scripts | - | Build-time static data generation |
+| API | Next.js Server Routes | 15.5.6 | Transform and validate |
+| Frontend | React + TypeScript | 18.3.1 + 5.5.4 | Interactive UI |
+| Styling | Tailwind CSS | 3.4.10 | Utility-first CSS |
+| Visualization | Nivo | 0.99.0 | D3-based radar charts |
+| Deploy | Vercel | - | Serverless hosting + CDN |
+| Validation | Zod | 3.23.8 | Runtime type safety |
+| Cache | SWR | 2.2.5 | Client-side data management |
+| Integration | @notionhq/client | 2.2.15 | Notion API access |
 
 ---
 
 **Architecture Philosophy**: Combine AI-assisted research for rapid, accurate data collection with modern web infrastructure for robust, scalable delivery.
+
+---
+
+*Last Updated: 2025-11-13*
