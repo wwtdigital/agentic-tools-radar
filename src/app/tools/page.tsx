@@ -1,6 +1,7 @@
 "use client";
 import useSWR from "swr";
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { ToolCard } from "@/components/ToolCard";
 
@@ -49,10 +50,42 @@ function getScoreRange(score: number): string {
 
 const fetcher = (u: string) => fetch(u).then(r => r.json());
 
-export default function ToolsPage() {
+function ToolsPageContent() {
   const { data = [], isLoading } = useSWR<Tool[]>("/api/tools", fetcher);
-  const [groupBy, setGroupBy] = useState<GroupBy>("category");
-  const [searchQuery, setSearchQuery] = useState("");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Initialize state from URL params
+  const [groupBy, setGroupBy] = useState<GroupBy>(() => {
+    const param = searchParams.get("groupBy");
+    if (param === "category" || param === "status" || param === "score" || param === "none") {
+      return param;
+    }
+    return "category";
+  });
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get("search") || "");
+
+  // Update URL when state changes
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    // Only add non-default values to keep URL clean
+    if (groupBy !== "category") {
+      params.set("groupBy", groupBy);
+    } else {
+      params.delete("groupBy");
+    }
+
+    if (searchQuery.trim()) {
+      params.set("search", searchQuery);
+    } else {
+      params.delete("search");
+    }
+
+    const queryString = params.toString();
+    const newUrl = queryString ? `/tools?${queryString}` : "/tools";
+    router.replace(newUrl as any, { scroll: false });
+  }, [groupBy, searchQuery, router, searchParams]);
 
   // Group tools by category, status, score, or none, sorted by weighted score within each group
   const groupedTools = useMemo(() => {
@@ -260,5 +293,25 @@ export default function ToolsPage() {
         </div>
       </main>
     </>
+  );
+}
+
+export default function ToolsPage() {
+  return (
+    <Suspense fallback={
+      <>
+        <Navbar title="All Agentic Developer Tools" latestUpdate={null} currentPage="tools" />
+        <main className="p-6">
+          <div className="flex items-center justify-center min-h-[600px]">
+            <div className="text-center space-y-4">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-slate-300 border-t-slate-900"></div>
+              <p className="text-slate-600 text-lg">Loading...</p>
+            </div>
+          </div>
+        </main>
+      </>
+    }>
+      <ToolsPageContent />
+    </Suspense>
   );
 }

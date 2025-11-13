@@ -1,6 +1,7 @@
 "use client";
 import useSWR from "swr";
-import { useMemo, useState, useEffect, useRef } from "react";
+import { Suspense, useMemo, useState, useEffect, useRef } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { toPng } from "html-to-image";
 import { RadarView, DIM_LABELS } from "@/components/RadarView";
 import { Filters } from "@/components/Filters";
@@ -25,15 +26,44 @@ type Tool = {
 
 const fetcher = (u: string) => fetch(u).then(r => r.json());
 
-export default function RadarPage() {
+function RadarPageContent() {
   const { data = [], isLoading } = useSWR<Tool[]>("/api/tools", fetcher);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   const [filters, setFilters] = useState<{category?: string; status?: string; months?: number}>({});
   const [selected, setSelected] = useState<string[]>([]);
-  const [hiddenDims, setHiddenDims] = useState<Set<string>>(new Set());
+
+  // Initialize hiddenDims from URL params
+  const [hiddenDims, setHiddenDims] = useState<Set<string>>(() => {
+    const param = searchParams.get("hiddenDims");
+    if (param) {
+      const dims = param.split(",").filter(d => DIM_LABELS.includes(d as typeof DIM_LABELS[number]));
+      return new Set(dims);
+    }
+    return new Set();
+  });
+
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [dimensionsExpanded, setDimensionsExpanded] = useState<boolean>(false);
   const radarRef = useRef<HTMLDivElement>(null);
+
+  // Update URL when hiddenDims changes
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    // Only add hiddenDims if there are any
+    if (hiddenDims.size > 0) {
+      params.set("hiddenDims", Array.from(hiddenDims).join(","));
+    } else {
+      params.delete("hiddenDims");
+    }
+
+    const queryString = params.toString();
+    const newUrl = queryString ? `/radar?${queryString}` : "/radar";
+    router.replace(newUrl as any, { scroll: false });
+  }, [hiddenDims, router, searchParams]);
 
   // Export radar chart as PNG
   const handleExport = async () => {
@@ -386,5 +416,25 @@ export default function RadarPage() {
         }
       </div>
     </div>
+  );
+}
+
+export default function RadarPage() {
+  return (
+    <Suspense fallback={
+      <div className="h-screen flex flex-col overflow-hidden">
+        <Navbar title="Agentic Developer Tools Radar" latestUpdate={null} currentPage="radar" />
+        <main className="flex-1 p-6 overflow-hidden">
+          <div className="flex items-center justify-center min-h-[600px]">
+            <div className="text-center space-y-4">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-slate-300 border-t-slate-900"></div>
+              <p className="text-slate-600 text-lg">Loading...</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    }>
+      <RadarPageContent />
+    </Suspense>
   );
 }
