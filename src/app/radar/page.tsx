@@ -176,7 +176,6 @@ export default function RadarPage() {
       {/* Drawer - slides down from top */}
       <div
         role="dialog"
-        aria-modal="false"
         aria-labelledby="drawer-title"
         aria-hidden={!drawerOpen}
         className={`fixed left-0 right-0 top-[57px] bg-white shadow-lg z-30 overflow-y-auto transition-all duration-300 ${
