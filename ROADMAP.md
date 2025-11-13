@@ -6,49 +6,7 @@ This document outlines potential features and improvements for the Agentic Devel
 
 ## High Priority / User-Facing Features
 
-### 1. Filter by Evaluation Status
-**Status:** Not Started
-**Priority:** High
-**Effort:** Small
-
-Add evaluation status filter dropdown to complement the new status badges.
-
-**Details:**
-- Add status filter dropdown (similar to category filter)
-- Let users view only "Active", "Adopted", "Feature Risk" tools, etc.
-- Apply to both radar and tools pages
-- Show count of tools in each status
-- Works naturally with existing category filters
-
-**Benefits:**
-- Natural extension of v0.4.0 status badges feature
-- Helps users focus on tools in specific evaluation stages
-- Low implementation complexity
-
----
-
-### 2. Search/Filter Tools
-**Status:** Not Started
-**Priority:** High
-**Effort:** Small
-
-Add search functionality to quickly find tools by name or company.
-
-**Details:**
-- Search bar component at top of tools page and drawer
-- Real-time filtering as user types
-- Search across tool name, company, and quick take
-- Clear/reset search functionality
-- Highlight matching terms in results
-
-**Benefits:**
-- High value for users with many tools
-- Improves discoverability
-- Quick to implement with existing data structure
-
----
-
-### 3. Comparison Table View
+### 1. Comparison Table View
 **Status:** Not Started
 **Priority:** Medium
 **Effort:** Medium
@@ -70,7 +28,7 @@ Add alternative table view for side-by-side dimension comparison.
 
 ---
 
-### 4. Tool Details Modal/Page
+### 2. Tool Details Modal/Page
 **Status:** Not Started
 **Priority:** Medium
 **Effort:** Medium
@@ -95,7 +53,7 @@ Dedicated view for comprehensive tool information.
 
 ## Medium Priority / UX Improvements
 
-### 5. Persist User Selections
+### 3. Persist User Selections
 **Status:** Not Started
 **Priority:** Medium
 **Effort:** Small
@@ -119,7 +77,7 @@ Save user preferences and restore on return visit.
 
 ---
 
-### 6. Share/Bookmark Current View
+### 4. Share/Bookmark Current View
 **Status:** Not Started
 **Priority:** Medium
 **Effort:** Small
@@ -142,7 +100,7 @@ Generate shareable URLs with current view state.
 
 ---
 
-### 7. Mobile Optimization
+### 5. Mobile Optimization
 **Status:** Not Started
 **Priority:** Medium
 **Effort:** Large
@@ -166,7 +124,7 @@ Improve mobile experience beyond current warning banner.
 
 ## Lower Priority / Nice-to-Have
 
-### 8. Export to CSV/JSON
+### 6. Export to CSV/JSON
 **Status:** Not Started
 **Priority:** Low
 **Effort:** Small
@@ -187,7 +145,7 @@ Download tool data in various formats.
 
 ---
 
-### 9. Dark Mode
+### 7. Dark Mode
 **Status:** Not Started
 **Priority:** Low
 **Effort:** Medium
@@ -209,7 +167,7 @@ Toggle between light and dark themes.
 
 ---
 
-### 10. Tool Rating/Feedback
+### 8. Tool Rating/Feedback
 **Status:** Not Started
 **Priority:** Low
 **Effort:** Large
@@ -237,6 +195,28 @@ Community-driven ratings and feedback.
 ---
 
 ## Completed Features
+
+### ✅ v0.7.0 - Tools Enhancements & Flexible Grouping
+**Completed:** 2025-11-13
+
+- **Flexible grouping options** - Category, Status, Score Range, or None (flat list)
+- **Search functionality** - Filter tools by name or company with instant results
+- **Status-based filtering** - Group and filter tools by evaluation status
+- Custom status ordering (production ready → emerging → risk/limitations)
+- Score-based grouping (Excellent 90-100, Very Good 80-89, etc.)
+- Dynamic filtering with search and grouping working together
+- About page with comprehensive evaluation framework documentation
+- Release validation system with automated checks
+- Extracted reusable ToolCard component
+
+### ✅ v0.6.0 - Weighted Scoring System
+**Completed:** 2025-01-27
+
+- Risk-adjusted weighted scoring accounting for validation confidence
+- Smart dual-score display (shows both when they differ significantly)
+- Confidence multipliers by evaluation status (40%-100%)
+- Enhanced accessibility improvements (WCAG 2.1 Level AA)
+- Increased radar chart fill opacity for better visibility
 
 ### ✅ v0.4.0 - Evaluation Status Badges
 **Completed:** 2025-11-04
@@ -280,4 +260,4 @@ When prioritizing features, consider:
 
 ---
 
-*Last Updated: 2025-11-04*
+*Last Updated: 2025-11-13*
