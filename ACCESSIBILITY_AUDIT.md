@@ -73,7 +73,7 @@ Significant accessibility improvements have been implemented without affecting v
 - ✅ Added `aria-label="Main navigation"` to Navbar component (Navbar.tsx:12)
 - ✅ Added `role="main"` and `id="main-content"` to all page main elements
 - ✅ Added `role="dialog"`, `aria-modal="false"`, `aria-labelledby="drawer-title"` to drawer (page.tsx:159-162)
-- ✅ Added `id="drawer-title"` to drawer heading (page.tsx:171)
+- ✅ Added `id="drawer-title"` to drawer heading (page.tsx:190)
 
 ---
 
