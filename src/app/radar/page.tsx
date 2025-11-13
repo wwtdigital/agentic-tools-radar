@@ -209,7 +209,7 @@ export default function RadarPage() {
                       : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
                   }`}
                   aria-label={`Select custom tools, ${selected.length || 5} tools currently selected`}
-                  aria-pressed={!filters.category && selected.length > 0}
+                  aria-pressed={!filters.category}
                 >
                   Select Tools <span className="ml-1 opacity-70">({selected.length || 5})</span>
                 </button>
@@ -345,16 +345,14 @@ export default function RadarPage() {
         </div>
       </main>
 
-      {/* Live regions for screen reader announcements */}
+      {/* Live region for screen reader announcements */}
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
-        {isLoading && "Loading tools data"}
-        {isExporting && "Exporting radar chart to PNG"}
-      </div>
-      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
-        {!isLoading && `Showing ${filtered.length} tools${filters.category ? ` in ${filters.category} category` : ''}`}
-      </div>
-      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
-        {selectedTools.length > 0 && `${selectedTools.length} tools selected for comparison`}
+        {isExporting
+          ? "Exporting radar chart to PNG"
+          : selectedTools.length > 0
+          ? `Showing ${filtered.length} tools${filters.category ? ` in ${filters.category} category` : ''}, ${selectedTools.length} selected for comparison`
+          : `Showing ${filtered.length} tools${filters.category ? ` in ${filters.category} category` : ''}`
+        }
       </div>
     </div>
   );
