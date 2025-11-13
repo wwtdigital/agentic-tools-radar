@@ -23,9 +23,17 @@ export default function AboutPage() {
 
   return (
     <>
+      {/* Skip Navigation Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:font-medium focus:border focus:border-slate-900 focus:m-2"
+      >
+        Skip to main content
+      </a>
+
       <Navbar title="About Agentic Developer Tools Radar" latestUpdate={latestUpdate} currentPage="about" />
 
-      <main role="main" aria-label="About page" className="max-w-5xl mx-auto p-6 pb-12">
+      <main id="main-content" role="main" aria-label="About page" className="max-w-5xl mx-auto p-6 pb-12">
         {/* Release Notes Section */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-slate-900 mb-4">Latest Release</h2>

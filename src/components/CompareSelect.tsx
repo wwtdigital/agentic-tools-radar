@@ -60,6 +60,8 @@ export function CompareSelect({
               <button
                 onClick={() => handleSelectAll(tools)}
                 className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                aria-pressed={allSelected}
+                aria-label={`${allSelected ? 'Deselect' : 'Select'} all tools in ${category} category`}
               >
                 {allSelected ? "Deselect all" : someSelected ? "Select all" : "Select all"}
               </button>
@@ -74,6 +76,8 @@ export function CompareSelect({
                     className={`text-left text-xs border px-2 py-2 rounded flex items-center gap-2 transition-colors ${
                       on ? "bg-slate-100 border-slate-400 shadow-sm" : "bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300"
                     }`}
+                    aria-pressed={on}
+                    aria-label={`${on ? 'Deselect' : 'Select'} ${t.tool}${t.company ? ` by ${t.company}` : ''} for comparison`}
                     title={t.quickTake}
                   >
                     <ToolLogo
