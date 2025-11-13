@@ -26,6 +26,52 @@ export default function AboutPage() {
       <Navbar title="About Agentic Developer Tools Radar" latestUpdate={latestUpdate} currentPage="about" />
 
       <main role="main" aria-label="About page" className="max-w-5xl mx-auto p-6 pb-12">
+        {/* Release Notes Section */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-slate-900 mb-4">Latest Release</h2>
+
+          <div className="border border-slate-200 rounded-lg p-6 bg-white">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-2xl font-bold text-slate-900">Version 0.6.0</h3>
+              <span className="text-sm text-slate-500">November 2025</span>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold text-slate-900 mb-2">Weighted Scoring & Accessibility</h4>
+                <p className="text-slate-700 text-sm leading-relaxed">
+                  Introduced risk-adjusted weighted scoring that accounts for evaluation status and validation confidence,
+                  plus comprehensive WCAG 2.1 Level AA accessibility improvements including enhanced visual contrast,
+                  keyboard navigation, and screen reader optimization.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-slate-900 mb-2">Key Highlights:</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm text-slate-700">
+                  <li>New weighted score with confidence multipliers (40%-100%)</li>
+                  <li>Smart dual-score display showing both weighted and capability ratings</li>
+                  <li>WCAG 2.1 Level AA compliance across all interactive elements</li>
+                  <li>Improved radar chart visibility with increased fill opacity</li>
+                  <li>UI controls excluded from PNG exports for cleaner images</li>
+                  <li>Enhanced documentation and accessibility audit</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-slate-200">
+              <a
+                href="https://github.com/wwtdigital/agentic-tools-radar/blob/main/RELEASE_NOTES.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium"
+              >
+                View complete release history →
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* Purpose Section */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-slate-900 mb-4">Purpose</h2>
@@ -114,41 +160,43 @@ export default function AboutPage() {
               Tools with higher maturity (e.g., "Adopted") maintain their full capability scores, while emerging or
               unvalidated tools receive discounts based on confidence multipliers.
             </p>
-            <p className="text-sm text-slate-700 mb-3 font-medium">Confidence Multipliers by Evaluation Status:</p>
-            <div className="bg-slate-50 rounded-lg p-4 space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-700">Adopted (fully validated, enterprise-ready)</span>
-                <span className="font-semibold text-slate-900">100%</span>
+
+            <h4 className="text-base font-semibold text-slate-900 mb-3 mt-4">Evaluation Status Categories</h4>
+            <p className="text-sm text-slate-700 mb-3">
+              Tools are categorized by maturity and validation status, ordered by priority:
+            </p>
+            <div className="bg-slate-50 rounded-lg p-4 space-y-3 mb-4">
+              <div>
+                <div className="font-semibold text-slate-900 text-sm mb-1">Production Ready (100%-85%)</div>
+                <ul className="space-y-1 text-sm text-slate-700 ml-4">
+                  <li><strong>Adopted:</strong> Fully validated and enterprise-ready (100%)</li>
+                  <li><strong>Active:</strong> Actively in use, proven in practice (85%)</li>
+                  <li><strong>Reviewed:</strong> Thorough evaluation completed (95%)</li>
+                </ul>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-700">Reviewed (thorough evaluation completed)</span>
-                <span className="font-semibold text-slate-900">95%</span>
+
+              <div>
+                <div className="font-semibold text-slate-900 text-sm mb-1">Emerging & Monitoring (70%-60%)</div>
+                <ul className="space-y-1 text-sm text-slate-700 ml-4">
+                  <li><strong>Emerging:</strong> Early stage with potential, limited validation (70%)</li>
+                  <li><strong>Watchlist:</strong> Monitoring for future potential (60%)</li>
+                </ul>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-700">Active (actively in use, proven in practice)</span>
-                <span className="font-semibold text-slate-900">85%</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-700">Feature Risk (identified limitations or concerns)</span>
-                <span className="font-semibold text-slate-900">80%</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-700">Deferred (evaluation postponed)</span>
-                <span className="font-semibold text-slate-900">75%</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-700">Emerging (early stage, limited validation)</span>
-                <span className="font-semibold text-slate-900">70%</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-700">Watchlist (monitoring for potential)</span>
-                <span className="font-semibold text-slate-900">60%</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-700">Not Enterprise Viable (significant limitations)</span>
-                <span className="font-semibold text-slate-900">40%</span>
+
+              <div>
+                <div className="font-semibold text-slate-900 text-sm mb-1">Risk & Limitations (80%-40%)</div>
+                <ul className="space-y-1 text-sm text-slate-700 ml-4">
+                  <li><strong>Feature Risk:</strong> Identified limitations or concerns (80%)</li>
+                  <li><strong>Deferred:</strong> Evaluation postponed (75%)</li>
+                  <li><strong>Not Enterprise Viable:</strong> Significant limitations for enterprise use (40%)</li>
+                </ul>
               </div>
             </div>
+
+            <p className="text-xs text-slate-600 italic">
+              Note: Tools grouped by status on the tools page appear in priority order (production-ready → emerging → risk/limitations),
+              while confidence multipliers are ordered by validation confidence level.
+            </p>
           </div>
 
           {/* Scoring Process */}
@@ -161,52 +209,6 @@ export default function AboutPage() {
               <li>Multi-platform validation prevents single-source bias</li>
               <li>Iterative refinement through hands-on testing and AI-assisted research</li>
             </ul>
-          </div>
-        </section>
-
-        {/* Release Notes Section */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">Latest Release</h2>
-
-          <div className="border border-slate-200 rounded-lg p-6 bg-white">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-bold text-slate-900">Version 0.6.0</h3>
-              <span className="text-sm text-slate-500">January 2025</span>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-semibold text-slate-900 mb-2">Weighted Scoring & Accessibility</h4>
-                <p className="text-slate-700 text-sm leading-relaxed">
-                  Introduced risk-adjusted weighted scoring that accounts for evaluation status and validation confidence,
-                  plus comprehensive WCAG 2.1 Level AA accessibility improvements including enhanced visual contrast,
-                  keyboard navigation, and screen reader optimization.
-                </p>
-              </div>
-
-              <div>
-                <h4 className="font-semibold text-slate-900 mb-2">Key Highlights:</h4>
-                <ul className="list-disc list-inside space-y-1 text-sm text-slate-700">
-                  <li>New weighted score with confidence multipliers (40%-100%)</li>
-                  <li>Smart dual-score display showing both weighted and capability ratings</li>
-                  <li>WCAG 2.1 Level AA compliance across all interactive elements</li>
-                  <li>Improved radar chart visibility with increased fill opacity</li>
-                  <li>UI controls excluded from PNG exports for cleaner images</li>
-                  <li>Enhanced documentation and accessibility audit</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-slate-200">
-              <a
-                href="https://github.com/wwtdigital/agentic-tools-radar/blob/main/RELEASE_NOTES.md"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium"
-              >
-                View complete release history →
-              </a>
-            </div>
           </div>
         </section>
 
