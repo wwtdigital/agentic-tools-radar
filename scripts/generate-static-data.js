@@ -103,6 +103,12 @@ async function generateStaticData() {
             ? ratingProp.formula.number
             : null;
 
+        const finalScoreProp = props["Final Score"];
+        const finalScoreFormula = finalScoreProp?.type === "formula" &&
+          finalScoreProp.formula?.type === "number"
+            ? finalScoreProp.formula.number
+            : null;
+
         const toolName = readTitle(props, "Tool") || readTitle(props, "Name") || "";
 
         // Skip tools with empty names
@@ -130,6 +136,7 @@ async function generateStaticData() {
             interface: readNumberLike(props, "User Interface")
           },
           rating: ratingFormula,
+          finalScore: finalScoreFormula,
           lastEdited: page.last_edited_time
         };
       })

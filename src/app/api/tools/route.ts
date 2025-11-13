@@ -43,6 +43,7 @@ const ToolSchema = z.object({
     interface: z.number()
   }),
   rating: z.number().nullable(),
+  finalScore: z.number().nullable(),
   lastEdited: z.string()
 });
 
@@ -77,6 +78,7 @@ export async function GET() {
       quickTake: "Fast IDE agent with Cascade planning.",
       dims: { autonomy: 4, collaboration: 4, context: 4, governance: 4, interface: 5 },
       rating: 4.2,
+      finalScore: 4.2,
       lastEdited: new Date().toISOString()
     }];
     return NextResponse.json(demo);
@@ -143,15 +145,27 @@ export async function GET() {
       };
       
       const ratingProp = props["Rating"];
-      const ratingFormula = ratingProp && 
-        ratingProp.type === "formula" && 
+      const ratingFormula = ratingProp &&
+        ratingProp.type === "formula" &&
         "formula" in ratingProp &&
         ratingProp.formula &&
         typeof ratingProp.formula === "object" &&
         "type" in ratingProp.formula &&
         ratingProp.formula.type === "number" &&
         "number" in ratingProp.formula
-          ? ratingProp.formula.number 
+          ? ratingProp.formula.number
+          : null;
+
+      const finalScoreProp = props["Final Score"];
+      const finalScoreFormula = finalScoreProp &&
+        finalScoreProp.type === "formula" &&
+        "formula" in finalScoreProp &&
+        finalScoreProp.formula &&
+        typeof finalScoreProp.formula === "object" &&
+        "type" in finalScoreProp.formula &&
+        finalScoreProp.formula.type === "number" &&
+        "number" in finalScoreProp.formula
+          ? finalScoreProp.formula.number
           : null;
 
       const toolName = readTitle("Tool") || readTitle("Name") || "";
@@ -181,6 +195,7 @@ export async function GET() {
           interface: readNumberLike("User Interface")
         },
         rating: ratingFormula,
+        finalScore: finalScoreFormula,
         lastEdited: page.last_edited_time
       };
       return ToolSchema.parse(tool);
