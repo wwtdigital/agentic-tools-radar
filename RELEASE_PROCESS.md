@@ -14,19 +14,33 @@ We use semantic versioning (MAJOR.MINOR.PATCH) and maintain comprehensive releas
 
 ## Pre-Release Checklist
 
-Before creating a new release, you can use the release preparation assistant:
+### Option 1: Release Preparation Assistant (Recommended)
 
-```bash
-/prepare-release
+Use Claude Code to guide you through the entire release process. Simply send this message:
+
+```
+Prepare a new release. Follow these steps:
+
+1. Check the current version in package.json
+2. Ask me what type of release this is (major/minor/patch)
+3. Calculate and update the new version number
+4. Review recent commits and draft release notes for RELEASE_NOTES.md
+5. Ask if I want to update the About page
+6. Run validation: npm run validate:release, npx tsc --noEmit, pnpm build
+7. Create a release branch, commit changes, and create a PR
+
+Be thorough and show me what you're doing at each step.
 ```
 
-This Claude Code slash command will guide you through:
-- ✅ Determining the new version number
-- ✅ Updating package.json with the new version
-- ✅ Creating release notes entry
-- ✅ Updating the About page (for major/minor releases)
-- ✅ Running validation checks (build, types, etc.)
-- ✅ Creating the release PR
+The assistant will:
+- ✅ Determine the new version number
+- ✅ Update package.json with the new version
+- ✅ Create release notes entry
+- ✅ Update the About page (for major/minor releases)
+- ✅ Run validation checks (build, types, etc.)
+- ✅ Create the release PR
+
+### Option 2: Manual Validation
 
 Alternatively, you can manually run the validation bot:
 
