@@ -70,10 +70,10 @@ Significant accessibility improvements have been implemented without affecting v
 ```
 
 **Implementation:**
-- ✅ Added `aria-label="Main navigation"` to Navbar component (Navbar.tsx:12)
+- ✅ Added `aria-label="Main navigation"` to Navbar component (Navbar.tsx)
 - ✅ Added `role="main"` and `id="main-content"` to all page main elements
-- ✅ Added `role="dialog"`, `aria-modal="false"`, `aria-labelledby="drawer-title"` to drawer (page.tsx:178-181)
-- ✅ Added `id="drawer-title"` to drawer heading (page.tsx:190)
+- ✅ Added `role="dialog"`, `aria-modal="false"`, `aria-labelledby="drawer-title"` to drawer (radar/page.tsx)
+- ✅ Added `id="drawer-title"` to drawer heading (radar/page.tsx)
 
 ---
 
@@ -83,7 +83,7 @@ Significant accessibility improvements have been implemented without affecting v
 **Status:** RESOLVED in commit 1443264 (2025-11-13)
 
 **Issues:**
-- Checkbox inputs for dimensions lack accessible labels (page.tsx:275-286)
+- Checkbox inputs for dimensions lack accessible labels
 - Filter buttons lack descriptive labels for screen readers
 - "Select All" buttons in CompareSelect don't indicate current state
 
@@ -112,10 +112,10 @@ Significant accessibility improvements have been implemented without affecting v
 ```
 
 **Implementation:**
-- ✅ Added unique IDs to all dimension checkboxes (page.tsx:295, 311-312)
-- ✅ Added `htmlFor` attributes to labels (page.tsx:292)
-- ✅ Added `aria-describedby` linking checkboxes to descriptions (page.tsx:304)
-- ✅ Added `aria-invalid` state for disabled checkboxes (page.tsx:305)
+- ✅ Added unique IDs to all dimension checkboxes (radar/page.tsx)
+- ✅ Added `htmlFor` attributes to labels (radar/page.tsx)
+- ✅ Added `aria-describedby` linking checkboxes to descriptions (radar/page.tsx)
+- ✅ Added `aria-invalid` state for disabled checkboxes (radar/page.tsx)
 
 ---
 
@@ -154,11 +154,11 @@ Significant accessibility improvements have been implemented without affecting v
 
 **Implementation:**
 - ✅ All icon-only buttons already had `aria-label` attributes (already implemented)
-- ✅ Added `aria-pressed` to category filter toggle buttons (page.tsx:228)
-- ✅ Added `aria-pressed` to status filter buttons (Filters.tsx:63)
-- ✅ Added `aria-pressed` to grouping toggle buttons (tools/page.tsx:153, 164, 175, 186)
-- ✅ Added `aria-pressed` to Select All buttons (CompareSelect.tsx:63)
-- ✅ Added `aria-pressed` to tool selection buttons (CompareSelect.tsx:79)
+- ✅ Added `aria-pressed` to category filter toggle buttons (radar/page.tsx)
+- ✅ Added `aria-pressed` to status filter buttons (components/Filters.tsx)
+- ✅ Added `aria-pressed` to grouping toggle buttons (tools/page.tsx)
+- ✅ Added `aria-pressed` to Select All buttons (components/CompareSelect.tsx)
+- ✅ Added `aria-pressed` to tool selection buttons (components/CompareSelect.tsx)
 - ✅ Added descriptive `aria-label` to all toggle buttons with context
 
 ---
@@ -179,7 +179,7 @@ Significant accessibility improvements have been implemented without affecting v
 
 **Current Code (Problematic):**
 ```tsx
-// page.tsx:146-152
+// Drawer backdrop
 <div
   className="fixed inset-0 bg-black/20 z-20"
   onClick={() => setDrawerOpen(false)}
@@ -217,7 +217,7 @@ import { FocusTrap } from '@headlessui/react' // or similar
 ```
 
 **Implementation:**
-- ✅ Added Escape key handler to close drawer (page.tsx:77-85)
+- ✅ Added Escape key handler to close drawer (radar/page.tsx)
 - ✅ Drawer backdrop maintained with `role="presentation"` (already implemented)
 - ✅ All SVG icons already have `aria-hidden="true"` and `focusable="false"` (already implemented)
 - ⚠️ Focus trap not implemented (would require additional dependency)
@@ -287,8 +287,8 @@ case "Active":
 ```
 
 **Implementation:**
-- ✅ Live region already existed for export/selection status (page.tsx:349-356)
-- ✅ Added `role="alert"` and `aria-live="polite"` to mobile warning banner (page.tsx:146)
+- ✅ Live region already existed for export/selection status (radar/page.tsx)
+- ✅ Added `role="alert"` and `aria-live="polite"` to mobile warning banner (radar/page.tsx)
 - ℹ️ Loading state announcements maintained through existing screen reader text
 
 ---
@@ -315,9 +315,9 @@ case "Active":
 ```
 
 **Implementation:**
-- ✅ Added skip navigation link to radar page (page.tsx:149-154)
-- ✅ Added skip navigation link to tools page (tools/page.tsx:132-137)
-- ✅ Added skip navigation link to about page (about/page.tsx:27-32)
+- ✅ Added skip navigation link to radar page (radar/page.tsx)
+- ✅ Added skip navigation link to tools page (tools/page.tsx)
+- ✅ Added skip navigation link to about page (about/page.tsx)
 - ✅ All skip links use sr-only class with focus:not-sr-only for visibility on focus
 - ✅ All pages have corresponding `id="main-content"` on main element
 
@@ -358,9 +358,9 @@ case "Active":
 ```
 
 **Implementation:**
-- ✅ Wrapped chart in `<figure>` with `aria-labelledby` and `aria-describedby` (page.tsx:333)
-- ✅ Added `<figcaption>` with list of compared tools (page.tsx:334-336)
-- ✅ Added detailed chart description including tool count and visible dimensions (page.tsx:337-339)
+- ✅ Wrapped chart in `<figure>` with `aria-labelledby` and `aria-describedby` (radar/page.tsx)
+- ✅ Added `<figcaption>` with list of compared tools (radar/page.tsx)
+- ✅ Added detailed chart description including tool count and visible dimensions (radar/page.tsx)
 - ⚠️ Data table alternative not implemented (would require additional UI component)
 - ℹ️ Tool details panel on the right provides accessible text alternative to chart data
 
@@ -419,8 +419,8 @@ title={wouldBeUnderMinimum ? 'Minimum 3 dimensions required' : ''}
 ```
 
 **Implementation:**
-- ✅ Added `role="alert"` to mobile warning banner (page.tsx:146)
-- ✅ Added `aria-live="polite"` for screen reader announcement (page.tsx:146)
+- ✅ Added `role="alert"` to mobile warning banner (radar/page.tsx)
+- ✅ Added `aria-live="polite"` for screen reader announcement (radar/page.tsx)
 
 ---
 
