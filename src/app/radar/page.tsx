@@ -150,7 +150,7 @@ export default function RadarPage() {
         <div
           className="fixed inset-0 bg-black/20 z-20 top-[57px]"
           onClick={() => setDrawerOpen(false)}
-          aria-label="Close drawer"
+          role="presentation"
         />
       )}
 
@@ -168,11 +168,12 @@ export default function RadarPage() {
                 <button
                   onClick={() => setDrawerOpen(false)}
                   className="p-2 hover:bg-red-50 bg-slate-100 rounded-lg transition-colors border border-slate-300 hover:border-red-300"
-                  aria-label="Close drawer"
+                  aria-label="Close tools and filters drawer"
                 >
-                  <svg className="w-6 h-6 text-slate-700 hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg aria-hidden="true" focusable="false" className="w-6 h-6 text-slate-700 hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                   </svg>
+                  <span className="sr-only">Close drawer</span>
                 </button>
               </div>
 
@@ -190,7 +191,7 @@ export default function RadarPage() {
       </div>
 
       {/* Main Content - Split Layout */}
-      <main className="w-full flex-1 flex flex-col overflow-hidden">
+      <main role="main" aria-label="Radar visualization" className="w-full flex-1 flex flex-col overflow-hidden">
         <div className="flex gap-6 p-6 flex-1 min-h-0">
           {/* Left: Radar Chart (2/3) */}
           <div className="w-2/3 flex flex-col">
@@ -207,7 +208,8 @@ export default function RadarPage() {
                       ? "bg-slate-900 text-white border-slate-900"
                       : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
                   }`}
-                  title="Select custom tools"
+                  aria-label={`Select custom tools, ${selected.length || 5} tools currently selected`}
+                  aria-pressed={!filters.category && selected.length > 0}
                 >
                   Select Tools <span className="ml-1 opacity-70">({selected.length || 5})</span>
                 </button>
@@ -222,6 +224,8 @@ export default function RadarPage() {
                           ? "bg-slate-900 text-white border-slate-900"
                           : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
                       }`}
+                      aria-label={`Filter by ${cat} category, ${count} tools available`}
+                      aria-pressed={filters.category === cat}
                     >
                       {cat} <span className="ml-1 opacity-70">({count})</span>
                     </button>
@@ -233,11 +237,12 @@ export default function RadarPage() {
                     setSelected([]);
                   }}
                   className="px-3 py-2 rounded border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-colors text-slate-700"
-                  title="Reset to default view"
+                  aria-label="Reset to default view"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg aria-hidden="true" focusable="false" className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
+                  <span className="sr-only">Reset</span>
                 </button>
               </div>
             </div>
@@ -248,15 +253,18 @@ export default function RadarPage() {
                   <button
                     onClick={() => setDimensionsExpanded(!dimensionsExpanded)}
                     className="px-2.5 py-2 flex items-center gap-1.5 hover:bg-slate-50 transition-colors rounded"
-                    title={`Dimension Filters ${hiddenDims.size > 0 ? `(${hiddenDims.size} hidden)` : ''}`}
+                    aria-label={`Dimension filters${hiddenDims.size > 0 ? `, ${hiddenDims.size} hidden` : ''}`}
+                    aria-expanded={dimensionsExpanded}
                   >
-                    <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg aria-hidden="true" focusable="false" className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                     </svg>
                     {hiddenDims.size > 0 && (
                       <span className="text-xs font-medium text-slate-700">{hiddenDims.size}</span>
                     )}
                     <svg
+                      aria-hidden="true"
+                      focusable="false"
                       className={`w-4 h-4 text-slate-500 transition-transform ${dimensionsExpanded ? 'rotate-180' : ''}`}
                       fill="none"
                       stroke="currentColor"
@@ -313,11 +321,12 @@ export default function RadarPage() {
                 onClick={handleExport}
                 disabled={isExporting}
                 className="absolute top-6 right-6 z-10 p-2 rounded border border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-slate-700 shadow-sm"
-                title={isExporting ? 'Exporting...' : 'Export radar chart as PNG'}
+                aria-label={isExporting ? 'Exporting radar chart to PNG' : 'Export radar chart as PNG image'}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg aria-hidden="true" focusable="false" className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
+                <span className="sr-only">{isExporting ? 'Exporting...' : 'Export PNG'}</span>
               </button>
 
               {/* Chart - Only this gets exported */}
@@ -335,6 +344,18 @@ export default function RadarPage() {
           </div>
         </div>
       </main>
+
+      {/* Live regions for screen reader announcements */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {isLoading && "Loading tools data"}
+        {isExporting && "Exporting radar chart to PNG"}
+      </div>
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {!isLoading && `Showing ${filtered.length} tools${filters.category ? ` in ${filters.category} category` : ''}`}
+      </div>
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {selectedTools.length > 0 && `${selectedTools.length} tools selected for comparison`}
+      </div>
     </div>
   );
 }

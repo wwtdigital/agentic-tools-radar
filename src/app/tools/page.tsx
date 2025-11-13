@@ -78,7 +78,7 @@ export default function ToolsPage() {
     <>
       <Navbar title="All Agentic Developer Tools" latestUpdate={latestUpdate} currentPage="tools" />
 
-      <main className="p-6">
+      <main role="main" aria-label="Tools listing" className="p-6">
         {/* Header */}
         <div className="mb-6">
           <p className="text-slate-600">
