@@ -32,29 +32,29 @@ export default function AboutPage() {
 
           <div className="border border-slate-200 rounded-lg p-6 bg-white">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-bold text-slate-900">Version 0.6.0</h3>
+              <h3 className="text-2xl font-bold text-slate-900">Version 0.7.0</h3>
               <span className="text-sm text-slate-500">November 2025</span>
             </div>
 
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold text-slate-900 mb-2">Weighted Scoring & Accessibility</h4>
+                <h4 className="font-semibold text-slate-900 mb-2">Tools Enhancements & Release System</h4>
                 <p className="text-slate-700 text-sm leading-relaxed">
-                  Introduced risk-adjusted weighted scoring that accounts for evaluation status and validation confidence,
-                  plus comprehensive WCAG 2.1 Level AA accessibility improvements including enhanced visual contrast,
-                  keyboard navigation, and screen reader optimization.
+                  Major improvements to tools browsing with flexible grouping options (Category, Status, Score Range, None),
+                  powerful search functionality, and a comprehensive About page documenting our evaluation framework.
+                  Added release preparation system with validation checks.
                 </p>
               </div>
 
               <div>
                 <h4 className="font-semibold text-slate-900 mb-2">Key Highlights:</h4>
                 <ul className="list-disc list-inside space-y-1 text-sm text-slate-700">
-                  <li>New weighted score with confidence multipliers (40%-100%)</li>
-                  <li>Smart dual-score display showing both weighted and capability ratings</li>
-                  <li>WCAG 2.1 Level AA compliance across all interactive elements</li>
-                  <li>Improved radar chart visibility with increased fill opacity</li>
-                  <li>UI controls excluded from PNG exports for cleaner images</li>
-                  <li>Enhanced documentation and accessibility audit</li>
+                  <li>Flexible grouping: Category, Status, Score Range, or flat list</li>
+                  <li>Search by tool name or company with instant filtering</li>
+                  <li>Status badges permanently visible for quick evaluation level identification</li>
+                  <li>Comprehensive About page with evaluation framework documentation</li>
+                  <li>Release validation system with automated checks</li>
+                  <li>Extracted reusable ToolCard component</li>
                 </ul>
               </div>
             </div>

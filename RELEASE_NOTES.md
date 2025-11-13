@@ -1,5 +1,62 @@
 # Release Notes
 
+## Version 0.7.0 - Tools Enhancements & Release System (November 2025)
+
+### 🎉 New Features
+
+#### Tools Page Enhancements
+- **Flexible Grouping Options** - Choose between Category, Status, Score Range, or None (flat list)
+- **Search Functionality** - Filter tools by name or company with instant results
+- **Improved Status Display** - Evaluation status pill permanently visible in bottom-right corner
+- **Custom Status Ordering** - Status groups follow maturity priority (Adopted → Active → Reviewed → Emerging → Watchlist → Feature Risk → Deferred → Not Enterprise Viable)
+- **Score-based Grouping** - Group tools by score ranges (90-100 Excellent, 80-89 Very Good, 70-79 Good, 60-69 Fair, Below 60)
+- **Dynamic Filtering** - Search and grouping work together for powerful tool discovery
+
+#### About Page
+- **Comprehensive Documentation** - New `/about` page with project details, release notes, and evaluation framework
+- **Evaluation Framework** - Detailed explanation of the five dimensions (AI Autonomy, Collaboration, Contextual Understanding, Governance, User Interface)
+- **Scoring Methodology** - Clear documentation of Rating vs Weighted Score with examples
+- **Status Categories** - Organized into three tiers: Production Ready (100%-85%), Emerging & Monitoring (70%-60%), Risk & Limitations (80%-40%)
+- **Release History** - Version history with feature highlights and key changes
+- **Navigation Integration** - About link added to navbar for easy access
+
+#### Release Preparation System
+- **Validation Script** - `npm run validate:release` checks version consistency, release notes, and build success
+- **Interactive Workflow** - Documented prompt-based approach for preparing releases with Claude Code
+- **Complete Documentation** - RELEASE_PROCESS.md with step-by-step instructions and best practices
+- **Semantic Versioning** - Automated checks ensure proper versioning (MAJOR.MINOR.PATCH)
+- **Documentation Validation** - Checks for broken links and missing release notes entries
+
+### 🏗️ Component Architecture
+
+#### ToolCard Component
+- **Extracted Reusable Component** - Eliminates 150+ lines of code duplication
+- **Type Safety** - Proper TypeScript types for all four grouping modes
+- **Flexible Display** - Adapts based on groupBy prop to show relevant information
+- **Consistent Styling** - Unified card design across all grouping views
+- **Accessibility** - Maintained WCAG 2.1 Level AA compliance
+
+### 🐛 Bug Fixes
+- **Duplicate Status Badge** - Fixed issue where evaluation status appeared twice per card
+- **TypeScript Type Safety** - Added proper types for groupBy prop across components
+- **Layout Improvements** - Better spacing and alignment in tool cards
+
+### 📚 Documentation
+- **RELEASE_PROCESS.md** - Complete guide for preparing and shipping releases
+- **Updated About Page** - Fixed release date from January to November 2025
+- **Improved Code Comments** - Better inline documentation for grouping and search logic
+
+### 🔧 Technical Improvements
+- **Validation Bot** - Automated checks for version consistency and build success
+- **Search Performance** - Efficient filtering using useMemo for optimal re-renders
+- **Custom Sorting** - Flexible sort logic handles status priority, score ranges, and alphabetical ordering
+- **Type Definitions** - Enhanced TypeScript types for better developer experience
+
+---
+
+**Total Changes**: 7 files changed, 900+ insertions, 250+ deletions (PR #17)
+**Key Areas**: Tools page enhancements, About page, release system, ToolCard component
+
 ## Version 0.6.0 - Weighted Scoring & Accessibility (January 2025)
 
 ### 🎉 New Features
