@@ -246,7 +246,7 @@ export default function RadarPage() {
                 </button>
               </div>
             </div>
-            <div className="relative flex-1" style={{ minHeight: '600px' }}>
+            <div className="relative flex-1 min-h-[600px]">
               {/* Dimension Filters - Top Left Overlay */}
               <div className="absolute top-6 left-6 z-10">
                 <div className="bg-white/95 backdrop-blur-sm rounded border border-slate-200 shadow-sm">
@@ -275,7 +275,7 @@ export default function RadarPage() {
                   </button>
 
                   {dimensionsExpanded && (
-                    <div className="absolute top-full left-0 mt-1 bg-white rounded border border-slate-200 shadow-lg p-3 max-h-96 overflow-y-auto" style={{ minWidth: '500px' }}>
+                    <div className="absolute top-full left-0 mt-1 bg-white rounded border border-slate-200 shadow-lg p-3 max-h-96 overflow-y-auto min-w-[500px]">
                       <h3 className="text-sm font-semibold text-slate-900 mb-3">Dimensions</h3>
                       <div className="grid grid-cols-2 gap-3">
                         {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => {

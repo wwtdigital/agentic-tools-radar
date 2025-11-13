@@ -102,7 +102,7 @@ Both `route.ts` and `generate-static-data.js` handle flexible property types, su
 
 ## Key Behaviors
 
-- **Auto-selection:** If user hasn't selected tools, show top 5 by weighted score (finalScore property in data)
+- **Auto-selection:** If user hasn't selected tools, show top 5 by weighted score (finalScore, with fallback to rating)
 - **Category filter behavior:** When a category is selected with no manual tool selection, displays all tools in that category (not limited to 5)
 - **Max 5 tools for manual selection:** When manually selecting tools, radar comparison limited to 5 tools
 - **Sorting:** All tools sorted by Weighted Score (finalScore field, with fallback to Rating if missing)
