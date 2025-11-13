@@ -19,6 +19,7 @@ type Tool = {
   quickTake?: string;
   dims: { autonomy: number; collaboration: number; context: number; governance: number; interface: number };
   rating?: number | null;
+  finalScore?: number | null;
   lastEdited: string;
 };
 
@@ -31,6 +32,7 @@ export default function RadarPage() {
   const [hiddenDims, setHiddenDims] = useState<Set<string>>(new Set());
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [isExporting, setIsExporting] = useState<boolean>(false);
+  const [dimensionsExpanded, setDimensionsExpanded] = useState<boolean>(false);
   const radarRef = useRef<HTMLDivElement>(null);
 
   // Export radar chart as PNG
@@ -79,7 +81,8 @@ export default function RadarPage() {
       const cutoff = new Date(); cutoff.setMonth(cutoff.getMonth() - filters.months);
       out = out.filter(t => new Date(t.lastEdited) >= cutoff);
     }
-    return out.sort((a,b) => (b.rating ?? 0) - (a.rating ?? 0));
+    // Sort by weighted score (with fallback to rating)
+    return out.sort((a,b) => (b.finalScore ?? b.rating ?? 0) - (a.finalScore ?? a.rating ?? 0));
   }, [data, filters]);
 
   // Default tools to display when nothing is selected
@@ -99,10 +102,10 @@ export default function RadarPage() {
     return matchedTools.length > 0 ? matchedTools : filtered.slice(0, 5).map(t => t.id);
   }, [filtered, filters.category, selected.length]);
   const compareIds = selected.length ? selected : defaultIds;
-  // Sort selected tools by rating (highest to lowest)
+  // Sort selected tools by weighted score (with fallback to rating)
   const selectedTools = filtered
     .filter(t => compareIds.includes(t.id))
-    .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    .sort((a, b) => (b.finalScore ?? b.rating ?? 0) - (a.finalScore ?? a.rating ?? 0));
 
   // Get the most recent lastEdited date
   const latestUpdate = useMemo(() => {
@@ -237,65 +240,90 @@ export default function RadarPage() {
                   </svg>
                 </button>
               </div>
-
-              {/* Export Button */}
-              <div className="flex gap-2">
-                <button
-                  onClick={handleExport}
-                  disabled={isExporting}
-                  className="px-4 py-2 rounded border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-slate-700"
-                  title="Export radar chart as PNG"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  <span className="text-sm font-medium">{isExporting ? 'Exporting...' : 'Export PNG'}</span>
-                </button>
-              </div>
             </div>
-            <figure ref={radarRef} className="border rounded p-4 bg-white flex-1 min-h-0 isolate">
+            <figure ref={radarRef} className="border rounded p-4 bg-white flex-1 isolate relative" style={{ minHeight: '600px' }}>
+              {/* Dimension Filters - Top Left */}
+              <div className="absolute top-2 left-2 z-10">
+                <div className="bg-white/95 backdrop-blur-sm rounded border border-slate-200 shadow-sm">
+                  <button
+                    onClick={() => setDimensionsExpanded(!dimensionsExpanded)}
+                    className="px-2.5 py-2 flex items-center gap-1.5 hover:bg-slate-50 transition-colors rounded"
+                    title={`Dimension Filters ${hiddenDims.size > 0 ? `(${hiddenDims.size} hidden)` : ''}`}
+                  >
+                    <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    {hiddenDims.size > 0 && (
+                      <span className="text-xs font-medium text-slate-700">{hiddenDims.size}</span>
+                    )}
+                    <svg
+                      className={`w-4 h-4 text-slate-500 transition-transform ${dimensionsExpanded ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {dimensionsExpanded && (
+                    <div className="absolute top-full left-0 mt-1 bg-white rounded border border-slate-200 shadow-lg p-3 max-h-96 overflow-y-auto" style={{ minWidth: '500px' }}>
+                      <h3 className="text-sm font-semibold text-slate-900 mb-3">Dimensions</h3>
+                      <div className="grid grid-cols-2 gap-3">
+                        {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => {
+                          const totalDimensions = 5;
+                          const visibleCount = totalDimensions - hiddenDims.size;
+                          const isChecked = !hiddenDims.has(dim);
+                          const wouldBeUnderMinimum = isChecked && visibleCount <= 3;
+
+                          const description = DIMENSION_DESCRIPTIONS[dim as keyof typeof DIMENSION_DESCRIPTIONS];
+
+                          return (
+                            <label key={dim} className={`flex items-start gap-2 text-sm ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                disabled={wouldBeUnderMinimum}
+                                onChange={(e) => {
+                                  const next = new Set(hiddenDims);
+                                  e.target.checked ? next.delete(dim) : next.add(dim);
+                                  setHiddenDims(next);
+                                }}
+                                className={`mt-0.5 ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                title={wouldBeUnderMinimum ? 'Minimum 3 dimensions required' : ''}
+                              />
+                              <div>
+                                <span className={`font-medium ${wouldBeUnderMinimum ? 'text-slate-400' : 'text-slate-700'}`}>{dim}</span>
+                                {description && (
+                                  <div className="text-xs text-slate-500 mt-0.5">{description}</div>
+                                )}
+                              </div>
+                            </label>
+                          );
+                        })}
+                      </div>
+                      <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-200">At least 3 dimensions must be selected</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Export Button - Top Right */}
+              <button
+                onClick={handleExport}
+                disabled={isExporting}
+                className="absolute top-2 right-2 z-10 p-2 rounded border border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-slate-700 shadow-sm"
+                title={isExporting ? 'Exporting...' : 'Export radar chart as PNG'}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </button>
+
               <div className="w-full h-full">
                 <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
               </div>
             </figure>
-
-            {/* Dimension Visibility Controls */}
-            <div className="mt-3 p-3 bg-slate-50 rounded border border-slate-200">
-              <div className="grid grid-cols-5 gap-4">
-              {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => {
-                const totalDimensions = 5;
-                const visibleCount = totalDimensions - hiddenDims.size;
-                const isChecked = !hiddenDims.has(dim);
-                const wouldBeUnderMinimum = isChecked && visibleCount <= 3;
-
-                const description = DIMENSION_DESCRIPTIONS[dim as keyof typeof DIMENSION_DESCRIPTIONS];
-
-                return (
-                  <label key={dim} className={`flex items-start gap-2 text-sm ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      disabled={wouldBeUnderMinimum}
-                      onChange={(e) => {
-                        const next = new Set(hiddenDims);
-                        e.target.checked ? next.delete(dim) : next.add(dim);
-                        setHiddenDims(next);
-                      }}
-                      className={`mt-0.5 ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                      title={wouldBeUnderMinimum ? 'Minimum 3 dimensions required' : ''}
-                    />
-                    <div>
-                      <span className={`font-medium ${wouldBeUnderMinimum ? 'text-slate-400' : 'text-slate-700'}`}>{dim}</span>
-                      {description && (
-                        <div className="text-xs text-slate-500 mt-0.5">{description}</div>
-                      )}
-                    </div>
-                  </label>
-                );
-              })}
-              </div>
-              <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-200">At least 3 dimensions must be selected</p>
-            </div>
           </div>
 
           {/* Right: Tool Details (1/3) */}

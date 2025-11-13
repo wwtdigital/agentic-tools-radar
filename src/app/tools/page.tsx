@@ -16,6 +16,7 @@ type Tool = {
   quickTake?: string;
   dims: { autonomy: number; collaboration: number; context: number; governance: number; interface: number };
   rating?: number | null;
+  finalScore?: number | null;
   lastEdited: string;
 };
 
@@ -41,9 +42,9 @@ export default function ToolsPage() {
       }
       groups[tool.category].push(tool);
     });
-    // Sort tools within each category by rating
+    // Sort tools within each category by final score (fallback to rating)
     Object.keys(groups).forEach(category => {
-      groups[category].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+      groups[category].sort((a, b) => (b.finalScore ?? b.rating ?? 0) - (a.finalScore ?? a.rating ?? 0));
     });
     return groups;
   }, [data]);
@@ -116,14 +117,36 @@ export default function ToolsPage() {
                           {tool.category}
                         </div>
                       </div>
-                      {tool.rating !== null && tool.rating !== undefined && (
+                      {(tool.finalScore !== null && tool.finalScore !== undefined) || (tool.rating !== null && tool.rating !== undefined) ? (
                         <div className="flex flex-col items-end flex-shrink-0">
-                          <div className="text-2xl font-bold text-slate-900">
-                            {tool.rating.toFixed(1)}
+                          <div className="flex items-center gap-2 text-slate-900">
+                            {tool.finalScore !== null && tool.finalScore !== undefined && (
+                              <>
+                                <span className="text-2xl font-bold">{tool.finalScore.toFixed(1)}</span>
+                                {tool.rating !== null && tool.rating !== undefined && (
+                                  <span className="text-slate-400">|</span>
+                                )}
+                              </>
+                            )}
+                            {tool.rating !== null && tool.rating !== undefined && (
+                              <span className="text-lg font-semibold text-slate-600">{tool.rating.toFixed(1)}</span>
+                            )}
                           </div>
-                          <div className="text-xs text-slate-500">Rating</div>
+                          <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                            {tool.finalScore !== null && tool.finalScore !== undefined && (
+                              <>
+                                <span>Weighted</span>
+                                {tool.rating !== null && tool.rating !== undefined && (
+                                  <span>|</span>
+                                )}
+                              </>
+                            )}
+                            {tool.rating !== null && tool.rating !== undefined && (
+                              <span>Rating</span>
+                            )}
+                          </div>
                         </div>
-                      )}
+                      ) : null}
                     </div>
 
                     {tool.quickTake && (
