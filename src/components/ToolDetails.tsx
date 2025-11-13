@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { DIMENSION_DESCRIPTIONS } from "@/components/DimensionTooltip";
 import { ToolLogo } from "@/components/ToolLogo";
-
+import { ScoreDisplay } from "@/components/ScoreDisplay";
 import { getStatusColor } from "@/utils/status";
 
 type Tool = {
@@ -146,43 +146,7 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
                   <p className="text-sm text-slate-600">{tool.company}</p>
                 )}
               </div>
-              {(() => {
-                const hasWeighted = tool.finalScore !== null && tool.finalScore !== undefined;
-                const hasRating = tool.rating !== null && tool.rating !== undefined;
-                const scoresDiffer = hasWeighted && hasRating && Math.abs(tool.finalScore! - tool.rating!) > 0.1;
-
-                if (!hasWeighted && !hasRating) return null;
-
-                return (
-                  <div className="flex flex-col items-end flex-shrink-0">
-                    {scoresDiffer ? (
-                      // Show both scores when they differ (weighted primary)
-                      <>
-                        <div className="flex items-center gap-2 text-slate-900">
-                          <span className="text-2xl font-bold">{tool.finalScore!.toFixed(1)}</span>
-                          <span className="text-slate-400">|</span>
-                          <span className="text-lg font-semibold text-slate-600">{tool.rating!.toFixed(1)}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                          <span>Weighted</span>
-                          <span>|</span>
-                          <span>Rating</span>
-                        </div>
-                      </>
-                    ) : (
-                      // Show single score when they're the same
-                      <>
-                        <div className="text-2xl font-bold text-slate-900">
-                          {(hasWeighted ? tool.finalScore! : tool.rating!).toFixed(1)}
-                        </div>
-                        <div className="text-xs text-slate-500 mt-0.5">
-                          {hasWeighted && hasRating ? 'Score' : hasWeighted ? 'Weighted' : 'Rating'}
-                        </div>
-                      </>
-                    )}
-                  </div>
-                );
-              })()}
+              <ScoreDisplay finalScore={tool.finalScore} rating={tool.rating} />
             </div>
 
             {tool.quickTake && (
