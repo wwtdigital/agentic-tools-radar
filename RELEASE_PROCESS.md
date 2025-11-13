@@ -14,13 +14,27 @@ We use semantic versioning (MAJOR.MINOR.PATCH) and maintain comprehensive releas
 
 ## Pre-Release Checklist
 
-Before creating a new release, use the release validation bot to ensure everything is in order:
+Before creating a new release, you can use the release preparation assistant:
+
+```bash
+/prepare-release
+```
+
+This Claude Code slash command will guide you through:
+- ✅ Determining the new version number
+- ✅ Updating package.json with the new version
+- ✅ Creating release notes entry
+- ✅ Updating the About page (for major/minor releases)
+- ✅ Running validation checks (build, types, etc.)
+- ✅ Creating the release PR
+
+Alternatively, you can manually run the validation bot:
 
 ```bash
 npm run validate:release
 ```
 
-This bot checks:
+This checks:
 - ✅ Version consistency across `package.json` and `RELEASE_NOTES.md`
 - ✅ Release notes entry exists for current version
 - ✅ Build completes successfully
@@ -137,19 +151,6 @@ After PR approval and CI passes:
 3. Create GitHub release from tag with release notes
 
 ## Automated Checks
-
-### GitHub Actions
-
-The `.github/workflows/release-validation.yml` workflow runs automatically on:
-- Pull requests to `main`
-- Pushes to `main`
-- Manual trigger via GitHub Actions UI
-
-The workflow performs:
-- Release validation (runs `validate:release`)
-- Linting
-- TypeScript type checking
-- Build verification
 
 ### CI/CD Pipeline
 
