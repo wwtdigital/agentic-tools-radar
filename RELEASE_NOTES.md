@@ -1,5 +1,60 @@
 # Release Notes
 
+## Version 0.7.1 - Accessibility Compliance (November 2025)
+
+### ♿ Accessibility Improvements (WCAG 2.1 Level AA)
+
+#### Semantic HTML Enhancements
+- **Semantic Landmarks** - Added proper `role="main"`, `aria-label="Main navigation"` to navigation, and `role="dialog"` to drawer component
+- **Skip Navigation Links** - Added skip-to-main-content links on all three pages (radar, tools, about) for keyboard users
+- **Dialog Accessibility** - Drawer component now has proper `aria-labelledby`, `aria-modal`, and `aria-hidden` attributes
+
+#### Form & Input Accessibility
+- **Dimension Checkboxes** - Added unique IDs, `htmlFor` attributes on labels, and `aria-describedby` linking to descriptions
+- **Validation States** - Added `aria-invalid` to disabled checkboxes with accessible error communication
+- **Proper Label Associations** - All form inputs now have explicit label relationships
+
+#### Button & Control Enhancements
+- **Toggle Button States** - Added `aria-pressed` to all toggle buttons (category filters, status filters, grouping controls, tool selection)
+- **Descriptive Labels** - Enhanced `aria-label` attributes with context (e.g., "Filter by IDE Assistants category, 8 tools available")
+- **Select All Buttons** - Added state announcements indicating selection status and affected category
+
+#### Keyboard Navigation
+- **Escape Key Support** - Drawer now closes with Escape key for better keyboard accessibility
+- **Focus Management** - Maintained logical tab order and keyboard access to all interactive elements
+- **Skip Links** - Keyboard users can bypass navigation on all pages
+
+#### Chart Accessibility
+- **Semantic Structure** - Wrapped radar chart in `<figure>` with `aria-labelledby` and `aria-describedby`
+- **Text Alternatives** - Added hidden `<figcaption>` describing compared tools and dimensions
+- **Detailed Descriptions** - Screen readers announce tool count, dimension count, and dimension names
+
+#### Live Regions & Announcements
+- **Mobile Warning** - Added `role="alert"` and `aria-live="polite"` for screen reader announcements
+- **Status Updates** - Existing live regions for export status and tool selection maintained
+
+### 📚 Documentation
+
+#### Accessibility Audit
+- **Resolution Tracking** - Updated ACCESSIBILITY_AUDIT.md with implementation status and commit references
+- **Detailed Implementation Notes** - Added file paths and line numbers for all changes
+- **Grade Improvement** - Documented upgrade from C+ to B+ accessibility rating
+- **Changelog** - Added comprehensive changelog of 2025-11-13 implementation
+- **Not Implemented Items** - Documented rationale for items requiring visual changes (color contrast, focus trap)
+
+### 🔧 Technical Improvements
+- **Zero Visual Changes** - All accessibility improvements maintain existing design
+- **No Breaking Changes** - All enhancements are additive and backwards-compatible
+- **Standards Compliance** - Improved compliance with WCAG 2.1 Level AA guidelines
+- **Assistive Technology Support** - Better screen reader, keyboard-only, and motor disability support
+
+---
+
+**Impact**: 8 of 10 critical accessibility issues resolved without affecting visual design
+**Grade**: Improved from C+ to B+ (WCAG 2.1 Level AA compliance)
+**Total Changes**: 5 files changed, 64 insertions, 9 deletions
+**Key Areas**: Semantic HTML, ARIA attributes, keyboard navigation, form accessibility
+
 ## Version 0.7.0 - Tools Enhancements & Release System (November 2025)
 
 ### 🎉 New Features
