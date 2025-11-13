@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
-    "generate-snapshot": "node scripts/generate-static-data.js"
+    "generate-snapshot": "node scripts/generate-static-data.js",
+    "validate:release": "node scripts/validate-release.js"
   },
   "dependencies": {
     "@nivo/core": "^0.99.0",

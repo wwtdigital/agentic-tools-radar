@@ -1,10 +1,8 @@
 "use client";
 import useSWR from "swr";
-import { useMemo } from "react";
-import { DIMENSION_DESCRIPTIONS } from "@/components/DimensionTooltip";
-import { ToolLogo } from "@/components/ToolLogo";
+import { useMemo, useState } from "react";
 import { Navbar } from "@/components/Navbar";
-import { getStatusColor } from "@/utils/status";
+import { ToolCard } from "@/components/ToolCard";
 
 type Tool = {
   id: string;
@@ -20,34 +18,88 @@ type Tool = {
   lastEdited: string;
 };
 
-const DIMENSION_LABELS = [
-  { key: "autonomy", label: "AI Autonomy" },
-  { key: "collaboration", label: "Collaboration" },
-  { key: "context", label: "Contextual Understanding" },
-  { key: "governance", label: "Governance" },
-  { key: "interface", label: "User Interface" }
-] as const;
+type GroupBy = "category" | "status" | "score" | "none";
+
+// Status priority order for sorting
+const STATUS_ORDER = [
+  "Adopted",
+  "Active",
+  "Reviewed",
+  "Emerging",
+  "Watchlist",
+  "Feature Risk",
+  "Deferred",
+  "Not Enterprise Viable",
+  "Uncategorized"
+];
+
+// Score range definitions
+const SCORE_RANGES = [
+  { label: "90-100 (Excellent)", min: 90, max: 100 },
+  { label: "80-89 (Very Good)", min: 80, max: 89 },
+  { label: "70-79 (Good)", min: 70, max: 79 },
+  { label: "60-69 (Fair)", min: 60, max: 69 },
+  { label: "Below 60", min: 0, max: 59 }
+];
+
+function getScoreRange(score: number): string {
+  const range = SCORE_RANGES.find(r => score >= r.min && score <= r.max);
+  return range ? range.label : "No Score";
+}
 
 const fetcher = (u: string) => fetch(u).then(r => r.json());
 
 export default function ToolsPage() {
   const { data = [], isLoading } = useSWR<Tool[]>("/api/tools", fetcher);
+  const [groupBy, setGroupBy] = useState<GroupBy>("category");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Group tools by category, sorted by rating within each category
+  // Group tools by category, status, score, or none, sorted by weighted score within each group
   const groupedTools = useMemo(() => {
+    // Filter by search first
+    let filtered = data;
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = data.filter(tool =>
+        tool.tool.toLowerCase().includes(query) ||
+        tool.company?.toLowerCase().includes(query)
+      );
+    }
+
+    // If groupBy is "none", return all tools in a single group
+    if (groupBy === "none") {
+      const sorted = [...filtered].sort((a, b) => (b.finalScore ?? b.rating ?? 0) - (a.finalScore ?? a.rating ?? 0));
+      return { "All Tools": sorted };
+    }
+
     const groups: Record<string, Tool[]> = {};
-    data.forEach(tool => {
-      if (!groups[tool.category]) {
-        groups[tool.category] = [];
+
+    filtered.forEach(tool => {
+      let groupKey: string;
+      if (groupBy === "category") {
+        groupKey = tool.category;
+      } else if (groupBy === "status") {
+        groupKey = tool.status || "Uncategorized";
+      } else if (groupBy === "score") {
+        const score = tool.finalScore ?? tool.rating ?? 0;
+        groupKey = getScoreRange(score);
+      } else {
+        groupKey = "All Tools";
       }
-      groups[tool.category].push(tool);
+
+      if (!groups[groupKey]) {
+        groups[groupKey] = [];
+      }
+      groups[groupKey].push(tool);
     });
-    // Sort tools within each category by final score (fallback to rating)
-    Object.keys(groups).forEach(category => {
-      groups[category].sort((a, b) => (b.finalScore ?? b.rating ?? 0) - (a.finalScore ?? a.rating ?? 0));
+
+    // Sort tools within each group by final score (fallback to rating)
+    Object.keys(groups).forEach(groupKey => {
+      groups[groupKey].sort((a, b) => (b.finalScore ?? b.rating ?? 0) - (a.finalScore ?? a.rating ?? 0));
     });
+
     return groups;
-  }, [data]);
+  }, [data, groupBy, searchQuery]);
 
   // Get the most recent lastEdited date
   const latestUpdate = useMemo(() => {
@@ -80,166 +132,119 @@ export default function ToolsPage() {
 
       <main role="main" aria-label="Tools listing" className="p-6">
         {/* Header */}
-        <div className="mb-6">
-          <p className="text-slate-600">
-            Showing <strong className="text-slate-900">{data.length}</strong> tools across <strong className="text-slate-900">{Object.keys(groupedTools).length}</strong> categories
-          </p>
+        <div className="mb-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-slate-600">
+              Showing <strong className="text-slate-900">{Object.values(groupedTools).flat().length}</strong> of <strong className="text-slate-900">{data.length}</strong> tools
+              {groupBy !== "none" && <> across <strong className="text-slate-900">{Object.keys(groupedTools).length}</strong> {groupBy === "category" ? "categories" : groupBy === "status" ? "statuses" : "score ranges"}</>}
+            </p>
+
+            {/* Group By Toggle */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-slate-600">Group by:</span>
+              <div className="inline-flex rounded-lg border border-slate-300 bg-white p-1">
+                <button
+                  onClick={() => setGroupBy("category")}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                    groupBy === "category"
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-700 hover:bg-slate-50"
+                  }`}
+                  aria-pressed={groupBy === "category"}
+                >
+                  Category
+                </button>
+                <button
+                  onClick={() => setGroupBy("status")}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                    groupBy === "status"
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-700 hover:bg-slate-50"
+                  }`}
+                  aria-pressed={groupBy === "status"}
+                >
+                  Status
+                </button>
+                <button
+                  onClick={() => setGroupBy("score")}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                    groupBy === "score"
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-700 hover:bg-slate-50"
+                  }`}
+                  aria-pressed={groupBy === "score"}
+                >
+                  Score
+                </button>
+                <button
+                  onClick={() => setGroupBy("none")}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                    groupBy === "none"
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-700 hover:bg-slate-50"
+                  }`}
+                  aria-pressed={groupBy === "none"}
+                >
+                  None
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Search */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="search" className="text-sm text-slate-600">Search:</label>
+            <input
+              id="search"
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by tool name or company..."
+              className="flex-1 px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
+              aria-label="Search tools by name or company"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="px-3 py-2 text-sm text-slate-600 hover:text-slate-900 transition-colors"
+                aria-label="Clear search"
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Tools Grouped by Category */}
+        {/* Tools Grouped by Category, Status, Score, or None */}
         <div className="space-y-8">
-          {Object.keys(groupedTools).sort().map((category) => (
-            <div key={category}>
+          {Object.keys(groupedTools).sort((a, b) => {
+            if (groupBy === "status") {
+              // Use custom status priority order
+              const indexA = STATUS_ORDER.indexOf(a);
+              const indexB = STATUS_ORDER.indexOf(b);
+              // If not found in STATUS_ORDER, put at end
+              const priorityA = indexA === -1 ? 999 : indexA;
+              const priorityB = indexB === -1 ? 999 : indexB;
+              return priorityA - priorityB;
+            } else if (groupBy === "score") {
+              // Sort score ranges from highest to lowest
+              const indexA = SCORE_RANGES.findIndex(r => r.label === a);
+              const indexB = SCORE_RANGES.findIndex(r => r.label === b);
+              return indexA - indexB;
+            } else if (groupBy === "none") {
+              // No sorting needed for single "All Tools" group
+              return 0;
+            }
+            // Alphabetical sort for categories
+            return a.localeCompare(b);
+          }).map((groupKey) => (
+            <div key={groupKey}>
               <h2 className="text-xl font-bold text-slate-900 mb-4 pb-2 border-b-2 border-slate-900">
-                {category} <span className="text-sm font-normal text-slate-500">({groupedTools[category].length})</span>
+                {groupKey} <span className="text-sm font-normal text-slate-500">({groupedTools[groupKey].length})</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {groupedTools[category].map((tool) => (
-                  <div
-                    key={tool.id}
-                    className="border border-slate-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow flex flex-col overflow-visible"
-                  >
-                    <div className="flex items-start gap-3 mb-3">
-                      <ToolLogo
-                        toolName={tool.tool}
-                        companyName={tool.company}
-                        productUrl={tool.urls?.product}
-                        size="lg"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-base font-semibold text-slate-900">
-                          {tool.tool}
-                        </h3>
-                        {tool.company && (
-                          <p className="text-sm text-slate-600">{tool.company}</p>
-                        )}
-                        <div className="text-xs text-slate-500 mt-1">
-                          {tool.category}
-                        </div>
-                      </div>
-                      {(() => {
-                        const hasWeighted = tool.finalScore !== null && tool.finalScore !== undefined;
-                        const hasRating = tool.rating !== null && tool.rating !== undefined;
-                        const scoresDiffer = hasWeighted && hasRating && Math.abs(tool.finalScore! - tool.rating!) > 0.1;
-
-                        if (!hasWeighted && !hasRating) return null;
-
-                        return (
-                          <div className="flex flex-col items-end flex-shrink-0">
-                            {scoresDiffer ? (
-                              // Show both scores when they differ (weighted primary)
-                              <>
-                                <div className="flex items-center gap-2 text-slate-900">
-                                  <span className="text-2xl font-bold">{tool.finalScore!.toFixed(1)}</span>
-                                  <span className="text-slate-400">|</span>
-                                  <span className="text-lg font-semibold text-slate-600">{tool.rating!.toFixed(1)}</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                                  <span>Weighted</span>
-                                  <span>|</span>
-                                  <span>Rating</span>
-                                </div>
-                              </>
-                            ) : (
-                              // Show single score when they're the same
-                              <>
-                                <div className="text-2xl font-bold text-slate-900">
-                                  {(hasWeighted ? tool.finalScore! : tool.rating!).toFixed(1)}
-                                </div>
-                                <div className="text-xs text-slate-500 mt-0.5">
-                                  {hasWeighted && hasRating ? 'Score' : hasWeighted ? 'Weighted' : 'Rating'}
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        );
-                      })()}
-                    </div>
-
-                    {tool.quickTake && (
-                      <p className="text-sm text-slate-700 mb-3 leading-relaxed line-clamp-3">
-                        {tool.quickTake}
-                      </p>
-                    )}
-
-                    <div className="grid grid-cols-2 gap-2 mb-3 flex-1 overflow-visible">
-                      {DIMENSION_LABELS.map(({ key, label }) => {
-                        const value = tool.dims[key];
-                        const description = DIMENSION_DESCRIPTIONS[label as keyof typeof DIMENSION_DESCRIPTIONS];
-                        return (
-                          <div
-                            key={key}
-                            className="flex items-center justify-between bg-slate-50 rounded px-3 py-2 relative overflow-visible"
-                          >
-                            <div className="flex-1 min-w-0 flex items-center gap-1">
-                              <div className="text-xs font-medium text-slate-900">
-                                {label}
-                              </div>
-                              {description && (
-                                <div className="group/tooltip relative inline-block">
-                                  <svg className="w-3 h-3 text-slate-400 hover:text-slate-600 cursor-help" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                                  </svg>
-                                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded shadow-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity duration-200 w-64 z-50 whitespace-normal">
-                                    {description}
-                                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900"></div>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                            <div className="text-lg font-semibold text-slate-900 ml-2 pl-2 border-l-2 border-slate-300 flex-shrink-0">
-                              {value}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {tool.urls && (
-                      <div className="flex items-center justify-between gap-3 text-xs pt-3 border-t border-slate-200">
-                        <div className="flex flex-wrap gap-3">
-                          {tool.urls.product && (
-                            <a
-                              href={tool.urls.product}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:text-blue-800 hover:underline"
-                            >
-                              Product →
-                            </a>
-                          )}
-                          {tool.urls.docs && (
-                            <a
-                              href={tool.urls.docs}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:text-blue-800 hover:underline"
-                            >
-                              Documentation →
-                            </a>
-                          )}
-                          {tool.urls.company && (
-                            <a
-                              href={tool.urls.company}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:text-blue-800 hover:underline"
-                            >
-                              Company →
-                            </a>
-                          )}
-                        </div>
-                        {tool.status && tool.status.trim() !== "" && (
-                          <div className="flex items-center gap-1.5 flex-shrink-0">
-                            <span className="text-xs text-slate-500">Evaluation Status:</span>
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getStatusColor(tool.status)}`}>
-                              {tool.status}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                {groupedTools[groupKey].map((tool) => (
+                  <ToolCard key={tool.id} tool={tool} groupBy={groupBy} />
                 ))}
               </div>
             </div>
