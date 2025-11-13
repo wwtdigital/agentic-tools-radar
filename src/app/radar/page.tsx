@@ -241,9 +241,9 @@ export default function RadarPage() {
                 </button>
               </div>
             </div>
-            <figure ref={radarRef} className="border rounded p-4 bg-white flex-1 isolate relative" style={{ minHeight: '600px' }}>
-              {/* Dimension Filters - Top Left */}
-              <div className="absolute top-2 left-2 z-10">
+            <div className="relative flex-1" style={{ minHeight: '600px' }}>
+              {/* Dimension Filters - Top Left Overlay */}
+              <div className="absolute top-6 left-6 z-10">
                 <div className="bg-white/95 backdrop-blur-sm rounded border border-slate-200 shadow-sm">
                   <button
                     onClick={() => setDimensionsExpanded(!dimensionsExpanded)}
@@ -308,11 +308,11 @@ export default function RadarPage() {
                 </div>
               </div>
 
-              {/* Export Button - Top Right */}
+              {/* Export Button - Top Right Overlay */}
               <button
                 onClick={handleExport}
                 disabled={isExporting}
-                className="absolute top-2 right-2 z-10 p-2 rounded border border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-slate-700 shadow-sm"
+                className="absolute top-6 right-6 z-10 p-2 rounded border border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-slate-700 shadow-sm"
                 title={isExporting ? 'Exporting...' : 'Export radar chart as PNG'}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -320,10 +320,13 @@ export default function RadarPage() {
                 </svg>
               </button>
 
-              <div className="w-full h-full">
-                <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
-              </div>
-            </figure>
+              {/* Chart - Only this gets exported */}
+              <figure ref={radarRef} className="border rounded p-4 bg-white h-full isolate">
+                <div className="w-full h-full">
+                  <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
+                </div>
+              </figure>
+            </div>
           </div>
 
           {/* Right: Tool Details (1/3) */}
