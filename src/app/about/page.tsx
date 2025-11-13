@@ -69,9 +69,7 @@ export default function AboutPage() {
 
             <div className="mt-6 pt-4 border-t border-slate-200">
               <a
-                href="https://github.com/wwtdigital/agentic-tools-radar/blob/main/RELEASE_NOTES.md"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/releases"
                 className="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium"
               >
                 View complete release history →
