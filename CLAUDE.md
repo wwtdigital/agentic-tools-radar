@@ -54,7 +54,8 @@ Both the API route and static data generator expect a Notion database with these
 - **Product URL, Documentation Link, Company URL** (URL fields)
 - **Quick Take** (Rich Text)
 - **AI Autonomy, Collaboration, Contextual Understanding, Governance, User Interface** (Number or Select 1-20)
-- **Rating** (Formula) — calculated overall rating (0-100)
+- **Rating** (Formula) — pure capability score (0-100), does not account for validation level
+- **Final Score** (Formula) — risk-adjusted weighted score that accounts for evaluation status and validation confidence (0-100). Displayed as "Weighted Score" in the UI.
 
 Both `route.ts` and `generate-static-data.js` handle flexible property types, supporting number, select, and **status** fields. The status type handling is critical for evaluation status badges to display correctly.
 
@@ -97,8 +98,10 @@ Both `route.ts` and `generate-static-data.js` handle flexible property types, su
 
 ## Key Behaviors
 
-- **Auto-selection:** If user hasn't selected tools, show top 5 by rating (page.tsx:40-41)
+- **Auto-selection:** If user hasn't selected tools, show top 5 by weighted score (finalScore property in data)
 - **Max 5 tools:** Radar comparison limited to 5 tools (page.tsx:23, RadarView.tsx:23)
+- **Sorting:** All tools sorted by Weighted Score (finalScore field, with fallback to Rating if missing)
+- **Dual scoring display:** UI shows both "Weighted Score" (primary, larger) and "Rating" (secondary, smaller) when both are available
 - **Dimension filtering:** User can hide dimensions via checkboxes; chart updates dynamically
 - **Evaluation status badges:** Display color-coded status from Notion on both tools page and radar tool details
 - **Page-based scrolling:** Radar page uses natural page scrolling instead of fixed containers
