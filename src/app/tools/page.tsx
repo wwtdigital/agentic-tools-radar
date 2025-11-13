@@ -16,6 +16,7 @@ type Tool = {
   quickTake?: string;
   dims: { autonomy: number; collaboration: number; context: number; governance: number; interface: number };
   rating?: number | null;
+  finalScore?: number | null;
   lastEdited: string;
 };
 
@@ -41,9 +42,9 @@ export default function ToolsPage() {
       }
       groups[tool.category].push(tool);
     });
-    // Sort tools within each category by rating
+    // Sort tools within each category by final score (fallback to rating)
     Object.keys(groups).forEach(category => {
-      groups[category].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+      groups[category].sort((a, b) => (b.finalScore ?? b.rating ?? 0) - (a.finalScore ?? a.rating ?? 0));
     });
     return groups;
   }, [data]);
@@ -77,7 +78,7 @@ export default function ToolsPage() {
     <>
       <Navbar title="All Agentic Developer Tools" latestUpdate={latestUpdate} currentPage="tools" />
 
-      <main className="p-6">
+      <main role="main" aria-label="Tools listing" className="p-6">
         {/* Header */}
         <div className="mb-6">
           <p className="text-slate-600">
@@ -116,14 +117,43 @@ export default function ToolsPage() {
                           {tool.category}
                         </div>
                       </div>
-                      {tool.rating !== null && tool.rating !== undefined && (
-                        <div className="flex flex-col items-end flex-shrink-0">
-                          <div className="text-2xl font-bold text-slate-900">
-                            {tool.rating.toFixed(1)}
+                      {(() => {
+                        const hasWeighted = tool.finalScore !== null && tool.finalScore !== undefined;
+                        const hasRating = tool.rating !== null && tool.rating !== undefined;
+                        const scoresDiffer = hasWeighted && hasRating && Math.abs(tool.finalScore! - tool.rating!) > 0.1;
+
+                        if (!hasWeighted && !hasRating) return null;
+
+                        return (
+                          <div className="flex flex-col items-end flex-shrink-0">
+                            {scoresDiffer ? (
+                              // Show both scores when they differ (weighted primary)
+                              <>
+                                <div className="flex items-center gap-2 text-slate-900">
+                                  <span className="text-2xl font-bold">{tool.finalScore!.toFixed(1)}</span>
+                                  <span className="text-slate-400">|</span>
+                                  <span className="text-lg font-semibold text-slate-600">{tool.rating!.toFixed(1)}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                                  <span>Weighted</span>
+                                  <span>|</span>
+                                  <span>Rating</span>
+                                </div>
+                              </>
+                            ) : (
+                              // Show single score when they're the same
+                              <>
+                                <div className="text-2xl font-bold text-slate-900">
+                                  {(hasWeighted ? tool.finalScore! : tool.rating!).toFixed(1)}
+                                </div>
+                                <div className="text-xs text-slate-500 mt-0.5">
+                                  {hasWeighted && hasRating ? 'Score' : hasWeighted ? 'Weighted' : 'Rating'}
+                                </div>
+                              </>
+                            )}
                           </div>
-                          <div className="text-xs text-slate-500">Rating</div>
-                        </div>
-                      )}
+                        );
+                      })()}
                     </div>
 
                     {tool.quickTake && (

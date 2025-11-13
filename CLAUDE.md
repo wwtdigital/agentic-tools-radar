@@ -54,7 +54,8 @@ Both the API route and static data generator expect a Notion database with these
 - **Product URL, Documentation Link, Company URL** (URL fields)
 - **Quick Take** (Rich Text)
 - **AI Autonomy, Collaboration, Contextual Understanding, Governance, User Interface** (Number or Select 1-20)
-- **Rating** (Formula) — calculated overall rating (0-100)
+- **Rating** (Formula) — pure capability score (0-100), does not account for validation level
+- **Final Score** (Formula) — risk-adjusted weighted score that accounts for evaluation status and validation confidence (0-100). Displayed as "Weighted Score" in the UI.
 
 Both `route.ts` and `generate-static-data.js` handle flexible property types, supporting number, select, and **status** fields. The status type handling is critical for evaluation status badges to display correctly.
 
@@ -62,21 +63,25 @@ Both `route.ts` and `generate-static-data.js` handle flexible property types, su
 - **`/app/radar/page.tsx`** — Main radar page with page-based scrolling
   - State: filters (category/status/months), selected tool IDs, hidden dimensions, drawer open/closed
   - Mobile warning banner for desktop optimization
-  - Defaults to top 5 tools by rating when nothing selected
-  - Radar chart uses aspect-square for responsive 1:1 ratio
+  - Defaults to top 5 tools by weighted score when nothing selected
+  - Category filter shows all tools in that category (not limited to 5)
+  - Radar chart: 600px minimum height, collapsible dimension filters overlay (top-left), export button overlay (top-right)
   - Top-aligned layout with items-start for radar and tool details columns
 - **`/app/tools/page.tsx`** — All tools listing page grouped by category
-  - Displays all tools in card format with color-coded evaluation status badges
-  - Status badges positioned in bottom right corner of each card
+  - Displays all tools in card format with smart score hiding (consistent with ToolDetails)
+  - Shows both weighted score and rating when they differ by >0.1, single score when identical
+  - Color-coded evaluation status badges positioned in bottom right corner
 - **`RadarView.tsx`** — Nivo ResponsiveRadar wrapper with custom logo dots
-  - Takes up to 5 tools, transforms dims into Nivo data format
+  - Takes up to 5 tools (or all tools in category filter), transforms dims into Nivo data format
   - Respects `hiddenDims` set to exclude dimensions
   - Smart collision detection with auto-stacking for overlapping tool logos
 - **`Filters.tsx`** — Category/status/recency filters with tooltips
 - **`CompareSelect.tsx`** — Category-grouped multi-select for choosing up to 5 tools
 - **`ToolDetails.tsx`** — Selected tools info panel with ratings and dimension breakdowns
-  - Sticky header with tool details scrolling naturally with page
+  - Sticky header with "About Scores" expandable section explaining scoring methodology
+  - Smart score display: shows both weighted and rating when differ by >0.1, single score when identical
   - Displays evaluation status badges with Notion colors
+  - Tool details scrolling naturally with page
 - **`ToolLogo.tsx`** — Logo component with favicon fallbacks and consistent color generation
 - **`DimensionTooltip.tsx`** — Interactive dimension explanations with hover tooltips
 - **`Navbar.tsx`** — Shared navigation component with radar/tools toggle and version info
@@ -97,9 +102,17 @@ Both `route.ts` and `generate-static-data.js` handle flexible property types, su
 
 ## Key Behaviors
 
-- **Auto-selection:** If user hasn't selected tools, show top 5 by rating (page.tsx:40-41)
-- **Max 5 tools:** Radar comparison limited to 5 tools (page.tsx:23, RadarView.tsx:23)
-- **Dimension filtering:** User can hide dimensions via checkboxes; chart updates dynamically
+- **Auto-selection:** If user hasn't selected tools, show top 5 by weighted score (finalScore, with fallback to rating)
+- **Category filter behavior:** When a category is selected with no manual tool selection, displays all tools in that category (not limited to 5)
+- **Max 5 tools for manual selection:** When manually selecting tools, radar comparison limited to 5 tools
+- **Sorting:** All tools sorted by Weighted Score (finalScore field, with fallback to Rating if missing)
+- **Smart score display:** Intelligently hides redundant scores for better UX
+  - When weighted score and rating differ by >0.1: shows both (e.g., "85.0 | 75.0" with "Weighted | Rating" labels)
+  - When identical (e.g., Adopted tools at 100% confidence): shows single score with "Score" label
+  - Consistent behavior across tools page and radar tool details
+- **Dimension filtering:** User can hide dimensions via collapsible overlay on chart; chart updates dynamically (minimum 3 dimensions required)
+- **Export functionality:** PNG export button overlays top-right of radar chart
+- **About Scores documentation:** Expandable section in ToolDetails explains weighted vs rating methodology and confidence multipliers
 - **Evaluation status badges:** Display color-coded status from Notion on both tools page and radar tool details
 - **Page-based scrolling:** Radar page uses natural page scrolling instead of fixed containers
 - **Build-time data refresh:** Every production build fetches fresh data from Notion via `prebuild` script (package.json:8)

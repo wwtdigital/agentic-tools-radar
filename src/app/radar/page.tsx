@@ -19,6 +19,7 @@ type Tool = {
   quickTake?: string;
   dims: { autonomy: number; collaboration: number; context: number; governance: number; interface: number };
   rating?: number | null;
+  finalScore?: number | null;
   lastEdited: string;
 };
 
@@ -31,6 +32,7 @@ export default function RadarPage() {
   const [hiddenDims, setHiddenDims] = useState<Set<string>>(new Set());
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [isExporting, setIsExporting] = useState<boolean>(false);
+  const [dimensionsExpanded, setDimensionsExpanded] = useState<boolean>(false);
   const radarRef = useRef<HTMLDivElement>(null);
 
   // Export radar chart as PNG
@@ -79,7 +81,8 @@ export default function RadarPage() {
       const cutoff = new Date(); cutoff.setMonth(cutoff.getMonth() - filters.months);
       out = out.filter(t => new Date(t.lastEdited) >= cutoff);
     }
-    return out.sort((a,b) => (b.rating ?? 0) - (a.rating ?? 0));
+    // Sort by weighted score (with fallback to rating)
+    return out.sort((a,b) => (b.finalScore ?? b.rating ?? 0) - (a.finalScore ?? a.rating ?? 0));
   }, [data, filters]);
 
   // Default tools to display when nothing is selected
@@ -99,10 +102,10 @@ export default function RadarPage() {
     return matchedTools.length > 0 ? matchedTools : filtered.slice(0, 5).map(t => t.id);
   }, [filtered, filters.category, selected.length]);
   const compareIds = selected.length ? selected : defaultIds;
-  // Sort selected tools by rating (highest to lowest)
+  // Sort selected tools by weighted score (with fallback to rating)
   const selectedTools = filtered
     .filter(t => compareIds.includes(t.id))
-    .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    .sort((a, b) => (b.finalScore ?? b.rating ?? 0) - (a.finalScore ?? a.rating ?? 0));
 
   // Get the most recent lastEdited date
   const latestUpdate = useMemo(() => {
@@ -147,7 +150,7 @@ export default function RadarPage() {
         <div
           className="fixed inset-0 bg-black/20 z-20 top-[57px]"
           onClick={() => setDrawerOpen(false)}
-          aria-label="Close drawer"
+          role="presentation"
         />
       )}
 
@@ -165,11 +168,12 @@ export default function RadarPage() {
                 <button
                   onClick={() => setDrawerOpen(false)}
                   className="p-2 hover:bg-red-50 bg-slate-100 rounded-lg transition-colors border border-slate-300 hover:border-red-300"
-                  aria-label="Close drawer"
+                  aria-label="Close tools and filters drawer"
                 >
-                  <svg className="w-6 h-6 text-slate-700 hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg aria-hidden="true" focusable="false" className="w-6 h-6 text-slate-700 hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                   </svg>
+                  <span className="sr-only">Close drawer</span>
                 </button>
               </div>
 
@@ -187,7 +191,7 @@ export default function RadarPage() {
       </div>
 
       {/* Main Content - Split Layout */}
-      <main className="w-full flex-1 flex flex-col overflow-hidden">
+      <main role="main" aria-label="Radar visualization" className="w-full flex-1 flex flex-col overflow-hidden">
         <div className="flex gap-6 p-6 flex-1 min-h-0">
           {/* Left: Radar Chart (2/3) */}
           <div className="w-2/3 flex flex-col">
@@ -204,7 +208,8 @@ export default function RadarPage() {
                       ? "bg-slate-900 text-white border-slate-900"
                       : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
                   }`}
-                  title="Select custom tools"
+                  aria-label={`Select custom tools, ${selected.length || 5} tools currently selected`}
+                  aria-pressed={!filters.category}
                 >
                   Select Tools <span className="ml-1 opacity-70">({selected.length || 5})</span>
                 </button>
@@ -219,6 +224,8 @@ export default function RadarPage() {
                           ? "bg-slate-900 text-white border-slate-900"
                           : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
                       }`}
+                      aria-label={`Filter by ${cat} category, ${count} tools available`}
+                      aria-pressed={filters.category === cat}
                     >
                       {cat} <span className="ml-1 opacity-70">({count})</span>
                     </button>
@@ -230,71 +237,104 @@ export default function RadarPage() {
                     setSelected([]);
                   }}
                   className="px-3 py-2 rounded border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-colors text-slate-700"
-                  title="Reset to default view"
+                  aria-label="Reset to default view"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg aria-hidden="true" focusable="false" className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
-                </button>
-              </div>
-
-              {/* Export Button */}
-              <div className="flex gap-2">
-                <button
-                  onClick={handleExport}
-                  disabled={isExporting}
-                  className="px-4 py-2 rounded border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-slate-700"
-                  title="Export radar chart as PNG"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  <span className="text-sm font-medium">{isExporting ? 'Exporting...' : 'Export PNG'}</span>
+                  <span className="sr-only">Reset</span>
                 </button>
               </div>
             </div>
-            <figure ref={radarRef} className="border rounded p-4 bg-white flex-1 min-h-0 isolate">
-              <div className="w-full h-full">
-                <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
-              </div>
-            </figure>
+            <div className="relative flex-1 min-h-[600px]">
+              {/* Dimension Filters - Top Left Overlay */}
+              <div className="absolute top-6 left-6 z-10">
+                <div className="bg-white/95 backdrop-blur-sm rounded border border-slate-200 shadow-sm">
+                  <button
+                    onClick={() => setDimensionsExpanded(!dimensionsExpanded)}
+                    className="px-2.5 py-2 flex items-center gap-1.5 hover:bg-slate-50 transition-colors rounded"
+                    aria-label={`Dimension filters${hiddenDims.size > 0 ? `, ${hiddenDims.size} hidden` : ''}`}
+                    aria-expanded={dimensionsExpanded}
+                  >
+                    <svg aria-hidden="true" focusable="false" className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    {hiddenDims.size > 0 && (
+                      <span className="text-xs font-medium text-slate-700">{hiddenDims.size}</span>
+                    )}
+                    <svg
+                      aria-hidden="true"
+                      focusable="false"
+                      className={`w-4 h-4 text-slate-500 transition-transform ${dimensionsExpanded ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
 
-            {/* Dimension Visibility Controls */}
-            <div className="mt-3 p-3 bg-slate-50 rounded border border-slate-200">
-              <div className="grid grid-cols-5 gap-4">
-              {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => {
-                const totalDimensions = 5;
-                const visibleCount = totalDimensions - hiddenDims.size;
-                const isChecked = !hiddenDims.has(dim);
-                const wouldBeUnderMinimum = isChecked && visibleCount <= 3;
+                  {dimensionsExpanded && (
+                    <div className="absolute top-full left-0 mt-1 bg-white rounded border border-slate-200 shadow-lg p-3 max-h-96 overflow-y-auto min-w-[500px]">
+                      <h3 className="text-sm font-semibold text-slate-900 mb-3">Dimensions</h3>
+                      <div className="grid grid-cols-2 gap-3">
+                        {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => {
+                          const totalDimensions = 5;
+                          const visibleCount = totalDimensions - hiddenDims.size;
+                          const isChecked = !hiddenDims.has(dim);
+                          const wouldBeUnderMinimum = isChecked && visibleCount <= 3;
 
-                const description = DIMENSION_DESCRIPTIONS[dim as keyof typeof DIMENSION_DESCRIPTIONS];
+                          const description = DIMENSION_DESCRIPTIONS[dim as keyof typeof DIMENSION_DESCRIPTIONS];
 
-                return (
-                  <label key={dim} className={`flex items-start gap-2 text-sm ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      disabled={wouldBeUnderMinimum}
-                      onChange={(e) => {
-                        const next = new Set(hiddenDims);
-                        e.target.checked ? next.delete(dim) : next.add(dim);
-                        setHiddenDims(next);
-                      }}
-                      className={`mt-0.5 ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                      title={wouldBeUnderMinimum ? 'Minimum 3 dimensions required' : ''}
-                    />
-                    <div>
-                      <span className={`font-medium ${wouldBeUnderMinimum ? 'text-slate-400' : 'text-slate-700'}`}>{dim}</span>
-                      {description && (
-                        <div className="text-xs text-slate-500 mt-0.5">{description}</div>
-                      )}
+                          return (
+                            <label key={dim} className={`flex items-start gap-2 text-sm ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                disabled={wouldBeUnderMinimum}
+                                onChange={(e) => {
+                                  const next = new Set(hiddenDims);
+                                  e.target.checked ? next.delete(dim) : next.add(dim);
+                                  setHiddenDims(next);
+                                }}
+                                className={`mt-0.5 ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                title={wouldBeUnderMinimum ? 'Minimum 3 dimensions required' : ''}
+                              />
+                              <div>
+                                <span className={`font-medium ${wouldBeUnderMinimum ? 'text-slate-400' : 'text-slate-700'}`}>{dim}</span>
+                                {description && (
+                                  <div className="text-xs text-slate-500 mt-0.5">{description}</div>
+                                )}
+                              </div>
+                            </label>
+                          );
+                        })}
+                      </div>
+                      <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-200">At least 3 dimensions must be selected</p>
                     </div>
-                  </label>
-                );
-              })}
+                  )}
+                </div>
               </div>
-              <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-200">At least 3 dimensions must be selected</p>
+
+              {/* Export Button - Top Right Overlay */}
+              <button
+                onClick={handleExport}
+                disabled={isExporting}
+                className="absolute top-6 right-6 z-10 p-2 rounded border border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-slate-700 shadow-sm"
+                aria-label={isExporting ? 'Exporting radar chart to PNG' : 'Export radar chart as PNG image'}
+              >
+                <svg aria-hidden="true" focusable="false" className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span className="sr-only">{isExporting ? 'Exporting...' : 'Export PNG'}</span>
+              </button>
+
+              {/* Chart - Only this gets exported */}
+              <figure ref={radarRef} className="border rounded p-4 bg-white h-full isolate">
+                <div className="w-full h-full">
+                  <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
+                </div>
+              </figure>
             </div>
           </div>
 
@@ -304,6 +344,16 @@ export default function RadarPage() {
           </div>
         </div>
       </main>
+
+      {/* Live region for screen reader announcements */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {isExporting
+          ? "Exporting radar chart to PNG"
+          : selectedTools.length > 0
+          ? `Showing ${filtered.length} tools${filters.category ? ` in ${filters.category} category` : ''}, ${selectedTools.length} selected for comparison`
+          : `Showing ${filtered.length} tools${filters.category ? ` in ${filters.category} category` : ''}`
+        }
+      </div>
     </div>
   );
 }
