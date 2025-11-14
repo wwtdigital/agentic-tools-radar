@@ -85,24 +85,45 @@ The research process combines multiple AI platforms to ensure comprehensive, acc
 ## 2. Presentation Layer (Next.js Application)
 
 ### Stack
-- **Framework**: Next.js 15 + React 18 + TypeScript
+- **Framework**: Next.js 15.5.6 + React 18.3.1 + TypeScript 5.5.4
 - **Deployment**: Vercel (serverless, global CDN)
-- **Visualization**: Nivo (D3-based radar charts)
-- **Data Fetching**: SWR (client-side caching)
-- **Validation**: Zod (runtime type safety)
+- **Visualization**: Nivo 0.99.0 (D3-based radar charts)
+- **Data Fetching**: SWR 2.2.5 (client-side caching)
+- **Validation**: Zod 3.23.8 (runtime type safety)
+- **Styling**: Tailwind CSS 3.4.10
 
 ### Key Features
 
-**API Integration** (`/api/tools`)
-- Server-side Notion query (up to 100 tools)
-- Schema validation and data transformation
-- Graceful fallback to demo data
+**Data Pipeline**
+- **Build-time generation**: `scripts/generate-static-data.js` runs as prebuild step
+- **Production**: Serves pre-generated snapshot from `src/data/tools-snapshot.json` for fast, reliable responses
+- **Development**: Live Notion API queries for real-time updates
+- **Fallback**: Demo data when Notion credentials unavailable
+- **Validation**: Zod schema ensures type safety across all data sources
 
-**Interactive Radar**
-- Compare up to 5 tools across dimensions
+**Interactive Radar** (`/radar`)
+- Compare up to 5 tools (or all tools in category filter)
 - Tool logos via favicon API with fallback to initials
 - Smart collision detection with auto-stacking
 - Interactive dimension tooltips with detailed explanations
+- PNG export functionality via overlay button
+- Dynamic dimension filtering (minimum 3 dimensions required)
+- Page-based scrolling for natural navigation
+
+**All Tools View** (`/tools`)
+- Comprehensive listing grouped by category
+- Smart score display (hides redundant scores for better UX)
+- Color-coded evaluation status badges matching Notion colors
+- Consistent card layout with tool details
+
+**Scoring Intelligence**
+- **Dual scoring system**:
+  - `rating`: Pure capability score (0-100)
+  - `finalScore`: Risk-adjusted weighted score accounting for evaluation status
+- **Smart display logic**:
+  - Shows both scores when they differ by >0.1
+  - Shows single score when identical (e.g., Adopted tools at 100% confidence)
+- **"About Scores" documentation**: Expandable section explaining methodology
 
 **User Interface**
 - Unified drawer (tools, filters, dimensions)
@@ -111,6 +132,7 @@ The research process combines multiple AI platforms to ensure comprehensive, acc
 - Dynamic dimension visibility controls
 - Mobile warning banner for optimal desktop experience
 - Dedicated architecture documentation page (`/architecture`)
+- Status badges with Notion color mapping (8 evaluation states)
 
 ---
 
@@ -124,11 +146,18 @@ AI Research Layer
         ↓
 Notion Database (Source of Truth)
         ↓
-Next.js API (/api/tools)
+        ├─→ [DEV] Live API query → Next.js API
+        │
+        └─→ [PROD] Build-time snapshot generation
+                   (scripts/generate-static-data.js)
+                   ↓
+            Static JSON (src/data/tools-snapshot.json)
+                   ↓
+            Next.js API (/api/tools)
         ↓
 SWR Cache (Client)
         ↓
-React UI (Radar + Controls)
+React UI (Radar + Tools Pages)
 ```
 
 ---
@@ -142,30 +171,39 @@ React UI (Radar + Controls)
 
 ### Technology
 - **Type Safety**: TypeScript + Zod prevent runtime errors
-- **Performance**: Serverless auto-scales, SWR minimizes API calls
+- **Performance**:
+  - Build-time snapshot generation eliminates API latency in production
+  - Serverless auto-scales, SWR minimizes client requests
+  - Static JSON responses are lightning-fast and cacheable
+- **Reliability**: Static snapshots ensure consistent data even during Notion API outages
 - **Maintainability**: No database/servers to manage
-- **Cost**: Pay-per-use serverless model
+- **Cost**: Pay-per-use serverless model, reduced API calls in production
 
 ### Operations
-- **Zero-downtime deploys**: Vercel auto-deploy on git push
+- **Zero-downtime deploys**: Vercel auto-deploy on git push with fresh Notion data on every build
 - **Team collaboration**: Non-technical users edit via Notion
-- **Audit ready**: Complete edit history maintained
-- **Fast iteration**: Changes flow instantly to production
+- **Audit ready**: Complete edit history maintained in Notion
+- **Fast iteration**: Changes flow to production on next deploy (automatic snapshot refresh)
+- **Developer experience**: Live API in development, cached snapshots in production
 
 ---
 
 ## Tech Stack Summary
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Research | Notion MCP, Perplexity | AI-assisted data collection |
-| Data | Notion Database | Source of truth with version control |
-| API | Next.js Server Routes | Transform and validate |
-| Frontend | React + TypeScript | Interactive UI |
-| Visualization | Nivo | D3-based radar charts |
-| Deploy | Vercel | Serverless hosting + CDN |
-| Validation | Zod | Runtime type safety |
-| Cache | SWR | Client-side data management |
+| Layer | Technology | Version | Purpose |
+|-------|-----------|---------|---------|
+| Research | Notion MCP, Perplexity | - | AI-assisted data collection |
+| Data | Notion Database | API v2.2.15 | Source of truth with version control |
+| Build | Node.js scripts | - | Static snapshot generation (prebuild) |
+| Storage | Static JSON | - | Production data cache (tools-snapshot.json) |
+| API | Next.js Server Routes | 15.5.6 | Transform and validate |
+| Frontend | React + TypeScript | 18.3.1 + 5.5.4 | Interactive UI |
+| Visualization | Nivo | 0.99.0 | D3-based radar charts |
+| Styling | Tailwind CSS | 3.4.10 | Utility-first CSS |
+| Deploy | Vercel | - | Serverless hosting + CDN |
+| Validation | Zod | 3.23.8 | Runtime type safety |
+| Cache | SWR | 2.2.5 | Client-side data management |
+| Export | html-to-image | 1.11.13 | PNG chart export |
 
 ---
 

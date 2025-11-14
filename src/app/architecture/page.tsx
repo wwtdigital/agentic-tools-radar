@@ -331,7 +331,7 @@ export default function ArchitecturePage() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between py-2 border-b border-gray-100">
                       <span className="font-medium text-gray-700">Framework</span>
-                      <span className="text-sm text-gray-600">Next.js 15 + React 18 + TypeScript</span>
+                      <span className="text-sm text-gray-600">Next.js 15.5.6 + React 18.3.1 + TypeScript 5.5.4</span>
                     </div>
                     <div className="flex items-center justify-between py-2 border-b border-gray-100">
                       <span className="font-medium text-gray-700">Deployment</span>
@@ -339,15 +339,19 @@ export default function ArchitecturePage() {
                     </div>
                     <div className="flex items-center justify-between py-2 border-b border-gray-100">
                       <span className="font-medium text-gray-700">Visualization</span>
-                      <span className="text-sm text-gray-600">Nivo (D3-based radar charts)</span>
+                      <span className="text-sm text-gray-600">Nivo 0.99.0 (D3-based radar charts)</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                      <span className="font-medium text-gray-700">Styling</span>
+                      <span className="text-sm text-gray-600">Tailwind CSS 3.4.10</span>
                     </div>
                     <div className="flex items-center justify-between py-2 border-b border-gray-100">
                       <span className="font-medium text-gray-700">Data Fetching</span>
-                      <span className="text-sm text-gray-600">SWR (client-side caching)</span>
+                      <span className="text-sm text-gray-600">SWR 2.2.5 (client-side caching)</span>
                     </div>
                     <div className="flex items-center justify-between py-2">
                       <span className="font-medium text-gray-700">Validation</span>
-                      <span className="text-sm text-gray-600">Zod (runtime type safety)</span>
+                      <span className="text-sm text-gray-600">Zod 3.23.8 (runtime type safety)</span>
                     </div>
                   </div>
                 </div>
@@ -356,19 +360,33 @@ export default function ArchitecturePage() {
                   <h3 className="text-xl font-semibold text-gray-900 mb-6">Key Features</h3>
                   <div className="space-y-6">
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-3">API Integration (<code className="bg-gray-100 px-2 py-1 rounded text-sm">/api/tools</code>)</h4>
+                      <h4 className="font-semibold text-gray-800 mb-3">Data Pipeline</h4>
                       <ul className="space-y-2 text-sm text-gray-600">
-                        <li>• Server-side Notion query (up to 100 tools)</li>
-                        <li>• Schema validation and data transformation</li>
-                        <li>• Graceful fallback to demo data</li>
+                        <li>• <strong>Build-time generation:</strong> Scripts fetch Notion data at build time</li>
+                        <li>• <strong>Production:</strong> Serves pre-generated static snapshots for fast, reliable responses</li>
+                        <li>• <strong>Development:</strong> Live Notion API queries for real-time updates</li>
+                        <li>• <strong>Fallback:</strong> Demo data when Notion credentials unavailable</li>
+                        <li>• <strong>Validation:</strong> Zod schema ensures type safety across all data sources</li>
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-3">Interactive Radar</h4>
+                      <h4 className="font-semibold text-gray-800 mb-3">Interactive Radar (<code className="bg-gray-100 px-2 py-1 rounded text-sm">/radar</code>)</h4>
                       <ul className="space-y-2 text-sm text-gray-600">
-                        <li>• Compare up to 5 tools across dimensions</li>
-                        <li>• Tool logos via favicon API</li>
+                        <li>• Compare up to 5 tools (or all tools in category filter)</li>
+                        <li>• Tool logos via favicon API with smart fallbacks</li>
                         <li>• Smart collision detection with auto-stacking</li>
+                        <li>• PNG export functionality via overlay button</li>
+                        <li>• Dynamic dimension filtering (minimum 3 required)</li>
+                        <li>• Page-based scrolling for natural navigation</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-800 mb-3">All Tools View (<code className="bg-gray-100 px-2 py-1 rounded text-sm">/tools</code>)</h4>
+                      <ul className="space-y-2 text-sm text-gray-600">
+                        <li>• Comprehensive listing grouped by category</li>
+                        <li>• Smart score display (shows both scores when they differ)</li>
+                        <li>• Color-coded evaluation status badges</li>
+                        <li>• Consistent card layout with tool details</li>
                       </ul>
                     </div>
                     <div>
@@ -378,6 +396,8 @@ export default function ArchitecturePage() {
                         <li>• Category-grouped selection with bulk actions</li>
                         <li>• Real-time filtering (category, status, recency)</li>
                         <li>• Dynamic dimension visibility controls</li>
+                        <li>• Status badges with Notion color mapping (8 evaluation states)</li>
+                        <li>• "About Scores" documentation explaining scoring methodology</li>
                       </ul>
                     </div>
                   </div>
@@ -400,11 +420,18 @@ export default function ArchitecturePage() {
         ↓
 Notion Database (Source of Truth)
         ↓
-Next.js API (/api/tools)
+        ├─→ [DEV] Live API query → Next.js API
+        │
+        └─→ [PROD] Build-time snapshot generation
+                   (scripts/generate-static-data.js)
+                   ↓
+            Static JSON (src/data/tools-snapshot.json)
+                   ↓
+            Next.js API (/api/tools)
         ↓
 SWR Cache (Client)
         ↓
-React UI (Radar + Controls)`}
+React UI (Radar + Tools Pages)`}
                   </pre>
                 </div>
               </div>
@@ -456,7 +483,13 @@ React UI (Radar + Controls)`}
                     <li className="flex items-start">
                       <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
                       <div>
-                        <strong>Performance</strong>: Serverless auto-scales, SWR minimizes API calls
+                        <strong>Performance</strong>: Build-time snapshots eliminate API latency in production, SWR minimizes client requests
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Reliability</strong>: Static snapshots ensure consistent data even during Notion API outages
                       </div>
                     </li>
                     <li className="flex items-start">
@@ -468,7 +501,7 @@ React UI (Radar + Controls)`}
                     <li className="flex items-start">
                       <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
                       <div>
-                        <strong>Cost</strong>: Pay-per-use serverless model
+                        <strong>Cost</strong>: Pay-per-use serverless model, reduced API calls in production
                       </div>
                     </li>
                   </ul>
@@ -482,7 +515,7 @@ React UI (Radar + Controls)`}
                     <li className="flex items-start">
                       <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
                       <div>
-                        <strong>Zero-downtime deploys</strong>: Vercel auto-deploy on git push
+                        <strong>Zero-downtime deploys</strong>: Vercel auto-deploy on git push with fresh Notion data on every build
                       </div>
                     </li>
                     <li className="flex items-start">
@@ -494,13 +527,19 @@ React UI (Radar + Controls)`}
                     <li className="flex items-start">
                       <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
                       <div>
-                        <strong>Audit ready</strong>: Complete edit history maintained
+                        <strong>Audit ready</strong>: Complete edit history maintained in Notion
                       </div>
                     </li>
                     <li className="flex items-start">
                       <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
                       <div>
-                        <strong>Fast iteration</strong>: Changes flow instantly to production
+                        <strong>Fast iteration</strong>: Changes flow to production on next deploy (automatic snapshot refresh)
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div>
+                        <strong>Developer experience</strong>: Live API in development, cached snapshots in production
                       </div>
                     </li>
                   </ul>
@@ -520,49 +559,82 @@ React UI (Radar + Controls)`}
                       <tr>
                         <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Layer</th>
                         <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Technology</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Version</th>
                         <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Purpose</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
                       <tr className="hover:bg-gray-50">
                         <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Research</td>
-                        <td className="px-6 py-4 text-sm text-gray-600">Notion MCP (Claude/ChatGPT Desktop), Perplexity</td>
-                        <td className="px-6 py-4 text-sm text-gray-600">AI-assisted data collection via desktop tools</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Notion MCP, Perplexity</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">-</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">AI-assisted data collection</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
                         <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Data</td>
                         <td className="px-6 py-4 text-sm text-gray-600">Notion Database</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">API v2.2.15</td>
                         <td className="px-6 py-4 text-sm text-gray-600">Source of truth with version control</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Build</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Node.js scripts</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">-</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Static snapshot generation (prebuild)</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Storage</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Static JSON</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">-</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Production data cache (tools-snapshot.json)</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
                         <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">API</td>
                         <td className="px-6 py-4 text-sm text-gray-600">Next.js Server Routes</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">15.5.6</td>
                         <td className="px-6 py-4 text-sm text-gray-600">Transform and validate</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
                         <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Frontend</td>
                         <td className="px-6 py-4 text-sm text-gray-600">React + TypeScript</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">18.3.1 + 5.5.4</td>
                         <td className="px-6 py-4 text-sm text-gray-600">Interactive UI</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
                         <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Visualization</td>
                         <td className="px-6 py-4 text-sm text-gray-600">Nivo</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">0.99.0</td>
                         <td className="px-6 py-4 text-sm text-gray-600">D3-based radar charts</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Styling</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Tailwind CSS</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">3.4.10</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Utility-first CSS</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
                         <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Deploy</td>
                         <td className="px-6 py-4 text-sm text-gray-600">Vercel</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">-</td>
                         <td className="px-6 py-4 text-sm text-gray-600">Serverless hosting + CDN</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
                         <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Validation</td>
                         <td className="px-6 py-4 text-sm text-gray-600">Zod</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">3.23.8</td>
                         <td className="px-6 py-4 text-sm text-gray-600">Runtime type safety</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
                         <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Cache</td>
                         <td className="px-6 py-4 text-sm text-gray-600">SWR</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">2.2.5</td>
                         <td className="px-6 py-4 text-sm text-gray-600">Client-side data management</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">Export</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">html-to-image</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">1.11.13</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">PNG chart export</td>
                       </tr>
                     </tbody>
                   </table>
