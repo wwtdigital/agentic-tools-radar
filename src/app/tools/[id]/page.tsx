@@ -48,6 +48,11 @@ export default function ToolDetailPage() {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   };
 
+  // Get latest update date from tools
+  const latestUpdate = tools.length > 0
+    ? new Date(Math.max(...tools.map(t => new Date(t.lastEdited).getTime()))).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    : null;
+
   const hasWeighted = tool?.finalScore !== null && tool?.finalScore !== undefined;
   const hasRating = tool?.rating !== null && tool?.rating !== undefined;
   const scoresDiffer = hasWeighted && hasRating && Math.abs(tool.finalScore! - tool.rating!) > 0.1;
@@ -55,7 +60,11 @@ export default function ToolDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white">
-        <Navbar />
+        <Navbar
+          title="Agentic Developer Tools Radar"
+          latestUpdate={latestUpdate}
+          currentPage="tools"
+        />
         <div className="max-w-5xl mx-auto px-6 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-slate-200 rounded w-1/3 mb-8"></div>
@@ -69,7 +78,11 @@ export default function ToolDetailPage() {
   if (!tool) {
     return (
       <div className="min-h-screen bg-white">
-        <Navbar />
+        <Navbar
+          title="Agentic Developer Tools Radar"
+          latestUpdate={latestUpdate}
+          currentPage="tools"
+        />
         <div className="max-w-5xl mx-auto px-6 py-8">
           <div className="text-center py-12">
             <h1 className="text-2xl font-bold text-slate-900 mb-4">Tool Not Found</h1>
@@ -88,7 +101,11 @@ export default function ToolDetailPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
+      <Navbar
+        title="Agentic Developer Tools Radar"
+        latestUpdate={latestUpdate}
+        currentPage="tools"
+      />
 
       <div className="max-w-5xl mx-auto px-6 py-8">
         {/* Breadcrumb Navigation */}

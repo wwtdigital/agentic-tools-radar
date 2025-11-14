@@ -223,31 +223,31 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        window.open(tool.urls.product, '_blank', 'noopener,noreferrer');
+                        if (tool.urls?.product) window.open(tool.urls.product, '_blank', 'noopener,noreferrer');
                       }}
                       className="text-blue-600 hover:text-blue-800 hover:underline z-10 relative cursor-pointer bg-transparent border-0 p-0 font-inherit"
                     >
                       Product →
                     </button>
                   )}
-                  {tool.urls.docs && (
+                  {tool.urls?.docs && (
                     <button
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        window.open(tool.urls.docs, '_blank', 'noopener,noreferrer');
+                        if (tool.urls?.docs) window.open(tool.urls.docs, '_blank', 'noopener,noreferrer');
                       }}
                       className="text-blue-600 hover:text-blue-800 hover:underline z-10 relative cursor-pointer bg-transparent border-0 p-0 font-inherit"
                     >
                       Documentation →
                     </button>
                   )}
-                  {tool.urls.company && (
+                  {tool.urls?.company && (
                     <button
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        window.open(tool.urls.company, '_blank', 'noopener,noreferrer');
+                        if (tool.urls?.company) window.open(tool.urls.company, '_blank', 'noopener,noreferrer');
                       }}
                       className="text-blue-600 hover:text-blue-800 hover:underline z-10 relative cursor-pointer bg-transparent border-0 p-0 font-inherit"
                     >
