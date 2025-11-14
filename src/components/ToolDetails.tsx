@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import { DIMENSION_DESCRIPTIONS } from "@/components/DimensionTooltip";
 import { ToolLogo } from "@/components/ToolLogo";
-
 import { getStatusColor } from "@/utils/status";
+import { generateSlug } from "@/utils/slug";
 
 type Tool = {
   id: string;
@@ -127,9 +128,10 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
       </div>
       <div className="space-y-4 overflow-y-auto pr-3" style={{ maxHeight: 'calc(100vh - 150px)' }}>
         {tools.map((tool) => (
-          <div
+          <Link
             key={tool.id}
-            className="border border-slate-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow overflow-visible"
+            href={`/tools/${generateSlug(tool.tool)}`}
+            className="block border border-slate-200 rounded-lg p-4 bg-white hover:shadow-md hover:border-blue-300 transition-all overflow-visible group cursor-pointer"
           >
             <div className="flex items-start gap-3 mb-3">
               <ToolLogo
@@ -139,7 +141,7 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
                 size="lg"
               />
               <div className="flex-1 min-w-0">
-                <h3 className="text-base font-semibold text-slate-900">
+                <h3 className="text-base font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
                   {tool.tool}
                 </h3>
                 {tool.company && (
@@ -217,34 +219,40 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
               <div className="flex items-center justify-between gap-3 text-xs">
                 <div className="flex flex-wrap gap-3">
                   {tool.urls.product && (
-                    <a
-                      href={tool.urls.product}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800 hover:underline"
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.open(tool.urls.product, '_blank', 'noopener,noreferrer');
+                      }}
+                      className="text-blue-600 hover:text-blue-800 hover:underline z-10 relative cursor-pointer bg-transparent border-0 p-0 font-inherit"
                     >
                       Product →
-                    </a>
+                    </button>
                   )}
                   {tool.urls.docs && (
-                    <a
-                      href={tool.urls.docs}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800 hover:underline"
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.open(tool.urls.docs, '_blank', 'noopener,noreferrer');
+                      }}
+                      className="text-blue-600 hover:text-blue-800 hover:underline z-10 relative cursor-pointer bg-transparent border-0 p-0 font-inherit"
                     >
                       Documentation →
-                    </a>
+                    </button>
                   )}
                   {tool.urls.company && (
-                    <a
-                      href={tool.urls.company}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800 hover:underline"
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.open(tool.urls.company, '_blank', 'noopener,noreferrer');
+                      }}
+                      className="text-blue-600 hover:text-blue-800 hover:underline z-10 relative cursor-pointer bg-transparent border-0 p-0 font-inherit"
                     >
                       Company →
-                    </a>
+                    </button>
                   )}
                 </div>
                 {tool.status && tool.status.trim() !== "" && (
@@ -257,7 +265,7 @@ export function ToolDetails({ tools }: { tools: Tool[] }) {
                 )}
               </div>
             )}
-          </div>
+          </Link>
         ))}
       </div>
     </div>

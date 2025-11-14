@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { DIMENSION_DESCRIPTIONS } from "@/components/DimensionTooltip";
 import { ToolLogo } from "@/components/ToolLogo";
 import { getStatusColor } from "@/utils/status";
+import { generateSlug } from "@/utils/slug";
 
 type Tool = {
   id: string;
@@ -34,7 +36,10 @@ export function ToolCard({ tool, groupBy }: ToolCardProps) {
   const scoresDiffer = hasWeighted && hasRating && Math.abs(tool.finalScore! - tool.rating!) > 0.1;
 
   return (
-    <div className="border border-slate-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow flex flex-col overflow-visible relative">
+    <Link
+      href={`/tools/${generateSlug(tool.tool)}`}
+      className="block border border-slate-200 rounded-lg p-4 bg-white hover:shadow-md hover:border-blue-300 transition-all overflow-visible relative group cursor-pointer"
+    >
       <div className="flex items-start gap-3 mb-3">
         <ToolLogo
           toolName={tool.tool}
@@ -43,7 +48,7 @@ export function ToolCard({ tool, groupBy }: ToolCardProps) {
           size="lg"
         />
         <div className="flex-1 min-w-0">
-          <h3 className="text-base font-semibold text-slate-900">
+          <h3 className="text-base font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
             {tool.tool}
           </h3>
           {tool.company && (
@@ -128,34 +133,40 @@ export function ToolCard({ tool, groupBy }: ToolCardProps) {
       {tool.urls && (
         <div className="flex flex-wrap gap-3 text-xs pt-3 border-t border-slate-200">
           {tool.urls.product && (
-            <a
-              href={tool.urls.product}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 hover:underline"
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(tool.urls.product, '_blank', 'noopener,noreferrer');
+              }}
+              className="text-blue-600 hover:text-blue-800 hover:underline z-10 relative cursor-pointer bg-transparent border-0 p-0 font-inherit"
             >
               Product →
-            </a>
+            </button>
           )}
           {tool.urls.docs && (
-            <a
-              href={tool.urls.docs}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 hover:underline"
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(tool.urls.docs, '_blank', 'noopener,noreferrer');
+              }}
+              className="text-blue-600 hover:text-blue-800 hover:underline z-10 relative cursor-pointer bg-transparent border-0 p-0 font-inherit"
             >
               Documentation →
-            </a>
+            </button>
           )}
           {tool.urls.company && (
-            <a
-              href={tool.urls.company}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 hover:underline"
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(tool.urls.company, '_blank', 'noopener,noreferrer');
+              }}
+              className="text-blue-600 hover:text-blue-800 hover:underline z-10 relative cursor-pointer bg-transparent border-0 p-0 font-inherit"
             >
               Company →
-            </a>
+            </button>
           )}
         </div>
       )}
@@ -168,6 +179,6 @@ export function ToolCard({ tool, groupBy }: ToolCardProps) {
           </span>
         </div>
       )}
-    </div>
+    </Link>
   );
 }
