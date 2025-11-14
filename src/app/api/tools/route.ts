@@ -47,6 +47,11 @@ const ToolSchema = z.object({
   lastEdited: z.string()
 });
 
+const SnapshotSchema = z.object({
+  buildDate: z.string(),
+  tools: z.array(ToolSchema)
+});
+
 const notion = process.env.NOTION_API_KEY ? new Client({ auth: process.env.NOTION_API_KEY }) : null;
 const DB_ID = process.env.NOTION_DB_ID;
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
@@ -57,8 +62,13 @@ export async function GET() {
     try {
       const snapshotPath = join(process.cwd(), "src", "data", "tools-snapshot.json");
       const data = readFileSync(snapshotPath, "utf-8");
-      const tools = JSON.parse(data);
-      return NextResponse.json(tools);
+      const snapshot = JSON.parse(data);
+
+      // Handle both old format (array) and new format (object with buildDate)
+      if (Array.isArray(snapshot)) {
+        return NextResponse.json({ buildDate: new Date().toISOString(), tools: snapshot });
+      }
+      return NextResponse.json(snapshot);
     } catch (error) {
       console.error("Failed to load static snapshot, falling back to demo data:", error);
       // Fall through to demo data if snapshot doesn't exist
@@ -81,7 +91,7 @@ export async function GET() {
       finalScore: 4.2,
       lastEdited: new Date().toISOString()
     }];
-    return NextResponse.json(demo);
+    return NextResponse.json({ buildDate: new Date().toISOString(), tools: demo });
   }
 
   try {
@@ -201,7 +211,7 @@ export async function GET() {
       return ToolSchema.parse(tool);
     }))).filter((item): item is z.infer<typeof ToolSchema> => item !== null);
 
-    return NextResponse.json(items);
+    return NextResponse.json({ buildDate: new Date().toISOString(), tools: items });
   } catch (error) {
     // Log full error for server-side debugging but don't expose details to client
     console.error("Error fetching from Notion:", error instanceof Error ? error.message : "Unknown error");

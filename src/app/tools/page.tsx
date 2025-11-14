@@ -18,6 +18,11 @@ type Tool = {
   lastEdited: string;
 };
 
+type ToolsResponse = {
+  buildDate: string;
+  tools: Tool[];
+};
+
 type GroupBy = "category" | "status" | "score" | "none";
 
 // Status priority order for sorting
@@ -50,17 +55,19 @@ function getScoreRange(score: number): string {
 const fetcher = (u: string) => fetch(u).then(r => r.json());
 
 export default function ToolsPage() {
-  const { data = [], isLoading } = useSWR<Tool[]>("/api/tools", fetcher);
+  const { data, isLoading } = useSWR<ToolsResponse>("/api/tools", fetcher);
+  const tools = data?.tools ?? [];
+  const buildDate = data?.buildDate;
   const [groupBy, setGroupBy] = useState<GroupBy>("category");
   const [searchQuery, setSearchQuery] = useState("");
 
   // Group tools by category, status, score, or none, sorted by weighted score within each group
   const groupedTools = useMemo(() => {
     // Filter by search first
-    let filtered = data;
+    let filtered = tools;
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = data.filter(tool =>
+      filtered = tools.filter(tool =>
         tool.tool.toLowerCase().includes(query) ||
         tool.company?.toLowerCase().includes(query)
       );
@@ -99,16 +106,15 @@ export default function ToolsPage() {
     });
 
     return groups;
-  }, [data, groupBy, searchQuery]);
+  }, [tools, groupBy, searchQuery]);
 
-  // Get the most recent lastEdited date
+  // Format build date for navbar
   const latestUpdate = useMemo(() => {
-    if (data.length === 0) return null;
-    const dates = data.map(t => new Date(t.lastEdited)).filter(d => !isNaN(d.getTime()));
-    if (dates.length === 0) return null;
-    const latest = new Date(Math.max(...dates.map(d => d.getTime())));
-    return latest.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }, [data]);
+    if (!buildDate) return null;
+    const date = new Date(buildDate);
+    if (isNaN(date.getTime())) return null;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }, [buildDate]);
 
   if (isLoading) {
     return (
@@ -143,7 +149,7 @@ export default function ToolsPage() {
         <div className="mb-6 space-y-4">
           <div className="flex items-center justify-between">
             <p className="text-slate-600">
-              Showing <strong className="text-slate-900">{Object.values(groupedTools).flat().length}</strong> of <strong className="text-slate-900">{data.length}</strong> tools
+              Showing <strong className="text-slate-900">{Object.values(groupedTools).flat().length}</strong> of <strong className="text-slate-900">{tools.length}</strong> tools
               {groupBy !== "none" && <> across <strong className="text-slate-900">{Object.keys(groupedTools).length}</strong> {groupBy === "category" ? "categories" : groupBy === "status" ? "statuses" : "score ranges"}</>}
             </p>
 

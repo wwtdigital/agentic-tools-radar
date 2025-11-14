@@ -16,11 +16,17 @@ type Dim = typeof DIM_LABELS[number];
 export function RadarView({
   tools,
   selectedIds,
-  hiddenDims
+  hiddenDims,
+  fillOpacity = 0.25,
+  color,
+  showScores = false
 }: {
   tools: Tool[];
   selectedIds: string[];
   hiddenDims: Set<string>;
+  fillOpacity?: number;
+  color?: string;
+  showScores?: boolean;
 }) {
   const selected = tools.filter(t => selectedIds.includes(t.id));
   const dims = DIM_LABELS.filter(d => !hiddenDims.has(d));
@@ -35,7 +41,11 @@ export function RadarView({
   };
 
   const data = dims.map(axis => {
-    const row: Record<string, number | string> = { dimension: axis };
+    const row: Record<string, number | string> = {
+      dimension: showScores && selected.length === 1
+        ? `${axis} (${selected[0].dims[labelToKey[axis]]})`
+        : axis
+    };
     selected.forEach(t => {
       const key = labelToKey[axis];
       const value = key ? t.dims[key] : 0;
@@ -208,12 +218,12 @@ export function RadarView({
         axis: { ticks: { text: { fontSize: 12 } } },
         legends: { text: { fontSize: 12 } }
       }}
-      colors={{ scheme: "blues" }}
+      colors={color ? [color] : { scheme: "blues" }}
       blendMode="multiply"
       borderWidth={2}
       layers={['grid', 'layers', 'slices', CustomDotsLayer]}
       enableDots={false}
-      fillOpacity={0.25}
+      fillOpacity={fillOpacity}
       isInteractive={false}
       animate={true}
       motionConfig={{

@@ -1,9 +1,11 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import useSWR from "swr";
+import { useMemo } from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { ToolLogo } from "@/components/ToolLogo";
+import { RadarView } from "@/components/RadarView";
 import { DIMENSION_DESCRIPTIONS } from "@/components/DimensionTooltip";
 import { getStatusColor } from "@/utils/status";
 import { generateSlug, findToolBySlug } from "@/utils/slug";
@@ -22,6 +24,11 @@ type Tool = {
   lastEdited: string;
 };
 
+type ToolsResponse = {
+  buildDate: string;
+  tools: Tool[];
+};
+
 const DIMENSION_LABELS = [
   { key: "autonomy", label: "AI Autonomy" },
   { key: "collaboration", label: "Collaboration" },
@@ -37,21 +44,20 @@ export default function ToolDetailPage() {
   const router = useRouter();
   const slug = params.id as string;
 
-  const { data: tools = [], isLoading } = useSWR<Tool[]>("/api/tools", fetcher);
+  const { data, isLoading } = useSWR<ToolsResponse>("/api/tools", fetcher);
+  const tools = data?.tools ?? [];
+  const buildDate = data?.buildDate;
 
   const tool = findToolBySlug(tools, slug);
   const relatedTools = tool ? tools.filter(t => t.category === tool.category && generateSlug(t.tool) !== slug).slice(0, 3) : [];
 
-  // Format last edited date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  };
-
-  // Get latest update date from tools
-  const latestUpdate = tools.length > 0
-    ? new Date(Math.max(...tools.map(t => new Date(t.lastEdited).getTime()))).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-    : null;
+  // Format build date for navbar
+  const latestUpdate = useMemo(() => {
+    if (!buildDate) return null;
+    const date = new Date(buildDate);
+    if (isNaN(date.getTime())) return null;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }, [buildDate]);
 
   const hasWeighted = tool?.finalScore !== null && tool?.finalScore !== undefined;
   const hasRating = tool?.rating !== null && tool?.rating !== undefined;
@@ -216,43 +222,22 @@ export default function ToolDetailPage() {
           )}
         </div>
 
-        {/* Dimensions Section */}
+        {/* Radar Visualization */}
         <div className="bg-white border border-slate-200 rounded-lg p-6 mb-6">
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">Evaluation Dimensions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {DIMENSION_LABELS.map(({ key, label }) => {
-              const value = tool.dims[key];
-              const description = DIMENSION_DESCRIPTIONS[label as keyof typeof DIMENSION_DESCRIPTIONS];
-              return (
-                <div
-                  key={key}
-                  className="bg-slate-50 rounded-lg p-4"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-base font-semibold text-slate-900">{label}</h3>
-                    <div className="text-2xl font-bold text-slate-900">{value}<span className="text-lg text-slate-500">/20</span></div>
-                  </div>
-                  {description && (
-                    <p className="text-sm text-slate-600 leading-relaxed">{description}</p>
-                  )}
-                </div>
-              );
-            })}
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">Capability Overview</h2>
+          <div className="w-full" style={{ height: '500px' }}>
+            <RadarView
+              tools={tools}
+              selectedIds={[tool.id]}
+              hiddenDims={new Set()}
+              fillOpacity={0.5}
+              color="#2563eb"
+              showScores={true}
+            />
           </div>
-        </div>
-
-        {/* Version History */}
-        <div className="bg-white border border-slate-200 rounded-lg p-6 mb-6">
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">Version History</h2>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600">Last Updated:</span>
-              <span className="font-medium text-slate-900">{formatDate(tool.lastEdited)}</span>
-            </div>
-            <p className="text-xs text-slate-500 mt-3">
-              This evaluation reflects the tool's status as of the last update date. For the most current information, please visit the tool's official website.
-            </p>
-          </div>
+          <p className="text-sm text-slate-500 mt-3 text-center">
+            All dimensions rated on a scale of 0-20
+          </p>
         </div>
 
         {/* Related Tools */}

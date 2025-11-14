@@ -23,10 +23,17 @@ type Tool = {
   lastEdited: string;
 };
 
+type ToolsResponse = {
+  buildDate: string;
+  tools: Tool[];
+};
+
 const fetcher = (u: string) => fetch(u).then(r => r.json());
 
 export default function RadarPage() {
-  const { data = [], isLoading } = useSWR<Tool[]>("/api/tools", fetcher);
+  const { data, isLoading } = useSWR<ToolsResponse>("/api/tools", fetcher);
+  const tools = data?.tools ?? [];
+  const buildDate = data?.buildDate;
   const [filters, setFilters] = useState<{category?: string; status?: string; months?: number}>({});
   const [selected, setSelected] = useState<string[]>([]);
   const [hiddenDims, setHiddenDims] = useState<Set<string>>(new Set());
@@ -85,7 +92,7 @@ export default function RadarPage() {
   }, [drawerOpen]);
 
   const filtered = useMemo(() => {
-    let out = data;
+    let out = tools;
     if (filters.category) out = out.filter(t => t.category === filters.category);
     if (filters.status) out = out.filter(t => t.status === filters.status);
     if (filters.months) {
@@ -94,7 +101,7 @@ export default function RadarPage() {
     }
     // Sort by weighted score (with fallback to rating)
     return out.sort((a,b) => (b.finalScore ?? b.rating ?? 0) - (a.finalScore ?? a.rating ?? 0));
-  }, [data, filters]);
+  }, [tools, filters]);
 
   // Default tools to display when nothing is selected
   const defaultToolNames = ["Claude Code", "Gemini Code Assist", "Windsurf", "GitHub Copilot", "Cursor"];
@@ -118,14 +125,13 @@ export default function RadarPage() {
     .filter(t => compareIds.includes(t.id))
     .sort((a, b) => (b.finalScore ?? b.rating ?? 0) - (a.finalScore ?? a.rating ?? 0));
 
-  // Get the most recent lastEdited date
+  // Format build date for navbar
   const latestUpdate = useMemo(() => {
-    if (data.length === 0) return null;
-    const dates = data.map(t => new Date(t.lastEdited)).filter(d => !isNaN(d.getTime()));
-    if (dates.length === 0) return null;
-    const latest = new Date(Math.max(...dates.map(d => d.getTime())));
-    return latest.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }, [data]);
+    if (!buildDate) return null;
+    const date = new Date(buildDate);
+    if (isNaN(date.getTime())) return null;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }, [buildDate]);
 
   if (isLoading) {
     return (
@@ -202,7 +208,7 @@ export default function RadarPage() {
               {/* Data Filters Section */}
               <div className="mb-4 pb-4 border-b border-slate-200">
                 <h3 className="text-sm font-semibold text-slate-700 mb-3">Data Filters</h3>
-                <Filters all={data} onChange={(f) => setFilters(prev => ({ ...prev, ...f }))} />
+                <Filters all={tools} onChange={(f) => setFilters(prev => ({ ...prev, ...f }))} />
               </div>
 
               {/* Tools Grid */}
@@ -235,8 +241,8 @@ export default function RadarPage() {
                 >
                   Select Tools <span className="ml-1 opacity-70">({selected.length || 5})</span>
                 </button>
-                {Array.from(new Set(data.map(t => t.category))).sort().map(cat => {
-                  const count = data.filter(t => t.category === cat).length;
+                {Array.from(new Set(tools.map(t => t.category))).sort().map(cat => {
+                  const count = tools.filter(t => t.category === cat).length;
                   return (
                     <button
                       key={cat}
