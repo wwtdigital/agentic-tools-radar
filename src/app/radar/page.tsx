@@ -2,7 +2,7 @@
 import useSWR from "swr";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { toPng } from "html-to-image";
-import { RadarView } from "@/components/RadarView";
+import { RadarView, DIM_LABELS } from "@/components/RadarView";
 import { Filters } from "@/components/Filters";
 import { CompareSelect } from "@/components/CompareSelect";
 import { ToolDetails } from "@/components/ToolDetails";
@@ -73,6 +73,17 @@ export default function RadarPage() {
     };
   }, [drawerOpen]);
 
+  // Handle Escape key to close drawer
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && drawerOpen) {
+        setDrawerOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [drawerOpen]);
+
   const filtered = useMemo(() => {
     let out = data;
     if (filters.category) out = out.filter(t => t.category === filters.category);
@@ -134,8 +145,16 @@ export default function RadarPage() {
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
+      {/* Skip Navigation Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:font-medium focus:border focus:border-slate-900 focus:m-2"
+      >
+        Skip to main content
+      </a>
+
       {/* Mobile Warning */}
-      <div className="md:hidden bg-yellow-50 border-b border-yellow-200 px-4 py-3 flex-shrink-0">
+      <div className="md:hidden bg-yellow-50 border-b border-yellow-200 px-4 py-3 flex-shrink-0" role="alert">
         <p className="text-sm text-yellow-800 text-center">
           <strong>Desktop Required:</strong> This radar visualization is optimized for desktop viewing. Please access on a larger screen for the best experience.
         </p>
@@ -156,6 +175,9 @@ export default function RadarPage() {
 
       {/* Drawer - slides down from top */}
       <div
+        role="dialog"
+        aria-labelledby="drawer-title"
+        aria-hidden={!drawerOpen}
         className={`fixed left-0 right-0 top-[57px] bg-white shadow-lg z-30 overflow-y-auto transition-all duration-300 ${
           drawerOpen ? 'max-h-[70vh] border-b' : 'max-h-0'
         }`}
@@ -164,7 +186,7 @@ export default function RadarPage() {
           {drawerOpen && (
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-slate-900">Tools & Filters</h2>
+                <h2 id="drawer-title" className="text-lg font-semibold text-slate-900">Tools & Filters</h2>
                 <button
                   onClick={() => setDrawerOpen(false)}
                   className="p-2 hover:bg-red-50 bg-slate-100 rounded-lg transition-colors border border-slate-300 hover:border-red-300"
@@ -191,7 +213,7 @@ export default function RadarPage() {
       </div>
 
       {/* Main Content - Split Layout */}
-      <main role="main" aria-label="Radar visualization" className="w-full flex-1 flex flex-col overflow-hidden">
+      <main id="main-content" role="main" aria-label="Radar visualization" className="w-full flex-1 flex flex-col overflow-hidden">
         <div className="flex gap-6 p-6 flex-1 min-h-0">
           {/* Left: Radar Chart (2/3) */}
           <div className="w-2/3 flex flex-col">
@@ -278,18 +300,21 @@ export default function RadarPage() {
                     <div className="absolute top-full left-0 mt-1 bg-white rounded border border-slate-200 shadow-lg p-3 max-h-96 overflow-y-auto min-w-[500px]">
                       <h3 className="text-sm font-semibold text-slate-900 mb-3">Dimensions</h3>
                       <div className="grid grid-cols-2 gap-3">
-                        {["AI Autonomy","Collaboration","Contextual Understanding","Governance","User Interface"].map(dim => {
+                        {DIM_LABELS.map(dim => {
                           const totalDimensions = 5;
                           const visibleCount = totalDimensions - hiddenDims.size;
                           const isChecked = !hiddenDims.has(dim);
                           const wouldBeUnderMinimum = isChecked && visibleCount <= 3;
 
                           const description = DIMENSION_DESCRIPTIONS[dim as keyof typeof DIMENSION_DESCRIPTIONS];
+                          const dimId = `dimension-${dim.replace(/\s+/g, '-').toLowerCase()}`;
+                          const descId = `${dimId}-desc`;
 
                           return (
-                            <label key={dim} className={`flex items-start gap-2 text-sm ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                            <label key={dim} htmlFor={dimId} className={`flex items-start gap-2 text-sm ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                               <input
                                 type="checkbox"
+                                id={dimId}
                                 checked={isChecked}
                                 disabled={wouldBeUnderMinimum}
                                 onChange={(e) => {
@@ -298,12 +323,12 @@ export default function RadarPage() {
                                   setHiddenDims(next);
                                 }}
                                 className={`mt-0.5 ${wouldBeUnderMinimum ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                title={wouldBeUnderMinimum ? 'Minimum 3 dimensions required' : ''}
+                                aria-describedby={description ? descId : undefined}
                               />
                               <div>
                                 <span className={`font-medium ${wouldBeUnderMinimum ? 'text-slate-400' : 'text-slate-700'}`}>{dim}</span>
                                 {description && (
-                                  <div className="text-xs text-slate-500 mt-0.5">{description}</div>
+                                  <div id={descId} className="text-xs text-slate-500 mt-0.5">{description}</div>
                                 )}
                               </div>
                             </label>
@@ -330,7 +355,13 @@ export default function RadarPage() {
               </button>
 
               {/* Chart - Only this gets exported */}
-              <figure ref={radarRef} className="border rounded p-4 bg-white h-full isolate">
+              <figure ref={radarRef} className="border rounded p-4 bg-white h-full isolate" aria-labelledby="chart-title" aria-describedby="chart-desc">
+                <figcaption id="chart-title" className="sr-only">
+                  Radar Chart Comparing {selectedTools.map(t => t.tool).join(", ")}
+                </figcaption>
+                <div id="chart-desc" className="sr-only">
+                  A radar chart showing dimension scores for {selectedTools.length} {selectedTools.length === 1 ? 'tool' : 'tools'} across {5 - hiddenDims.size} dimensions: {DIM_LABELS.filter(d => !hiddenDims.has(d)).join(", ")}.
+                </div>
                 <div className="w-full h-full">
                   <RadarView tools={filtered} selectedIds={compareIds} hiddenDims={hiddenDims} />
                 </div>

@@ -60,6 +60,8 @@ export function Filters({
                     ? "bg-slate-900 text-white border-slate-900"
                     : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
                 }`}
+                aria-pressed={selectedStatus === s}
+                aria-label={`Filter by ${s} status`}
               >
                 {s}
               </button>

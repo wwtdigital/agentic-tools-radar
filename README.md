@@ -18,10 +18,11 @@ An editorial, Notion-powered radar to compare agentic developer tools across fiv
 ### 📋 Tools Listing Page
 
 - **Browse all tools** at `/tools` in a comprehensive card-based layout
-- **Organized by category** with clear section headers and tool counts
+- **Flexible grouping options** - Category, Status, Score Range, or None (flat list)
+- **Search functionality** - Filter tools by name or company with instant results
 - **Color-coded evaluation status badges** matching Notion status colors (Active, Adopted, Feature Risk, etc.)
 - Each card displays full details: ratings, all dimension scores, quick take, external links, and evaluation status
-- Tools automatically sorted by rating within categories
+- Tools automatically sorted by weighted score within groups
 - Easy navigation between radar and tools views via header buttons
 
 ### 🔍 Advanced Filtering & Selection
@@ -53,10 +54,20 @@ An editorial, Notion-powered radar to compare agentic developer tools across fiv
 ### 📊 Tool Details
 
 - Side-by-side comparison of selected tools (up to 5)
+- **Weighted scoring system** - Risk-adjusted ratings accounting for evaluation status and validation confidence
+- **Smart dual-score display** - Shows both Weighted Score and Rating when they differ significantly
 - Tool logos fetched from product URLs via favicon proxy
 - Fallback to initials for tools without logos with consistent color generation
 - Quick take summaries and direct links to product/docs/company
 - "View All" button links to comprehensive tools listing page
+
+### 📖 About Page
+
+- **Comprehensive documentation** at `/about` with project overview and evaluation framework
+- **Detailed dimension explanations** - AI Autonomy, Collaboration, Contextual Understanding, Governance, User Interface
+- **Scoring methodology** - Clear explanation of Rating vs Weighted Score with confidence multipliers
+- **Evaluation status categories** - Organized into Production Ready, Emerging & Monitoring, and Risk & Limitations tiers
+- **Release history** - Version highlights and links to complete release notes
 
 ## Setup
 
@@ -115,7 +126,8 @@ src/
 │   │   ├── tools/route.ts     # Notion API integration with demo fallback
 │   │   └── favicon/route.ts   # Favicon proxy for CORS-free logo fetching
 │   ├── radar/page.tsx         # Main radar page with drawer interface
-│   ├── tools/page.tsx         # Tools listing page grouped by category
+│   ├── tools/page.tsx         # Tools listing page with flexible grouping and search
+│   ├── about/page.tsx         # About page with evaluation framework and release notes
 │   ├── architecture/page.tsx  # Architecture documentation page
 │   └── not-found.tsx          # 404 page
 └── components/
@@ -123,6 +135,7 @@ src/
     ├── CompareSelect.tsx      # Category-grouped tool selection grid
     ├── Filters.tsx            # Status filter with tooltips
     ├── ToolDetails.tsx        # Selected tools info panel with ratings and status
+    ├── ToolCard.tsx           # Reusable tool card component for tools page
     ├── ToolLogo.tsx           # Logo component with favicon fallbacks
     ├── Navbar.tsx             # Shared navigation component
     └── DimensionTooltip.tsx   # Interactive dimension explanations
@@ -149,7 +162,8 @@ Required properties:
 - **Product URL, Documentation Link, Company URL** (URL)
 - **Quick Take** (Rich Text) — Brief description
 - **AI Autonomy, Collaboration, Contextual Understanding, Governance, User Interface** (Number 1-20)
-- **Rating** (Formula) — Overall rating calculated 0-100
+- **Rating** (Formula) — Pure capability score 0-100 (does not account for validation level)
+- **Final Score** (Formula) — Risk-adjusted weighted score 0-100 (accounts for evaluation status and validation confidence)
 
 ## Development
 

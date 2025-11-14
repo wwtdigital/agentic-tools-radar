@@ -128,9 +128,17 @@ export default function ToolsPage() {
 
   return (
     <>
+      {/* Skip Navigation Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:font-medium focus:border focus:border-slate-900 focus:m-2"
+      >
+        Skip to main content
+      </a>
+
       <Navbar title="All Agentic Developer Tools" latestUpdate={latestUpdate} currentPage="tools" />
 
-      <main role="main" aria-label="Tools listing" className="p-6">
+      <main id="main-content" role="main" aria-label="Tools listing" className="p-6">
         {/* Header */}
         <div className="mb-6 space-y-4">
           <div className="flex items-center justify-between">

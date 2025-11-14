@@ -67,10 +67,17 @@ Both `route.ts` and `generate-static-data.js` handle flexible property types, su
   - Category filter shows all tools in that category (not limited to 5)
   - Radar chart: 600px minimum height, collapsible dimension filters overlay (top-left), export button overlay (top-right)
   - Top-aligned layout with items-start for radar and tool details columns
-- **`/app/tools/page.tsx`** — All tools listing page grouped by category
-  - Displays all tools in card format with smart score hiding (consistent with ToolDetails)
+- **`/app/tools/page.tsx`** — All tools listing page with flexible grouping and search
+  - Flexible grouping options: Category, Status, Score Range, or None (flat list)
+  - Search functionality filters tools by name or company with instant results
+  - Displays all tools in card format using reusable ToolCard component
   - Shows both weighted score and rating when they differ by >0.1, single score when identical
   - Color-coded evaluation status badges positioned in bottom right corner
+- **`/app/about/page.tsx`** — About page with project documentation
+  - Comprehensive evaluation framework documentation
+  - Latest release information and highlights
+  - Detailed dimension explanations and scoring methodology
+  - Links to complete release history on GitHub
 - **`RadarView.tsx`** — Nivo ResponsiveRadar wrapper with custom logo dots
   - Takes up to 5 tools (or all tools in category filter), transforms dims into Nivo data format
   - Respects `hiddenDims` set to exclude dimensions
@@ -82,9 +89,13 @@ Both `route.ts` and `generate-static-data.js` handle flexible property types, su
   - Smart score display: shows both weighted and rating when differ by >0.1, single score when identical
   - Displays evaluation status badges with Notion colors
   - Tool details scrolling naturally with page
+- **`ToolCard.tsx`** — Reusable tool card component for tools page
+  - Displays tool information with flexible grouping support
+  - Adapts display based on groupBy prop (category, status, score, none)
+  - Consistent styling and smart score display across all grouping modes
 - **`ToolLogo.tsx`** — Logo component with favicon fallbacks and consistent color generation
 - **`DimensionTooltip.tsx`** — Interactive dimension explanations with hover tooltips
-- **`Navbar.tsx`** — Shared navigation component with radar/tools toggle and version info
+- **`Navbar.tsx`** — Shared navigation component with radar/tools/about navigation and version info
 
 ### Styling
 - Tailwind CSS with minimal palette
@@ -129,7 +140,7 @@ Shared utility function `getStatusColor(status: string)` that maps Notion evalua
 
 ## Dependency Management
 
-### Current Versions (Last Updated: 2025-01-27)
+### Current Versions (Last Updated: 2025-11-13)
 - **Next.js:** 15.5.6 (latest stable in 15.x line)
 - **React:** 18.3.1 (avoid React 19 until ecosystem stabilizes)
 - **Nivo:** 0.99.0 (updated from 0.85.1)
