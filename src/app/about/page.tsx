@@ -41,29 +41,29 @@ export default function AboutPage() {
 
           <div className="border border-slate-200 rounded-lg p-6 bg-white">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-bold text-slate-900">Version 0.7.1</h3>
+              <h3 className="text-2xl font-bold text-slate-900">Version 0.8.0</h3>
               <span className="text-sm text-slate-500">November 2025</span>
             </div>
 
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold text-slate-900 mb-2">Accessibility Compliance</h4>
+                <h4 className="font-semibold text-slate-900 mb-2">Tool Detail Pages & Release Automation</h4>
                 <p className="text-slate-700 text-sm leading-relaxed">
-                  Comprehensive accessibility improvements achieving WCAG 2.1 Level AA compliance.
-                  Added semantic HTML landmarks, keyboard navigation support, ARIA labels, and screen reader
-                  optimizations without affecting visual design. Grade improved from C+ to B+.
+                  Added comprehensive individual tool pages with slug-based URLs, radar visualizations, and complete
+                  dimension breakdowns. Implemented automated release workflow with custom slash command for streamlined
+                  version management and release preparation.
                 </p>
               </div>
 
               <div>
                 <h4 className="font-semibold text-slate-900 mb-2">Key Highlights:</h4>
                 <ul className="list-disc list-inside space-y-1 text-sm text-slate-700">
-                  <li>Semantic landmarks and skip navigation links on all pages</li>
-                  <li>Toggle button states (aria-pressed) for better assistive technology support</li>
-                  <li>Form accessibility with proper labels and IDs</li>
-                  <li>Keyboard navigation (Escape key closes drawer)</li>
-                  <li>Chart accessibility with figure/figcaption and descriptions</li>
-                  <li>8 of 10 critical accessibility issues resolved</li>
+                  <li>Individual tool pages with deep linking via /tools/[id] routes</li>
+                  <li>Mini radar visualizations showing tool dimension profiles</li>
+                  <li>Related tools discovery and comprehensive external links</li>
+                  <li>Navbar enhancements with date display and improved TypeScript safety</li>
+                  <li>Custom /release slash command for automated release workflow</li>
+                  <li>Smart release notes generation and validation checks</li>
                 </ul>
               </div>
             </div>

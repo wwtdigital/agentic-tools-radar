@@ -1,5 +1,48 @@
 # Release Notes
 
+## Version 0.8.0 - Tool Detail Pages & Release Automation (November 2025)
+
+### 🎉 New Features
+
+#### Tool Detail Pages
+- **Slug-based URLs** - Individual tool pages accessible via `/tools/[id]` routes for deep linking
+- **Comprehensive Tool Information** - Full tool header with large logo, scores, category, and status
+- **Complete Quick Take** - Untruncated tool descriptions for detailed evaluation insights
+- **Radar Visualization** - Mini radar chart on detail page showing tool's dimension profile
+- **External Links** - Prominent buttons for Product, Documentation, and Company URLs
+- **Full Dimension Display** - All five dimensions with complete descriptions and scores
+- **Related Tools** - Displays 3 similar tools from the same category for discovery
+- **404 Handling** - Graceful error pages for non-existent tools
+- **Breadcrumb Navigation** - Easy return to tools listing page
+
+#### Navbar Enhancements
+- **Date Display** - Shows current date and latest release information
+- **TypeScript Type Safety** - Proper prop types for improved reliability
+- **Consistent Styling** - Unified design across all pages
+
+#### Release Automation
+- **Custom `/release` Slash Command** - Interactive guided workflow for preparing releases
+- **Automated Version Bumping** - Smart semantic versioning with user prompts
+- **Git Log Analysis** - Automatically categorizes commits into features, fixes, and improvements
+- **Release Notes Generation** - Template-based release documentation with change summaries
+- **Validation Checks** - Runs tests, type checking, and build before release
+- **PR Creation** - Automated pull request generation with proper formatting
+
+### 🐛 Bug Fixes
+- **Navbar Props** - Added required props to fix TypeScript compilation errors
+- **Type Safety** - Improved type definitions across navigation components
+
+### 🔧 Technical Improvements
+- **Dynamic Routing** - Implemented Next.js App Router dynamic routes for tool pages
+- **Reusable Components** - Tool detail layout optimized for information hierarchy
+- **Error Boundaries** - Better error handling for missing or invalid tool data
+- **Release Workflow** - Streamlined process from version bump to PR creation
+
+---
+
+**Total Changes**: 4 commits
+**Key Areas**: Tool detail pages, navbar improvements, release automation workflow
+
 ## Version 0.7.1 - Accessibility Compliance (November 2025)
 
 ### ♿ Accessibility Improvements (WCAG 2.1 Level AA)
