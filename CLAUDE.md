@@ -73,6 +73,16 @@ Both `route.ts` and `generate-static-data.js` handle flexible property types, su
   - Displays all tools in card format using reusable ToolCard component
   - Shows both weighted score and rating when they differ by >0.1, single score when identical
   - Color-coded evaluation status badges positioned in bottom right corner
+  - Clickable cards with hover effects (blue border, title color change)
+- **`/app/tools/[id]/page.tsx`** — Tool detail page with comprehensive information
+  - Dynamic route accepting tool ID parameter
+  - Breadcrumb navigation back to tools listing
+  - Full tool header with large logo, scores, category, and status
+  - Complete quick take (not truncated)
+  - Prominent external links as buttons (Product, Documentation, Company)
+  - All dimensions displayed with full descriptions
+  - Related tools section showing 3 tools from same category
+  - 404 handling for non-existent tools
 - **`/app/about/page.tsx`** — About page with project documentation
   - Comprehensive evaluation framework documentation
   - Latest release information and highlights
@@ -89,10 +99,13 @@ Both `route.ts` and `generate-static-data.js` handle flexible property types, su
   - Smart score display: shows both weighted and rating when differ by >0.1, single score when identical
   - Displays evaluation status badges with Notion colors
   - Tool details scrolling naturally with page
-- **`ToolCard.tsx`** — Reusable tool card component for tools page
+- **`ToolCard.tsx`** — Reusable clickable tool card component for tools page
+  - Wrapped in Link component pointing to `/tools/[id]` detail page
   - Displays tool information with flexible grouping support
   - Adapts display based on groupBy prop (category, status, score, none)
   - Consistent styling and smart score display across all grouping modes
+  - Hover effects: shadow, blue border, title color change
+  - External links have stopPropagation to prevent navigation to detail page
 - **`ToolLogo.tsx`** — Logo component with favicon fallbacks and consistent color generation
 - **`DimensionTooltip.tsx`** — Interactive dimension explanations with hover tooltips
 - **`Navbar.tsx`** — Shared navigation component with radar/tools/about navigation and version info

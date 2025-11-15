@@ -146,13 +146,19 @@ async function generateStaticData() {
     const dataDir = join(__dirname, "..", "src", "data");
     mkdirSync(dataDir, { recursive: true });
 
+    // Create snapshot with build timestamp
+    const snapshot = {
+      buildDate: new Date().toISOString(),
+      tools: items
+    };
+
     // Write the data to a JSON file
     const outputPath = join(dataDir, "tools-snapshot.json");
-    writeFileSync(outputPath, JSON.stringify(items, null, 2), "utf-8");
+    writeFileSync(outputPath, JSON.stringify(snapshot, null, 2), "utf-8");
 
     console.log(`✅ Successfully generated static data: ${items.length} tools`);
     console.log(`📁 Saved to: ${outputPath}`);
-    console.log(`📅 Generated at: ${new Date().toISOString()}`);
+    console.log(`📅 Generated at: ${snapshot.buildDate}`);
 
   } catch (error) {
     console.error("❌ Error fetching from Notion:", error.message);

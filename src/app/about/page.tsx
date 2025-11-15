@@ -3,23 +3,24 @@ import useSWR from "swr";
 import { useMemo } from "react";
 import { Navbar } from "@/components/Navbar";
 
-type Tool = {
-  lastEdited: string;
+type ToolsResponse = {
+  buildDate: string;
+  tools: unknown[];
 };
 
 const fetcher = (u: string) => fetch(u).then(r => r.json());
 
 export default function AboutPage() {
-  const { data = [] } = useSWR<Tool[]>("/api/tools", fetcher);
+  const { data } = useSWR<ToolsResponse>("/api/tools", fetcher);
+  const buildDate = data?.buildDate;
 
-  // Get the most recent lastEdited date for navbar
+  // Format build date for navbar
   const latestUpdate = useMemo(() => {
-    if (data.length === 0) return null;
-    const dates = data.map(t => new Date(t.lastEdited)).filter(d => !isNaN(d.getTime()));
-    if (dates.length === 0) return null;
-    const latest = new Date(Math.max(...dates.map(d => d.getTime())));
-    return latest.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }, [data]);
+    if (!buildDate) return null;
+    const date = new Date(buildDate);
+    if (isNaN(date.getTime())) return null;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }, [buildDate]);
 
   return (
     <>
